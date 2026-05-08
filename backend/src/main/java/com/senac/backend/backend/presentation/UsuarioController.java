@@ -1,6 +1,8 @@
 package com.senac.backend.backend.presentation;
 
 import com.senac.backend.backend.application.DTO.AlterarStatusRequest;
+import com.senac.backend.backend.application.DTO.UsuarioRequest;
+import com.senac.backend.backend.application.DTO.UsuarioResponse;
 import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.repository.UsuarioRepository;
 import com.senac.backend.backend.application.services.UsuarioService;
@@ -27,7 +29,7 @@ public class UsuarioController {
 
     @GetMapping
     @Operation(summary = "Listar todos", description = "Retorna a lista completa de usuários cadastrados")
-    public ResponseEntity<List<Usuario>> listarTodos(){
+    public ResponseEntity<List<UsuarioResponse>> listarTodos(){
 
         var usuarios = usuarioService.ListarTodos();
         return ResponseEntity.ok(usuarios);
@@ -43,15 +45,15 @@ public class UsuarioController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar por ID", description = "Busca os detalhes de um usuário específico através do código identificador")
-    public ResponseEntity<Usuario> buscarPorId(@PathVariable Long id){
+    public ResponseEntity<UsuarioResponse> buscarPorId(@PathVariable Long id){
         return ResponseEntity.ok(usuarioService.BuscarUsuarioPorId(id));
 
     }
 
     @PostMapping
     @Operation(summary = "Criar novo usuário", description = "Cadastra um novo usuário no sistema")
-    public ResponseEntity<Long> salvar(@RequestBody Usuario usuario){
-        return ResponseEntity.ok(usuarioRepository.save(usuario).getId());
+    public ResponseEntity<Long> salvar(@RequestBody UsuarioRequest usuario){
+        return ResponseEntity.ok(usuarioService.SalvarUsuario(usuario));
     }
 
     @PutMapping("/{id}")

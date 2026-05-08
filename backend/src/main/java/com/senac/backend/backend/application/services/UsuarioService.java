@@ -1,8 +1,9 @@
 package com.senac.backend.backend.application.services;
 
 import com.senac.backend.backend.application.DTO.LoginRequest;
+import com.senac.backend.backend.application.DTO.UsuarioRequest;
+import com.senac.backend.backend.application.DTO.UsuarioResponse;
 import com.senac.backend.backend.domain.entities.Usuario;
-import com.senac.backend.backend.domain.enuns.EnumStatusUsuario;
 import com.senac.backend.backend.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,11 +26,11 @@ public class UsuarioService {
 
     }
 
-    public List<Usuario> ListarTodos() {
+    public List<UsuarioResponse> ListarTodos() {
         try{
             return usuarioRepository.findAll()
                     .stream()
-                    .filter(a->a.getStatus().equals(EnumStatusUsuario.ATIVO))
+                    .map(UsuarioResponse::new)
                     .collect(Collectors.toList());
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -45,9 +46,10 @@ public class UsuarioService {
         }
     }
 
-    public Usuario BuscarUsuarioPorId(Long id) {
+    public UsuarioResponse BuscarUsuarioPorId(Long id) {
         try{
-            return usuarioRepository.findById(id).orElse(null);
+            var usuario = usuarioRepository.findById(id).orElse(null);
+            return new UsuarioResponse(usuario);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -71,5 +73,13 @@ public class UsuarioService {
         }
 
         return false;
+    }
+    public Long SalvarUsuario(UsuarioRequest usuario) {
+        try {
+            return usuarioRepository.save(new Usuario(usuario)).getId();
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
     }
 }

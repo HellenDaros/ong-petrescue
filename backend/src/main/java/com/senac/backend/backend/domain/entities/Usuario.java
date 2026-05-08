@@ -1,5 +1,6 @@
 package com.senac.backend.backend.domain.entities;
 
+import com.senac.backend.backend.application.DTO.UsuarioRequest;
 import com.senac.backend.backend.domain.enuns.EnumStatusUsuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -33,6 +34,13 @@ public class Usuario implements UserDetails {
     private String role;
 
     private EnumStatusUsuario status = EnumStatusUsuario.ATIVO;
+
+    public Usuario(UsuarioRequest usuario) {
+        this.email =usuario.email();
+        this.name = usuario.name();
+        this.senha = usuario.senha();
+        this.role = "ROLE_USER";
+    }
 
 
     @Override
