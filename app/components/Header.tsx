@@ -1,8 +1,14 @@
 'use client'
+import { useDispatch } from "react-redux";
 import { useAuth } from "../context/AuthContext";
+import { logout } from "../redux/slices/authSlice";
+import { store } from "../redux/store"
 
 export default function Header() {
-  const { usuario, logout } = useAuth();
+  // const { usuario, logout } = useAuth();
+
+  const dispatch = useDispatch();
+  const usuario = store.getState().auth.usuario;
 
   return (
     /* REMOVIDO: fixed, w-full, top-0 */
@@ -39,7 +45,7 @@ export default function Header() {
         </div>
 
         {/* Lado Direito: Botão Sair */}
-        <button type="button" className="group relative flex items-center" onClick={logout}>
+        <button type="button" className="group relative flex items-center" onClick={(e)=>{ dispatch(logout()); }}>
           <div className="flex items-center gap-2 bg-[#1e293b] hover:bg-orange-500 text-white pl-5 pr-8 py-2.5 rounded-full font-bold transition-all duration-300 shadow-lg z-10">
             <svg 
               xmlns="http://www.w3.org/2000/svg" 

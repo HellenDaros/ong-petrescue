@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Poppins, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { AuthProvider } from "./context/AuthContext";
 import { AnimalProvider } from "./context/AnimalContext";
+import StoreProvider from "./redux/storeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,14 +30,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
+
   return (
     <html lang="pt-BR">
       <body>
-        <AuthProvider>
+        <StoreProvider>
+
           <AnimalProvider>
       {children}
       </AnimalProvider>
-      </AuthProvider>
+
+      </StoreProvider>
       </body>
     </html>
   );

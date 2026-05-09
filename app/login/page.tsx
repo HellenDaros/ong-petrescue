@@ -2,21 +2,22 @@
 
 import { Mail, Lock, ArrowRight, PawPrint } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useAuth} from "../context/AuthContext";
 import { Usuario } from "../types/usuarios";
-import { LoginResponse } from "../types/auth";
-import { loginRequest } from "../services/authService";
+import { loginResult } from "../services/authService";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/slices/authSlice";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { login } = useAuth();
+
+  const dispatch = useDispatch();
 
   const handleLogin = async (formData: FormData) => {
   const email = formData.get("email") as string;
   const senha = formData.get("senha") as string;
 
   try {
-    const data = await loginRequest({ email, senha });
+    const data = await loginResult({ email, senha });
 
     if (!data) {
       alert("Usuário ou senha inválido!");
@@ -25,7 +26,8 @@ export default function LoginPage() {
 
     const usuarioMock = new Usuario(1, "Hellen Daros", "46566356", "ATIVO");
 
-    login(usuarioMock, data.token);
+    dispatch(login({usuario: {...usuarioMock}, token: data.token}))
+    // login(usuarioMock, data.token);
 
     router.push("/home");
   } catch (error) {

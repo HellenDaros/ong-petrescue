@@ -6,7 +6,7 @@ interface LoginParams {
   senha: string;
 }
 
-export async function loginRequest({
+export async function loginResult({
   email,
   senha,
 }: LoginParams): Promise<LoginResponse | null> {
