@@ -1,5 +1,6 @@
 package com.senac.backend.backend.domain.entities;
 
+import com.senac.backend.backend.application.DTO.UsuarioAdminRequest;
 import com.senac.backend.backend.application.DTO.UsuarioRequest;
 import com.senac.backend.backend.domain.enuns.EnumStatusUsuario;
 import jakarta.persistence.*;
@@ -40,6 +41,13 @@ public class Usuario implements UserDetails {
         this.name = usuario.name();
         this.senha = usuario.senha();
         this.role = "ROLE_USER";
+    }
+
+    public Usuario(UsuarioAdminRequest usuario) {
+        this.email =usuario.email();
+        this.name = usuario.name();
+        this.senha = usuario.senha();
+        this.role = "ROLE_ADMIN";
     }
 
 

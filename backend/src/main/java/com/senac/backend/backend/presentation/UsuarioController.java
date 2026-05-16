@@ -1,6 +1,7 @@
 package com.senac.backend.backend.presentation;
 
 import com.senac.backend.backend.application.DTO.AlterarStatusRequest;
+import com.senac.backend.backend.application.DTO.UsuarioAdminRequest;
 import com.senac.backend.backend.application.DTO.UsuarioRequest;
 import com.senac.backend.backend.application.DTO.UsuarioResponse;
 import com.senac.backend.backend.domain.entities.Usuario;
@@ -54,6 +55,12 @@ public class UsuarioController {
     @Operation(summary = "Criar novo usuário", description = "Cadastra um novo usuário no sistema")
     public ResponseEntity<Long> salvar(@RequestBody UsuarioRequest usuario){
         return ResponseEntity.ok(usuarioService.SalvarUsuario(usuario));
+    }
+
+    @PostMapping("/adm")
+    @Operation(summary = "Criar novo usuário", description = "Cadastra um novo usuário no sistema")
+    public ResponseEntity<Long> salvarAdm(@RequestBody UsuarioAdminRequest usuario){
+        return ResponseEntity.ok(usuarioService.SalvarUsuarioAdmin(usuario));
     }
 
     @PutMapping("/{id}")

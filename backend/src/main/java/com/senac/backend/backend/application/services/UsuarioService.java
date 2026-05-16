@@ -1,11 +1,13 @@
 package com.senac.backend.backend.application.services;
 
 import com.senac.backend.backend.application.DTO.LoginRequest;
+import com.senac.backend.backend.application.DTO.UsuarioAdminRequest;
 import com.senac.backend.backend.application.DTO.UsuarioRequest;
 import com.senac.backend.backend.application.DTO.UsuarioResponse;
 import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +18,7 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
 
     public boolean ValidaUsuarioSenha(LoginRequest loginRequest){
         try {
@@ -75,6 +78,15 @@ public class UsuarioService {
         return false;
     }
     public Long SalvarUsuario(UsuarioRequest usuario) {
+        try {
+            return usuarioRepository.save(new Usuario(usuario)).getId();
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+
+    }
+    public Long SalvarUsuarioAdmin(UsuarioAdminRequest usuario) {
+
         try {
             return usuarioRepository.save(new Usuario(usuario)).getId();
         }catch (Exception e){
