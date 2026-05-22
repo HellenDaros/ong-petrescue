@@ -1,6 +1,8 @@
 package com.senac.backend.backend.domain.entities;
 
+import com.senac.backend.backend.domain.enuns.EnumConfirmacao;
 import com.senac.backend.backend.domain.enuns.EnumEspecieAnimal;
+import com.senac.backend.backend.domain.enuns.EnumSexo;
 import com.senac.backend.backend.domain.enuns.EnumStatusAnimal;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,10 +24,27 @@ public class Animal {
 
     private String raca;
 
-    @Column(columnDefinition = "TEXT")
+    private EnumSexo sexo;
+
+    private Integer idade;
+
     private String urlFoto;
 
+    private String porte;
+
+    private String corPelagem;
+
+    private EnumConfirmacao castrado;
+
+    private EnumConfirmacao vermifugado;
+    
+    private EnumConfirmacao vacinado;
+
+    private String vacinadoDescricao;
+
     private EnumEspecieAnimal especie;
+
+    private String nameDoador;
 
     private EnumStatusAnimal statusAnimal = EnumStatusAnimal.DISPONIVEL;
 

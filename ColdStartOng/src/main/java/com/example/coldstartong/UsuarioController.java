@@ -38,6 +38,7 @@ public class UsuarioController {
         String json = "{\n" +
                 "  \"name\": \""+txtName.getText()+"\",\n" +
                 "  \"email\": \""+txtEmail.getText()+"\",\n" +
+                "  \"secretKey\": \"gsfuhfidhsihf8547f6dsf\",\n" +
                 "  \"senha\": \""+txtSenha.getText()+"\"\n" +
                 "}";
 

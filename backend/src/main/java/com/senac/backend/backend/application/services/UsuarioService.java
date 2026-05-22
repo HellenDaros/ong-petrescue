@@ -1,7 +1,7 @@
 package com.senac.backend.backend.application.services;
 
 import com.senac.backend.backend.application.DTO.LoginRequest;
-import com.senac.backend.backend.application.DTO.UsuarioAdminRequest;
+import com.senac.backend.backend.application.DTO.UsuarioAdmRequest;
 import com.senac.backend.backend.application.DTO.UsuarioRequest;
 import com.senac.backend.backend.application.DTO.UsuarioResponse;
 import com.senac.backend.backend.domain.entities.Usuario;
@@ -18,6 +18,10 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Value("${spring.secretkey}")
+    private String secret;
+
 
 
     public boolean ValidaUsuarioSenha(LoginRequest loginRequest){
@@ -85,7 +89,7 @@ public class UsuarioService {
         }
 
     }
-    public Long SalvarUsuarioAdmin(UsuarioAdminRequest usuario) {
+    public Long SalvarUsuarioAdmin(UsuarioAdmRequest usuario) {
 
         try {
             return usuarioRepository.save(new Usuario(usuario)).getId();
