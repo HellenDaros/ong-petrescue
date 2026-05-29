@@ -1,17 +1,18 @@
 package com.senac.backend.backend.domain.valueobjects;
 
 public class CPF {
+
     private String cpf;
 
-    public CPF (){
-        this.cpf ="";
+    public CPF(){
+        this.cpf="";
     }
 
     public CPF(String cpf){
-        if(cpf == null || !isValid(cpf)){
-            throw new IllegalArgumentException("CPF Invalido!");
-        }
+        if(cpf == null || !isValid(cpf)) {
+        throw new IllegalArgumentException("CPF Inválido!");
 
+        }
         this.cpf = cpf;
     }
 
