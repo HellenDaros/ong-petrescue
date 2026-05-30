@@ -24,7 +24,6 @@ export default function LoginPage() {
         return;
       }
       var token = loginResult.token;
-
       dispatch(
         setToken({
           token: token,
