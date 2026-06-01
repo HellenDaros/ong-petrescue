@@ -52,7 +52,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/adm")
-    @Operation(summary = "Criar novo usuário", description = "Cadastra um novo usuário no sistema")
+    @Operation(summary = "Criar novo usuário Admin", description = "Cadastra um novo usuário Admin no sistema")
     public ResponseEntity<Long> salvarAdm(@RequestBody UsuarioAdmRequest usuario){
         return ResponseEntity.ok(usuarioService.SalvarUsuarioAdmin(usuario));
     }

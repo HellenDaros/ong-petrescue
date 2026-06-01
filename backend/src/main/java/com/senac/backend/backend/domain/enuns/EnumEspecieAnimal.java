@@ -4,7 +4,4 @@ public enum EnumEspecieAnimal {
 
     CACHORRO,
     GATO,
-    PASSARO,
-    HAMISTER,
-    OUTROS
 }

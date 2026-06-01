@@ -78,6 +78,19 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
               className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
             />
           </div>
+          <div className="space-y-2">
+            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+              Senha
+            </label>
+            <input
+              type="password"
+              required={!usuarioExistente}
+              onChange={(e) => handleChange("senha", e.target.value)}
+              value={usuario.senha}
+              placeholder="••••••••"
+              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+            />
+          </div>
 
           <div className="flex items-center gap-4 pt-4">
             <Link

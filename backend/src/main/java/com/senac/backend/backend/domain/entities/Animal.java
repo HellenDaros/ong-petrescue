@@ -1,9 +1,7 @@
 package com.senac.backend.backend.domain.entities;
 
-import com.senac.backend.backend.domain.enuns.EnumConfirmacao;
-import com.senac.backend.backend.domain.enuns.EnumEspecieAnimal;
-import com.senac.backend.backend.domain.enuns.EnumSexo;
-import com.senac.backend.backend.domain.enuns.EnumStatusAnimal;
+import com.senac.backend.backend.application.DTO.AnimalRequest;
+import com.senac.backend.backend.domain.enuns.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,28 +22,49 @@ public class Animal {
 
     private String raca;
 
+    @Enumerated(EnumType.STRING)
     private EnumSexo sexo;
 
-    private Integer idade;
+    private String idade;
 
     private String urlFoto;
 
-    private String porte;
+    @Enumerated(EnumType.STRING)
+    private EnumPorte porte;
 
     private String corPelagem;
 
+    @Enumerated(EnumType.STRING)
     private EnumConfirmacao castrado;
 
+    @Enumerated(EnumType.STRING)
     private EnumConfirmacao vermifugado;
-    
+
+    @Enumerated(EnumType.STRING)
     private EnumConfirmacao vacinado;
 
     private String vacinadoDescricao;
 
+    @Enumerated(EnumType.STRING)
     private EnumEspecieAnimal especie;
 
     private String nameDoador;
 
     private EnumStatusAnimal statusAnimal = EnumStatusAnimal.DISPONIVEL;
 
+    public Animal(AnimalRequest animal) {
+        this.nameAnimal = animal.nameAnimal();
+        this.raca = animal.raca();
+        this.sexo = animal.sexo();
+        this.idade = animal.idade();
+        this.urlFoto = animal.urlFoto();
+        this.porte = animal.porte();
+        this.corPelagem = animal.corPelagem();
+        this.castrado = animal.castrado();
+        this.vermifugado = animal.vermifugado();
+        this.vacinado = animal.vacinado();
+        this.vacinadoDescricao = animal.vacinadoDescricao();
+        this.especie = animal.especie();
+        this.nameDoador = animal.nameDoador();
+    }
 }

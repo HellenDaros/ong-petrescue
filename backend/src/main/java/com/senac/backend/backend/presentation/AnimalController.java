@@ -1,13 +1,16 @@
 package com.senac.backend.backend.presentation;
 
 import com.senac.backend.backend.application.DTO.AlterarStatusAnimalRequest;
-import com.senac.backend.backend.domain.entities.Animal;
-import com.senac.backend.backend.domain.repository.AnimalRepository;
+import com.senac.backend.backend.application.DTO.AnimalRequest;
+import com.senac.backend.backend.application.DTO.AnimalResponse;
+import com.senac.backend.backend.application.services.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/animais")
@@ -16,58 +19,41 @@ public class AnimalController {
 
 
     @Autowired
-    private AnimalRepository animalRepository;
+    private AnimalService animalService;
 
     @GetMapping
     @Operation(summary = "Listar todos os pets", description = "Retorna a lista completa de animais cadastrados")
-    public ResponseEntity<?> listarTodos(){
+    public ResponseEntity<List<AnimalResponse>> listarTodos(){
 
-        var animais = animalRepository.findAll();
+        var animais = animalService.ListarTodos();
         return ResponseEntity.ok(animais);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar pet por ID", description = "Retorna os detalhes de um animal específico")
-    public ResponseEntity<Animal> buscarPorId(@PathVariable Long id){
-        return ResponseEntity.ok(animalRepository.findById(id).orElse(null));
+    public ResponseEntity<AnimalResponse> buscarPorId(@PathVariable Long id){
+        return ResponseEntity.ok(animalService.BuscarPorId(id));
     }
 
     @PostMapping
     @Operation(summary = "Cadastrar novo pet", description = "Adiciona um novo animal ao sistema")
-    public  ResponseEntity<Long> salvar(@RequestBody Animal animal){
-        animal.setId(null);
-        return  ResponseEntity.ok(animalRepository.save(animal).getId());
+    public  ResponseEntity<Long> salvar(@RequestBody AnimalRequest animal){
+        return  ResponseEntity.ok(animalService.SalvarAnimal(animal));
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar dados do pet", description = "Altera informações de um animal já cadastrado")
-    public ResponseEntity<?> salvar(@PathVariable Long id, @RequestBody Animal animal){
+    public ResponseEntity<?> alterarAnimal(@PathVariable Long id, @RequestBody AnimalRequest animal){
 
-        var animalBanco = animalRepository.findById(id).orElse(null);
+        var alterarAnimalResult = animalService.AlterarAnimal(id,animal);
+        return alterarAnimalResult ? ResponseEntity.ok("Atualizado com sucesso!") : ResponseEntity.notFound().build();
 
-        if(animalBanco != null){
-            animalBanco.setNameAnimal(animal.getNameAnimal());
-            animalBanco.setRaca(animal.getRaca());
-            animalBanco.setUrlFoto(animal.getUrlFoto());
-            animalBanco.setEspecie(animal.getEspecie());
-            animalBanco.setStatusAnimal(animal.getStatusAnimal());
-            animalRepository.save(animalBanco);
-
-            return  ResponseEntity.ok("Atualizado com sucesso!");
-
-        }
-        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}/AlterarStatusAnimal")
     @Operation(summary = "Alterar Status de Adoção", description = "Atualiza o estado do animal (ex: Disponível, Inativo, Adotado)")
     public  ResponseEntity<?> AlterarStatusAnimal(@PathVariable Long id, @RequestBody AlterarStatusAnimalRequest statusAnimalRequest) {
-        var animalBanco = animalRepository.findById(id).orElse(null);
-        if (animalBanco != null){
-            animalBanco.setStatusAnimal(statusAnimalRequest.statusAnimal());
-            animalRepository.save(animalBanco);
-            return ResponseEntity.ok("Atualizado com sucesso!");
-        }
-        return ResponseEntity.notFound().build();
+        boolean alterarStatusAnimalResult = animalService.AlterarStatus(id,statusAnimalRequest);
+        return alterarStatusAnimalResult ? ResponseEntity.ok("Status atualizado com sucesso!") : ResponseEntity.notFound().build();
     }
 }

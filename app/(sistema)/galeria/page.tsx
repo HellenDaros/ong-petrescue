@@ -48,13 +48,6 @@ export default function GaleriaPage() {
             Encontre seu novo melhor amigo.
           </p>
         </div>
-
-        <Link href="/animais/novo">
-          <button className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-2xl font-black transition-all shadow-lg shadow-orange-100 active:scale-95">
-            <Plus size={20} strokeWidth={3} />
-            Cadastrar Animal
-          </button>
-        </Link>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
