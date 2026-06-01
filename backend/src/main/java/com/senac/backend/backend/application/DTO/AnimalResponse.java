@@ -32,6 +32,8 @@ public record AnimalResponse(
 
         String nameDoador,
 
+        String telefoneDoador,
+
         String statusAnimal
 
 ) {
@@ -52,6 +54,7 @@ public record AnimalResponse(
                 animal.getVacinadoDescricao(),
                 animal.getEspecie().toString(),
                 animal.getNameDoador(),
+                animal.getTelefoneDoador(),
                 animal.getStatusAnimal().toString()
         );
     }

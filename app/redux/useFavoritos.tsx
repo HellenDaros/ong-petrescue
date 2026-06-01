@@ -30,7 +30,7 @@ export const useFavoritos = () => {
         return animalNoServidor ? animalNoServidor : favLocal;
       });
 
-      dispatch(setFavoritos(favsAtualizados));
+      dispatch(setFavoritos({ items: favsAtualizados }));
     } catch (e) {
       console.error("Erro ao sincronizar favoritos:", e);
     }
@@ -44,8 +44,8 @@ export const useFavoritos = () => {
 
   return {
     favoritos,
-    addFavorito: (animal: Animal) => dispatch(adicionarFavorito(animal)),
-    removeFavorito: (id: number) => dispatch(removerFavorito(id)),
+    addFavorito: (animal: Animal) => dispatch(adicionarFavorito({ animal })),
+    removeFavorito: (id: number) => dispatch(removerFavorito({ id })),
     isFavorito: (id: number) => favoritos.some((fav) => fav.id === id),
   };
 };

@@ -14,6 +14,7 @@ export class Animal {
     public vacinadoDescricao: string,
     public especie: string,
     public nameDoador: string,
+    public telefoneDoador: string,
     public statusAnimal: string,
   ) {}
 }

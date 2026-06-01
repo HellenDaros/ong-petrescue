@@ -53,6 +53,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
         "",
         "",
         "",
+        "",
         "DISPONIVEL",
       ),
   );
@@ -78,6 +79,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
         campo === "vacinadoDescricao" ? valor : prev.vacinadoDescricao,
         campo === "especie" ? valor : prev.especie,
         campo === "nameDoador" ? valor : prev.nameDoador,
+        campo === "telefoneDoador" ? valor : prev.telefoneDoador,
         campo === "statusAnimal" ? valor : prev.statusAnimal,
       );
     });
@@ -251,6 +253,22 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
 
             <div className="space-y-2">
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                Telefone Doador
+              </label>
+              <input
+                type="text"
+                required
+                onChange={(e) => handleChange("telefoneDoador", e.target.value)}
+                value={animal.telefoneDoador}
+                placeholder="(48) 9 9999-9999"
+                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 URL da Foto
               </label>
               <input
@@ -262,9 +280,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Castrado?
@@ -283,7 +299,9 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 ))}
               </select>
             </div>
+          </div>
 
+          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Vermifugado?
@@ -302,9 +320,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 ))}
               </select>
             </div>
-          </div>
 
-          <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Vacinado?
@@ -323,25 +339,25 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 ))}
               </select>
             </div>
-
-            {animal.vacinado === "SIM" && (
-              <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                  Quais Vacinas? (Descrição)
-                </label>
-                <input
-                  type="text"
-                  required
-                  onChange={(e) =>
-                    handleChange("vacinadoDescricao", e.target.value)
-                  }
-                  value={animal.vacinadoDescricao}
-                  placeholder="Ex: V10, Raiva..."
-                  className="w-full bg-teal-50/30 border-2 border-teal-100 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-teal-200"
-                />
-              </div>
-            )}
           </div>
+
+          {animal.vacinado === "SIM" && (
+            <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
+              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                Quais Vacinas? (Descrição)
+              </label>
+              <input
+                type="text"
+                required
+                onChange={(e) =>
+                  handleChange("vacinadoDescricao", e.target.value)
+                }
+                value={animal.vacinadoDescricao}
+                placeholder="Ex: V10, Raiva..."
+                className="w-full bg-teal-50/30 border-2 border-teal-100 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-teal-200"
+              />
+            </div>
+          )}
 
           <div className="flex items-center gap-4 pt-4">
             <Link

@@ -50,6 +50,8 @@ public class Animal {
 
     private String nameDoador;
 
+    private String telefoneDoador;
+
     private EnumStatusAnimal statusAnimal = EnumStatusAnimal.DISPONIVEL;
 
     public Animal(AnimalRequest animal) {
@@ -66,5 +68,6 @@ public class Animal {
         this.vacinadoDescricao = animal.vacinadoDescricao();
         this.especie = animal.especie();
         this.nameDoador = animal.nameDoador();
+        this.telefoneDoador = animal.telefoneDoador();
     }
 }

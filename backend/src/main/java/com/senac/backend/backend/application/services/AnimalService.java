@@ -80,6 +80,7 @@ public class AnimalService {
             animalBanco.setVacinadoDescricao(animalRequest.vacinadoDescricao());
             animalBanco.setEspecie(animalRequest.especie());
             animalBanco.setNameDoador(animalRequest.nameDoador());
+            animalBanco.setTelefoneDoador(animalRequest.telefoneDoador());
 
             animalRepository.save(animalBanco);
 

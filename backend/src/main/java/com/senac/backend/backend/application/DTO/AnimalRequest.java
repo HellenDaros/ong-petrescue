@@ -31,7 +31,9 @@ public record AnimalRequest(
 
         EnumEspecieAnimal especie,
 
-        String nameDoador
+        String nameDoador,
+
+        String telefoneDoador
 
 ) {
 }
