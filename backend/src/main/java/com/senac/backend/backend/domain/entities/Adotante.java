@@ -1,5 +1,6 @@
 package com.senac.backend.backend.domain.entities;
 
+import com.senac.backend.backend.application.DTO.AdotanteRequest;
 import com.senac.backend.backend.domain.valueobjects.CPF;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,10 +18,9 @@ public class Adotante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nameAdotante;
-
-    @Embedded
-    private CPF cpf;
+    @OneToOne
+    @JoinColumn(name = "usuario_id", nullable = false, unique = true)
+    private Usuario usuario;
 
     private String identidade;
 
@@ -37,5 +37,17 @@ public class Adotante {
     private String telefoneFixo;
 
     private String telefoneMovel;
+
+    public Adotante(AdotanteRequest adotante, Usuario usuario) {
+        this.usuario = usuario;
+        this.identidade = adotante.identidade();
+        this.endereco = adotante.endereco();
+        this.bairro = adotante.bairro();
+        this.cidade = adotante.cidade();
+        this.uf = adotante.uf();
+        this.profissao = adotante.profissao();
+        this.telefoneFixo = adotante.telefoneFixo();
+        this.telefoneMovel = adotante.telefoneMovel();
+    }
 
 }

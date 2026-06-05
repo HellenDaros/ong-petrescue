@@ -1,5 +1,6 @@
 package com.senac.backend.backend.domain.entities;
 
+import com.senac.backend.backend.application.DTO.AdotanteRequest;
 import com.senac.backend.backend.application.DTO.UsuarioAdmRequest;
 import com.senac.backend.backend.application.DTO.UsuarioRequest;
 import com.senac.backend.backend.domain.enuns.EnumStatusUsuario;
@@ -56,6 +57,13 @@ public class Usuario implements UserDetails {
         this.role = "ROLE_ADMIN";
     }
 
+    public Usuario(AdotanteRequest usuario) {
+        this.email = usuario.email();
+        this.name = usuario.name();
+        this.cpf = new CPF(usuario.cpf());
+        this.senha = usuario.senha();
+        this.role = "ROLE_ADOTANTE";
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
