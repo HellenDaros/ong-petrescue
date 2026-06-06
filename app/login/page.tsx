@@ -7,6 +7,7 @@ import { loginService } from "../services/authService";
 import { useDispatch } from "react-redux";
 import { setToken, setUsuario } from "../redux/slices/authSlice";
 import { buscarUsuarioLogado } from "../services/usuarioService";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -126,20 +127,19 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* <div className="mt-10 pt-8 border-t border-stone-100 text-center">
+        <div className="mt-10 pt-8 border-t border-stone-100 text-center">
           <p className="text-slate-500 text-xs font-bold uppercase tracking-tight">
             Ainda não tem conta?
             <Link
-              href="/cadastro"
+              href="/cadastro-adotante"
               className="ml-2 text-orange-500 font-black hover:text-teal-600 transition-colors underline underline-offset-4 decoration-2"
             >
               Cadastre-se agora
             </Link>
           </p>
-        </div> */}
+        </div>
       </div>
 
-      {/* Footerzinho discreto já que não tem o global */}
       <p className="mt-8 text-stone-400 text-[10px] font-bold uppercase tracking-widest">
         © 2026 PetRescue
       </p>

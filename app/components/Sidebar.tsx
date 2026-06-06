@@ -11,6 +11,7 @@ import {
   BookImage,
   PawPrint,
   FilePen,
+  User,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -19,6 +20,7 @@ export default function Sidebar() {
   const menuItems = [
     { name: "Home", href: "/home", icon: LayoutDashboard },
     { name: "Usuários", href: "/usuarios", icon: Users },
+    { name: "Adotante", href: "/adotantes", icon: User },
     { name: "Galeria", href: "/galeria", icon: BookImage },
     { name: "Favoritos", href: "/favoritos", icon: Heart },
     { name: "Animais", href: "/animais", icon: PawPrint },

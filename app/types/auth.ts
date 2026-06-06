@@ -1,3 +1,4 @@
+import { Adotante } from "./adotante";
 import { Usuario } from "./usuarios";
 
 export interface LoginResponse {
@@ -10,6 +11,6 @@ export interface LoginRequest {
 }
 
 export interface AuthSlice {
-  usuario: Usuario | null;
+  usuario: Usuario | Adotante | null;
   token: string;
 }

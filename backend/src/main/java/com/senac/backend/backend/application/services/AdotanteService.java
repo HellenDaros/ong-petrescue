@@ -9,6 +9,7 @@ import com.senac.backend.backend.domain.repository.UsuarioRepository;
 import com.senac.backend.backend.domain.valueobjects.CPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdotanteService {
@@ -19,6 +20,7 @@ public class AdotanteService {
     @Autowired
     private AdotanteRepository adotanteRepository;
 
+    @Transactional
     public Long SalvarAdotante(AdotanteRequest adotante) {
         try {
             Usuario usuarioSalvo = usuarioRepository.save(new Usuario(adotante));
@@ -37,6 +39,7 @@ public class AdotanteService {
         }
     }
 
+    @Transactional
     public boolean AlterarAdotante(Long id, AdotanteRequest adotante) {
         var adotanteBanco = adotanteRepository.findById(id).orElse(null);
 
