@@ -3,6 +3,7 @@ export class Usuario {
     public id: number | null,
     public name: string,
     public email: string,
+    public cpf: string | null,
     public status: string,
     public senha: string,
   ) {}

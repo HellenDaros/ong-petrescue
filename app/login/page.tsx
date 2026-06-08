@@ -93,7 +93,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Campo Senha */}
           <div className="space-y-2">
             <div className="flex justify-between items-center px-1">
               <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
@@ -114,7 +113,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Botão Acessar */}
           <button
             type="submit"
             className="w-full py-4 mt-4 bg-slate-900 hover:bg-teal-600 text-white rounded-[1.5rem] font-black text-base shadow-xl shadow-slate-200 transition-all duration-300 flex items-center justify-center gap-3 group active:scale-[0.97]"

@@ -116,7 +116,6 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
           }}
           className="p-10 space-y-6"
         >
-          {/* Campo: Nome */}
           <div className="space-y-2">
             <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
               Nome do Pet

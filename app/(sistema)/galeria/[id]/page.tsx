@@ -54,10 +54,10 @@ export default function DetalhesAnimalPage() {
         <div className="flex justify-between items-center mb-6 md:mb-10 px-2">
           <Link
             href="/galeria"
-            className="inline-flex items-center gap-2 text-slate-400 hover:text-[#008080] font-black text-[10px] uppercase tracking-[0.15em] transition-all"
+            className="inline-flex items-center gap-2 text-slate-400 hover:text-[#008080] font-black text-xs uppercase tracking-widest transition-colors"
           >
             <ChevronLeft size={16} strokeWidth={3} />
-            Voltar
+            Voltar para galeria
           </Link>
 
           <div className="flex gap-2">
