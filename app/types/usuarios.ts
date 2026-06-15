@@ -9,6 +9,15 @@ export class Usuario {
   ) {}
 }
 
+export class UsuarioAdmin {
+  constructor(
+    public name: string,
+    public email: string,
+    public senha: string,
+    public cpf: string,
+  ) {}
+}
+
 export interface AuthContextType {
   usuario: Usuario | null;
   token: string | null;

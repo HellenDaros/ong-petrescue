@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -41,12 +42,40 @@ public class Usuario implements UserDetails {
 
     private EnumStatusUsuario status = EnumStatusUsuario.ATIVO;
 
-    public Usuario(UsuarioRequest usuario) {
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "empresa_id", referencedColumnName = "id")
+    private Empresa empresa;
+
+   /* public Usuario(UsuarioRequest usuario) {
+        var usuarioLogado = getUsuarioLogado();
         this.email =usuario.email();
         this.name = usuario.name();
         this.cpf = new CPF(usuario.cpf());
         this.senha = usuario.senha();
         this.role = "ROLE_USER";
+        this.empresa = usuarioLogado.getEmpresa();
+    }
+
+    public Usuario getUsuarioLogado(){
+        return (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }*/
+
+    public Usuario(UsuarioRequest usuario, Empresa empresaDaOng) {
+        this.email = usuario.email();
+        this.name = usuario.name();
+        this.cpf = new CPF(usuario.cpf());
+        this.senha = usuario.senha();
+        this.role = "ROLE_FUNCIONARIO_ONG";
+        this.empresa = empresaDaOng;
+    }
+
+    public Usuario(UsuarioAdmRequest usuario, Empresa empresaDaOng) {
+        this.email = usuario.email();
+        this.name = usuario.name();
+        this.cpf = new CPF(usuario.cpf());
+        this.senha = usuario.senha();
+        this.role = "ROLE_ADMIN_ONG";
+        this.empresa = empresaDaOng;
     }
 
     public Usuario(UsuarioAdmRequest usuario) {
@@ -55,6 +84,7 @@ public class Usuario implements UserDetails {
         this.cpf = new CPF(usuario.cpf());
         this.senha = usuario.senha();
         this.role = "ROLE_ADMIN";
+        this.empresa = null;
     }
 
     public Usuario(AdotanteRequest usuario) {
@@ -63,6 +93,7 @@ public class Usuario implements UserDetails {
         this.cpf = new CPF(usuario.cpf());
         this.senha = usuario.senha();
         this.role = "ROLE_ADOTANTE";
+        this.empresa = null;
     }
 
     @Override

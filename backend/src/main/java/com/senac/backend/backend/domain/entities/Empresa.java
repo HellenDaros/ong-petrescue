@@ -1,5 +1,8 @@
 package com.senac.backend.backend.domain.entities;
 
+import com.senac.backend.backend.application.DTO.EmpresaRequest;
+import com.senac.backend.backend.domain.valueobjects.CNPJ;
+import com.senac.backend.backend.domain.valueobjects.CPF;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,9 +25,19 @@ public class Empresa {
 
     private String razaoSocial;
 
-    private String CNPJ;
+    @Embedded
+    private CNPJ cnpj;
+
+    @OneToOne
+    @JoinColumn(name = "administrador_id")
+    private Usuario administrador;
 
     @OneToMany(mappedBy = "empresa")
     private List<Usuario> usuarios;
 
+    public Empresa(EmpresaRequest empresa) {
+        this.nameFantasia = empresa.nameFantasia();
+        this.razaoSocial = empresa.razaoSocial();
+        this.cnpj = new CNPJ(empresa.cnpj());
+    }
 }

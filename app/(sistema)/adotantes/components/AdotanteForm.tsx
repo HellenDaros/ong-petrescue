@@ -63,7 +63,7 @@ export default function AdotanteForm({ adotanteExistente }: AdotanteFormProps) {
           campo === "email" ? valor : prev.email,
           prev.status,
           campo === "senha" ? valor : prev.senha || "",
-          campo === "cpf" ? valor : prev.cpf,
+          campo === "cpf" ? valor : prev.cpf || "",
           campo === "identidade" ? valor : prev.identidade,
           campo === "endereco" ? valor : prev.endereco,
           campo === "bairro" ? valor : prev.bairro,
@@ -92,7 +92,6 @@ export default function AdotanteForm({ adotanteExistente }: AdotanteFormProps) {
   return (
     <div className="flex-1 flex items-center justify-center p-4 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="w-full max-w-lg bg-white rounded-[2.5rem] shadow-xl shadow-stone-200/50 border border-stone-100 overflow-hidden">
-        {/* Cabeçalho destacado igual ao UsuarioForm */}
         <div className="bg-stone-50/50 px-10 py-8 border-b border-stone-100">
           <h2 className="text-2xl font-black text-slate-800 tracking-tight">
             {adotanteExistente ? "Meu Perfil" : "Crie sua Conta"}
@@ -156,7 +155,7 @@ export default function AdotanteForm({ adotanteExistente }: AdotanteFormProps) {
               <input
                 type="text"
                 required
-                value={adotante.cpf}
+                value={adotante.cpf ? adotante.cpf : ""}
                 onChange={(e) => handleChange("cpf", e.target.value)}
                 placeholder="000.000.000-00"
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"

@@ -11,8 +11,13 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
+    Optional<Usuario> findByIdAndEmpresa_Id(Long id, Long empresaId);
+
+    List<Usuario> getUsuariosByEmpresa_Id(Long empresa);
+
+    Optional<Usuario> findByEmpresa_IdAndRole(Long empresaId, String role);
 
     boolean existsUsuarioByEmailContainingAndSenha(String email, String senha);
 
-    List<Usuario> findAllByStatus(EnumStatusUsuario statusUsuario);
+
 }
