@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { useRouter } from "next/navigation";
@@ -15,14 +15,21 @@ export default function SistemaLayout({
   const usuario = useSelector((state: RootState) => state.auth.usuario);
   const router = useRouter();
 
+  const [mounted, setMounted] = useState(false);
+
   useEffect(() => {
-    // debugger;
-    if (usuario == null) {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (mounted && usuario == null) {
       router.push("/login");
     }
-  });
+  }, [mounted, usuario, router]);
 
-  if (usuario == null) return null;
+  if (!mounted) {
+    return null;
+  }
 
   return (
     /* h-screen impede o scroll na sidebar enquanto o conteúdo rola */

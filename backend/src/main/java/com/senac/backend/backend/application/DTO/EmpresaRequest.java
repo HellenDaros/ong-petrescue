@@ -4,5 +4,5 @@ public record EmpresaRequest(
                              String nameFantasia,
                              String razaoSocial,
                              String cnpj,
-                             UsuarioAdmRequest usuarioAdmin) {
+                             UsuarioRequest usuarioAdmin) {
 }

@@ -8,9 +8,7 @@ public record EmpresaResponse(Long id,
                               String razaoSocial,
                               String cnpj,
 
-                              String name,
-                              String email,
-                              String cpf) {
+                              UsuarioResponse usuarioAdmin) {
     public EmpresaResponse(Empresa empresa, Usuario administrador) {
         this(
                 empresa.getId(),
@@ -18,9 +16,7 @@ public record EmpresaResponse(Long id,
                 empresa.getRazaoSocial(),
                 empresa.getCnpj().toString(),
 
-                administrador.getName(),
-                administrador.getEmail(),
-                administrador.getCpf().toString()
+                new UsuarioResponse(administrador)
         );
     }
 }

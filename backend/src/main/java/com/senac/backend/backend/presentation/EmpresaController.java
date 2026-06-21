@@ -11,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping ("/ong")
+@RequestMapping ("/empresa")
 @Tag(name = "Gestão de ONG/Empresa", description = "Serviços para controle da empresa")
 public class EmpresaController {
 
@@ -25,13 +25,6 @@ public class EmpresaController {
         return ResponseEntity.ok(empresaService.BuscarEmpresaLogada(authentication));
     }
 
-    /*@GetMapping("/{id}")
-    @Operation(summary = "Buscar por ID", description = "Busca os detalhes de uma empresa específica através do código identificador")
-    public ResponseEntity<EmpresaResponse> buscarPorId(@PathVariable Long id){
-        return ResponseEntity.ok(empresaService.BuscarEmpresaPorId(id));
-
-    }*/
-
     @PostMapping
     @Operation(summary = "Criar nova empresa", description = "Cadastra uma nova empresa no sistema")
     public ResponseEntity<Long> salvar(@RequestBody EmpresaRequest empresa){
@@ -40,7 +33,7 @@ public class EmpresaController {
 
     @PutMapping
     @Operation(summary = "Atualizar empresa", description = "Altera os dados de uma empresa existente")
-    public ResponseEntity<?> alterarEmpresa(@PathVariable Long id, @RequestBody EmpresaRequest empresa){
+    public ResponseEntity<?> alterarEmpresa(@RequestBody EmpresaRequest empresa){
 
         boolean result = empresaService.AlterarEmpresa(empresa);
 

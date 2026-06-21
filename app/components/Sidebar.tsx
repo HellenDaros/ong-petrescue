@@ -13,18 +13,52 @@ import {
   FilePen,
   User,
 } from "lucide-react";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 export default function Sidebar() {
   const pathname = usePathname();
 
+  const usuario = useSelector((state: RootState) => state.auth.usuario);
+
   const menuItems = [
-    { name: "Home", href: "/home", icon: LayoutDashboard },
-    { name: "Usuários", href: "/usuarios", icon: Users },
-    { name: "Adotante", href: "/adotantes", icon: User },
+    {
+      name: "Home",
+      href: "/home",
+      icon: LayoutDashboard,
+      roles: ["ROLE_ADMIN", "ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO"],
+    },
+    { name: "Ong", href: "/ong", icon: Settings, roles: ["ROLE_ADMIN"] },
+    {
+      name: "Usuários",
+      href: "/usuarios",
+      icon: Users,
+      roles: ["ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO"],
+    },
+    {
+      name: "Adotante",
+      href: "/adotantes",
+      icon: User,
+      roles: ["ROLE_ADOTANTE"],
+    },
     { name: "Galeria", href: "/galeria", icon: BookImage },
-    { name: "Favoritos", href: "/favoritos", icon: Heart },
-    { name: "Animais", href: "/animais", icon: PawPrint },
+    {
+      name: "Favoritos",
+      href: "/favoritos",
+      icon: Heart,
+      roles: ["ROLE_ADOTANTE"],
+    },
+    {
+      name: "Animais",
+      href: "/animais",
+      icon: PawPrint,
+      roles: ["ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO"],
+    },
   ];
+
+  const menuPermitido = menuItems.filter(
+    (item) => !item.roles || item.roles.includes(usuario?.role ?? ""),
+  );
 
   return (
     <aside className="w-72 h-screen bg-white border-r border-stone-100 flex flex-col p-6 sticky top-0">
@@ -54,9 +88,11 @@ export default function Sidebar() {
           Menu Principal
         </p>
 
-        {menuItems.map((item) => {
+        {menuPermitido.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
+
+          console.log("usuario sidebar", usuario);
 
           return (
             <Link

@@ -6,15 +6,7 @@ export class Usuario {
     public cpf: string | null,
     public status: string,
     public senha: string,
-  ) {}
-}
-
-export class UsuarioAdmin {
-  constructor(
-    public name: string,
-    public email: string,
-    public senha: string,
-    public cpf: string,
+    public role: string | null,
   ) {}
 }
 

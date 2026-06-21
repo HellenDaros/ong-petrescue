@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { RootState } from "@/app/redux/store";
+import { RootState, store } from "@/app/redux/store";
 import { buscarEmpresaLogada } from "@/app/services/empresaService";
 import { Empresa } from "@/app/types/empresa";
 
@@ -30,7 +30,6 @@ export default function MeuPerfilOng() {
       setCarregando(true);
 
       const dados = await buscarEmpresaLogada();
-
       setEmpresa(dados);
     } catch (error) {
       console.error(error);
@@ -55,23 +54,55 @@ export default function MeuPerfilOng() {
 
   if (!empresa) {
     return (
-      <div className="w-full max-w-4xl mx-auto p-12 text-center bg-white rounded-[2.5rem] shadow-sm border border-stone-100">
-        <h2 className="text-2xl font-black text-slate-800">
-          ONG não encontrada
-        </h2>
+      <div className="w-full max-w-7xl mx-auto animate-in fade-in duration-500 p-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-black text-slate-800 tracking-tight">
+              Perfil da ONG
+            </h1>
+            <p className="text-slate-500 text-sm font-medium">
+              Visualize e gerencie os dados da instituição.
+            </p>
+          </div>
 
-        <p className="text-slate-500 mt-2">
-          Nenhuma ONG foi encontrada para este usuário.
-        </p>
+          <Link
+            href="/ong/novo"
+            className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-2xl font-black transition-all shadow-lg shadow-teal-100"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={3}
+              stroke="currentColor"
+              className="w-5 h-5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+            Nova ONG
+          </Link>
+        </div>
+
+        <div className="w-full p-12 text-center bg-white rounded-[2.5rem] shadow-sm border border-stone-100">
+          <p className="px-6 py-20 text-center text-slate-400 font-medium">
+            ONG não encontrada no sistema.
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-5xl mx-auto animate-in fade-in duration-500">
+    <div className="w-full max-w-7xl mx-auto animate-in fade-in duration-500 p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-black text-slate-800">Perfil da ONG</h1>
+          <h1 className="text-3xl font-black text-slate-800 tracking-tight">
+            Perfil da ONG
+          </h1>
 
           <p className="text-slate-500 text-sm font-medium">
             Visualize e gerencie os dados da instituição.

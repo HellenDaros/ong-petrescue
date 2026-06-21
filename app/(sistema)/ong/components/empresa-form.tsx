@@ -1,27 +1,24 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Empresa, EmpresaFormProps } from "@/app/types/empresa";
 import { salvarEmpresa } from "@/app/services/empresaService";
+import { Usuario } from "@/app/types/usuarios";
 
 export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
   const router = useRouter();
 
   const [empresa, setEmpresa] = useState<Empresa>(
     empresaExistente ||
-      new Empresa(null, "", "", "", {
-        name: "",
-        email: "",
-        senha: "",
-        cpf: "",
-      }),
+      new Empresa(
+        null,
+        "",
+        "",
+        "",
+        new Usuario(null, "", "", "", "ATIVO", "", ""),
+      ),
   );
-
-  useEffect(() => {
-    console.log("empresaExistente", empresaExistente);
-    console.log("empresa", empresa);
-  }, [empresa]);
 
   const handleEmpresaChange = (
     campo: "nameFantasia" | "razaoSocial" | "cnpj",
@@ -49,15 +46,15 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
   const handleSalvar = async (formData: FormData) => {
     const isEdicao = !!empresaExistente;
 
-    const sucesso = await salvarEmpresa(empresa, isEdicao);
+    try {
+      const sucesso = await salvarEmpresa(empresa, isEdicao);
 
-    if (!sucesso) {
-      alert("Erro ao salvar a ONG");
-      return;
+      alert("ONG salva com sucesso!");
+      router.push("/ong");
+    } catch (error) {
+      console.log(error);
+      alert(error instanceof Error ? error.message : "Erro ao salvar ONG");
     }
-
-    alert("ONG salva com sucesso!");
-    router.push("/empresas");
   };
 
   return (
@@ -143,7 +140,7 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
             <input
               type="text"
               required
-              value={empresa.usuarioAdmin.cpf}
+              value={empresa.usuarioAdmin.cpf ?? ""}
               placeholder="000.000.000-00"
               onChange={(e) => handleAdminChange("cpf", e.target.value)}
               className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
@@ -181,7 +178,7 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
 
           <div className="flex items-center gap-4 pt-4">
             <Link
-              href="/"
+              href="/ong"
               className="flex-1 text-center py-4 rounded-2xl font-black text-slate-400 hover:text-slate-600 hover:bg-stone-50 transition-all"
             >
               Cancelar

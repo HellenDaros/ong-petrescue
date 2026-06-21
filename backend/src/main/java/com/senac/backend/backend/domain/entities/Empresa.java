@@ -28,10 +28,6 @@ public class Empresa {
     @Embedded
     private CNPJ cnpj;
 
-    @OneToOne
-    @JoinColumn(name = "administrador_id")
-    private Usuario administrador;
-
     @OneToMany(mappedBy = "empresa")
     private List<Usuario> usuarios;
 

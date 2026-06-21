@@ -4,6 +4,7 @@ import com.senac.backend.backend.application.DTO.EmpresaRequest;
 import com.senac.backend.backend.application.DTO.EmpresaResponse;
 import com.senac.backend.backend.domain.entities.Empresa;
 import com.senac.backend.backend.domain.entities.Usuario;
+import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.EmpresaRepository;
 import com.senac.backend.backend.domain.repository.UsuarioRepository;
 import com.senac.backend.backend.domain.valueobjects.CNPJ;
@@ -28,25 +29,25 @@ public class EmpresaService {
             Usuario adminLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             if (adminLogado.getEmpresa() != null) {
-                throw new RuntimeException("Já possui uma ONG vinculada.");
+                throw new BusinessException("Já possui uma ONG vinculada.");
             }
 
-            Empresa novaEmpresa = new Empresa(empresa);
-            var empresaSalva = empresaRepository.save(novaEmpresa);
-
+            Empresa empresaSalva =
+                    empresaRepository.save(
+                            new Empresa(empresa)
+                    );
 
             Usuario adminOng =
                     new Usuario(
                             empresa.usuarioAdmin(),
-                            empresaSalva
+                            empresaSalva,
+                            "ROLE_ADMIN_ONG"
                     );
 
-            adminOng = usuarioRepository.save(adminOng);
+            usuarioRepository.save(adminOng);
 
-            empresaSalva.setAdministrador(adminOng);
-
-            empresaRepository.save(empresaSalva);
-
+            adminLogado.setEmpresa(empresaSalva);
+            usuarioRepository.save(adminLogado);
 
             return empresaSalva.getId();
         } catch (Exception e) {
@@ -64,12 +65,10 @@ public class EmpresaService {
                 return null;
             }
 
-            Usuario administrador = usuarioRepository
-                    .findByEmpresa_IdAndRole(
-                            empresa.getId(),
-                            "ROLE_ADMIN_ONG"
-                    )
-                    .orElse(null);
+            Usuario administrador =
+                    usuarioRepository
+                            .findByEmpresaAndRole(empresa, "ROLE_ADMIN_ONG")
+                            .orElse(null);
 
             return new EmpresaResponse(empresa, administrador);
 
@@ -78,22 +77,6 @@ public class EmpresaService {
         }
     }
 
-  /*  public EmpresaResponse BuscarEmpresaPorId(Long id) {
-        try {
-            Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-            if (usuarioLogado.getEmpresa() != null && usuarioLogado.getEmpresa().getId().equals(id)) {
-                var empresa = empresaRepository.findById(id).orElse(null);
-
-                if (empresa != null) {
-                    return new EmpresaResponse(empresa);
-                }
-            }
-            return null;
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }*/
 
 
     @Transactional
@@ -115,21 +98,27 @@ public class EmpresaService {
         empresa.setRazaoSocial(request.razaoSocial());
         empresa.setCnpj(new CNPJ(request.cnpj()));
 
-        Usuario administrador = empresa.getAdministrador();
+        Usuario administrador =
+                empresa.getUsuarios()
+                        .stream()
+                        .filter(u -> u.getRole().equals("ROLE_ADMIN_ONG"))
+                        .findFirst()
+                        .orElse(null);
 
-        administrador.setName(request.usuarioAdmin().name());
-        administrador.setEmail(request.usuarioAdmin().email());
+        if (administrador != null) {
 
-        if (request.usuarioAdmin().senha() != null &&
-                !request.usuarioAdmin().senha().isBlank()) {
+            administrador.setName(request.usuarioAdmin().name());
+            administrador.setEmail(request.usuarioAdmin().email());
 
-            administrador.setSenha(request.usuarioAdmin().senha());
+            if (request.usuarioAdmin().senha() != null
+                    && !request.usuarioAdmin().senha().isBlank()) {
+
+                administrador.setSenha(request.usuarioAdmin().senha());
+            }
+            usuarioRepository.save(administrador);
         }
-
-        usuarioRepository.save(administrador);
         empresaRepository.save(empresa);
 
         return true;
     }
-
 }

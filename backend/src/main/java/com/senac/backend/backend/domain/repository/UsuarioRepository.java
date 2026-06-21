@@ -1,5 +1,6 @@
 package com.senac.backend.backend.domain.repository;
 
+import com.senac.backend.backend.domain.entities.Empresa;
 import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.enuns.EnumStatusUsuario;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,7 +16,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> getUsuariosByEmpresa_Id(Long empresa);
 
-    Optional<Usuario> findByEmpresa_IdAndRole(Long empresaId, String role);
+    Optional<Usuario> findByEmpresaAndRole(Empresa empresa, String role);
 
     boolean existsUsuarioByEmailContainingAndSenha(String email, String senha);
 

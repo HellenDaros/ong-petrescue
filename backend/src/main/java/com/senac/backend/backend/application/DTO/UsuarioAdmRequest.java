@@ -4,5 +4,6 @@ public record UsuarioAdmRequest(String name,
                                 String email,
                                 String senha,
                                 String secretKey,
-                                String cpf) {
+                                String cpf,
+                                String role) {
 }

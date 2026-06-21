@@ -85,7 +85,11 @@ public class UsuarioService {
 
             Empresa empresaDaOng = adminLogado.getEmpresa();
 
-            Usuario novoFuncionario = new Usuario(usuario, empresaDaOng);
+            Usuario novoFuncionario = new Usuario(
+                    usuario,
+                    empresaDaOng,
+                    "ROLE_FUNCIONARIO_ONG"
+            );
             return usuarioRepository.save(novoFuncionario).getId();
         }catch (Exception e){
             throw new RuntimeException(e);

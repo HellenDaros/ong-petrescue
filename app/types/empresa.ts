@@ -1,4 +1,4 @@
-import { UsuarioAdmin } from "./usuarios";
+import { Usuario } from "./usuarios";
 
 export class Empresa {
   constructor(
@@ -6,7 +6,7 @@ export class Empresa {
     public nameFantasia: string,
     public razaoSocial: string,
     public cnpj: string,
-    public usuarioAdmin: UsuarioAdmin,
+    public usuarioAdmin: Usuario,
   ) {}
 }
 

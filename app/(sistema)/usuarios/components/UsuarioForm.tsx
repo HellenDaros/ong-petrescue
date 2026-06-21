@@ -8,18 +8,23 @@ import { salvarUsuario } from "@/app/services/usuarioService";
 export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
   const router = useRouter();
   const [usuario, setUsuario] = useState<Usuario>(
-    usuarioExistente || new Usuario(null, "", "", "ATIVO", ""),
+    usuarioExistente || new Usuario(null, "", "", "", "ATIVO", "", ""),
   );
 
-  const handleChange = (campo: "name" | "email" | "senha", valor: string) => {
+  const handleChange = (
+    campo: "name" | "email" | "cpf" | "senha",
+    valor: string,
+  ) => {
     setUsuario(
       (prev) =>
         new Usuario(
           prev.id,
           campo === "name" ? valor : prev.name,
           campo === "email" ? valor : prev.email,
+          campo === "cpf" ? valor : prev.cpf,
           prev.status,
           campo === "senha" ? valor : prev.senha,
+          prev.role,
         ),
     );
   };

@@ -6,7 +6,8 @@ public record UsuarioResponse(
         Long id,
         String name,
         String email,
-        String status
+        String status,
+        String role
 ) {
 
     public UsuarioResponse(Usuario usuario){
@@ -14,7 +15,8 @@ public record UsuarioResponse(
                 usuario.getId(),
                 usuario.getName(),
                 usuario.getEmail(),
-                usuario.getStatus().toString()
+                usuario.getStatus().toString(),
+                usuario.getRole()
         );
     }
 }

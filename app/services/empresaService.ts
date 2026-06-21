@@ -1,5 +1,6 @@
 import api from "./api";
 import { Empresa } from "../types/empresa";
+import axios from "axios";
 
 export async function salvarEmpresa(
   empresa: Empresa,
@@ -9,32 +10,34 @@ export async function salvarEmpresa(
     let response;
 
     if (isEdicao) {
-      response = await api.put("/ong", empresa);
+      response = await api.put("/empresa", empresa);
     } else {
-      response = await api.post("/ong", empresa);
+      response = await api.post("/empresa", empresa);
     }
 
     return response.status === 200 || response.status === 201;
   } catch (error) {
-    console.error("Erro ao salvar empresa:", error);
-    return false;
-  }
-}
-
-export async function buscarEmpresaPorId(id: number): Promise<Empresa | null> {
-  try {
-    const response = await api.get<Empresa>(`/ong/${id}`);
-
-    if (response.status === 200) {
-      return response.data;
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data);
     }
-  } catch (error) {
-    console.error(`Erro ao buscar empresa ${id}:`, error);
+    throw error;
   }
-
-  return null;
 }
+
+// export async function buscarEmpresaPorId(id: number): Promise<Empresa | null> {
+//   try {
+//     const response = await api.get<Empresa>(`/empresa/${id}`);
+
+//     if (response.status === 200) {
+//       return response.data;
+//     }
+//   } catch (error) {
+//     console.error(`Erro ao buscar empresa ${id}:`, error);
+//   }
+
+//   return null;
+// }
 
 export async function buscarEmpresaLogada(): Promise<Empresa> {
-  return (await api.get<Empresa>("/ong/empresalogada")).data;
+  return (await api.get<Empresa>("/empresa/empresalogada")).data;
 }
