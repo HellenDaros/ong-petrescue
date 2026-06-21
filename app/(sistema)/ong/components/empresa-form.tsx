@@ -117,63 +117,63 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-              Nome Completo do Responsável
-            </label>
-            <input
-              type="text"
-              required
-              onChange={(e) => handleAdminChange("name", e.target.value)}
-              value={empresa.usuarioAdmin.name}
-              placeholder="João da Silva"
-              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-            />
-          </div>
+            <div className="space-y-2">
+              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                Nome Completo do Responsável
+              </label>
+              <input
+                type="text"
+                required
+                onChange={(e) => handleAdminChange("name", e.target.value)}
+                value={empresa.usuarioAdmin.name}
+                placeholder="João da Silva"
+                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-              CPF do Responsável
-            </label>
-            <input
-              type="text"
-              required
-              value={empresa.usuarioAdmin.cpf ?? ""}
-              placeholder="000.000.000-00"
-              onChange={(e) => handleAdminChange("cpf", e.target.value)}
-              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-            />
-          </div>
+            <div className="space-y-2">
+              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                CPF do Responsável
+              </label>
+              <input
+                type="text"
+                required
+                value={empresa.usuarioAdmin.cpf ?? ""}
+                placeholder="000.000.000-00"
+                onChange={(e) => handleAdminChange("cpf", e.target.value)}
+                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-              E-mail de Login
-            </label>
-            <input
-              type="email"
-              autoComplete="off"
-              required
-              onChange={(e) => handleAdminChange("email", e.target.value)}
-              value={empresa.usuarioAdmin.email}
-              placeholder="admin@ong.com"
-              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-            />
-          </div>
+            <div className="space-y-2">
+              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                E-mail de Login
+              </label>
+              <input
+                type="email"
+                autoComplete="off"
+                required
+                onChange={(e) => handleAdminChange("email", e.target.value)}
+                value={empresa.usuarioAdmin.email}
+                placeholder="admin@ong.com"
+                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+              />
+            </div>
 
-          <div className="space-y-2">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-              Senha
-            </label>
-            <input
-              type="password"
-              required
-              onChange={(e) => handleAdminChange("senha", e.target.value)}
-              value={empresa.usuarioAdmin.senha}
-              placeholder="••••••••"
-              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-            />
+            <div className="space-y-2">
+              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                Senha
+              </label>
+              <input
+                type="password"
+                required
+                onChange={(e) => handleAdminChange("senha", e.target.value)}
+                value={empresa.usuarioAdmin.senha}
+                placeholder="••••••••"
+                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+              />
+            </div>
           </div>
 
           <div className="flex items-center gap-4 pt-4">

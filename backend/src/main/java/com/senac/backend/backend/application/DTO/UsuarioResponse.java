@@ -6,6 +6,7 @@ public record UsuarioResponse(
         Long id,
         String name,
         String email,
+        String cpf,
         String status,
         String role
 ) {
@@ -15,6 +16,7 @@ public record UsuarioResponse(
                 usuario.getId(),
                 usuario.getName(),
                 usuario.getEmail(),
+                usuario.getCpf() != null ? usuario.getCpf().toString() : null,
                 usuario.getStatus().toString(),
                 usuario.getRole()
         );

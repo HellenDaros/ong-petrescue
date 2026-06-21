@@ -4,9 +4,13 @@ import com.senac.backend.backend.application.DTO.AlterarStatusAnimalRequest;
 import com.senac.backend.backend.application.DTO.AnimalRequest;
 import com.senac.backend.backend.application.DTO.AnimalResponse;
 import com.senac.backend.backend.domain.entities.Animal;
+import com.senac.backend.backend.domain.entities.Usuario;
+import com.senac.backend.backend.domain.enuns.EnumStatusAnimal;
 import com.senac.backend.backend.domain.repository.AnimalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,8 +24,13 @@ public class AnimalService {
     public List<AnimalResponse> ListarTodos() {
 
         try {
+            Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            return animalRepository.findAll()
+            if (usuarioLogado.getEmpresa() == null) {
+                return List.of();
+            }
+
+            return animalRepository.findByEmpresa_Id(usuarioLogado.getEmpresa().getId())
                     .stream()
                     .map(AnimalResponse::new)
                     .collect(Collectors.toList());
@@ -33,11 +42,22 @@ public class AnimalService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public List<AnimalResponse> listarPublicos() {
+        return animalRepository.findByStatusAnimal(EnumStatusAnimal.DISPONIVEL)
+                .stream()
+                .map(AnimalResponse::new)
+                .collect(Collectors.toList());
+    }
+
     public AnimalResponse BuscarPorId(Long id) {
 
         try {
+            Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            var animal = animalRepository.findById(id).orElse(null);
+            Animal animal = animalRepository
+                    .findByIdAndEmpresa_Id(id, usuarioLogado.getEmpresa().getId())
+                    .orElseThrow(() -> new RuntimeException("Animal não encontrado."));
 
             return new AnimalResponse(animal);
 
@@ -48,11 +68,14 @@ public class AnimalService {
         }
     }
 
-    public Long SalvarAnimal(AnimalRequest animal) {
-
+    public Long SalvarAnimal(AnimalRequest animalRequest) {
         try {
+            Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            return animalRepository.save(new Animal(animal)).getId();
+            Animal animal = new Animal(animalRequest);
+            animal.setEmpresa(usuarioLogado.getEmpresa());
+
+            return animalRepository.save(animal).getId();
 
         } catch (Exception e) {
 
@@ -62,8 +85,11 @@ public class AnimalService {
     }
 
     public boolean AlterarAnimal(Long id, AnimalRequest animalRequest) {
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        var animalBanco = animalRepository.findById(id).orElse(null);
+        Animal animalBanco = animalRepository
+                .findByIdAndEmpresa_Id(id, usuarioLogado.getEmpresa().getId())
+                .orElse(null);
 
         if (animalBanco != null) {
 
@@ -92,14 +118,16 @@ public class AnimalService {
 
     public boolean AlterarStatus(Long id, AlterarStatusAnimalRequest statusRequest) {
 
-        var animalBanco = animalRepository.findById(id).orElse(null);
+        Usuario usuarioLogado =
+                (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+            Animal animalBanco = animalRepository
+                .findByIdAndEmpresa_Id(id, usuarioLogado.getEmpresa().getId())
+                .orElse(null);
 
         if (animalBanco != null) {
-
             animalBanco.setStatusAnimal(statusRequest.statusAnimal());
-
             animalRepository.save(animalBanco);
-
             return true;
         }
 

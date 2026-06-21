@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -46,6 +45,9 @@ public class Usuario implements UserDetails {
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private Empresa empresa;
 
+    @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY)
+    private Adotante adotante;
+
    /* public Usuario getUsuarioLogado(){
         return (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }*/
@@ -62,7 +64,11 @@ public class Usuario implements UserDetails {
     public Usuario(UsuarioAdmRequest usuario) {
         this.email =usuario.email();
         this.name = usuario.name();
-        this.cpf = new CPF(usuario.cpf());
+        if (usuario.cpf() != null && !usuario.cpf().isBlank()) {
+            this.cpf = new CPF(usuario.cpf());
+        } else {
+            this.cpf = null;
+        }
         this.senha = usuario.senha();
         this.role = "ROLE_ADMIN";
         this.empresa = null;

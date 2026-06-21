@@ -36,3 +36,17 @@ export async function buscarAdotantePorId(
 
   return null;
 }
+
+export async function buscarAdotanteLogado(): Promise<Adotante | null> {
+  try {
+    const response = await api.get<Adotante>("/adotantes/adotantelogado");
+
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Erro ao buscar perfil do adotante:", error);
+  }
+
+  return null;
+}

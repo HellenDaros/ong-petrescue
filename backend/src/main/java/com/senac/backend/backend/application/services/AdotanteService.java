@@ -8,6 +8,7 @@ import com.senac.backend.backend.domain.repository.AdotanteRepository;
 import com.senac.backend.backend.domain.repository.UsuarioRepository;
 import com.senac.backend.backend.domain.valueobjects.CPF;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +38,21 @@ public class AdotanteService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public AdotanteResponse BuscarAdotanteLogado(Authentication authentication) {
+
+        Usuario usuario = (Usuario) authentication.getPrincipal();
+
+        var adotante = adotanteRepository
+                .findByUsuario_Id(usuario.getId())
+                .orElse(null);
+
+        if (adotante == null) {
+            return null;
+        }
+
+        return new AdotanteResponse(adotante);
     }
 
     @Transactional

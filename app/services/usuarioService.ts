@@ -18,9 +18,10 @@ export async function alterarStatusUsuario(usuario: Usuario): Promise<void> {
     //novos testes
   }
 
-  const response = await api.put(`/usuarios/${usuario.id}/AlterarStatus`, {
-    status: novoStatus,
-  });
+  const response = await api.put(
+    `/usuarios/${usuario.id}/AlterarStatus`,
+    novoStatus,
+  );
 
   if (response.status !== 200) {
     alert("Erro ao atualizar status!");

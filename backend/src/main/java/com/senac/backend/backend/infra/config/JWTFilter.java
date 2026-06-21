@@ -24,11 +24,13 @@ public class JWTFilter extends OncePerRequestFilter {
 
 
         String path = request.getRequestURI();
+        String method = request.getMethod();
 
         //liberação de metodos para não travar o token jwt
         //adionar a land page aqui
         if (path.equals("/auth/login") || path.startsWith("/swagger-ui")
-                //|| path.equals("/animais") //if ((path.equals("/animais") && method.equalsIgnoreCase("GET"))
+                || path.startsWith("/animais/publicos")
+                || (path.equals("/adotantes") && method.equalsIgnoreCase("POST"))
                 || path.startsWith("/webjars")
                 || path.startsWith("/usuarios/adm")
                 || path.startsWith("/swagger-resources")

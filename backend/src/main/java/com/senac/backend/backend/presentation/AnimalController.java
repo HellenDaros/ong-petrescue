@@ -22,11 +22,17 @@ public class AnimalController {
     private AnimalService animalService;
 
     @GetMapping
-    @Operation(summary = "Listar todos os pets", description = "Retorna a lista completa de animais cadastrados")
+    @Operation(summary = "Listar os pets por ONG", description = "Retorna a lista de animais cadastrados por ONG")
     public ResponseEntity<List<AnimalResponse>> listarTodos(){
 
         var animais = animalService.ListarTodos();
         return ResponseEntity.ok(animais);
+    }
+
+    @GetMapping("/publicos")
+    @Operation(summary = "Listar os pets disoníveis público", description = "Retorna a lista de animais disponiveis em rota pública")
+    public ResponseEntity<List<AnimalResponse>> listarPublicos() {
+        return ResponseEntity.ok(animalService.listarPublicos());
     }
 
     @GetMapping("/{id}")

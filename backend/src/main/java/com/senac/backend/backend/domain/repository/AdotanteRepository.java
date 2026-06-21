@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface AdotanteRepository extends JpaRepository<Adotante, Long> {
 
-    Optional<Adotante> findByUsuarioId(Long usuarioId);
+    Optional<Adotante> findByUsuario_Id(Long usuarioId);
 
 }

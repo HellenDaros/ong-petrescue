@@ -4,7 +4,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import { buscarAdotantePorId } from "@/app/services/adotanteService";
+import {
+  buscarAdotanteLogado,
+  buscarAdotantePorId,
+} from "@/app/services/adotanteService";
 import { Adotante } from "@/app/types/adotante";
 import { RootState } from "@/app/redux/store";
 
@@ -22,15 +25,15 @@ export default function MeuPerfilAdotante() {
       return;
     }
 
-    if (usuario?.id) {
-      carregarPerfil(usuario.id);
-    }
+    carregarPerfil();
   }, [usuario, token, router]);
 
-  const carregarPerfil = async (id: number) => {
+  const carregarPerfil = async () => {
     try {
       setCarregando(true);
-      const dados = await buscarAdotantePorId(id);
+
+      const dados = await buscarAdotanteLogado();
+
       setPerfil(dados);
     } catch (error) {
       alert("Erro ao carregar as informações do perfil.");

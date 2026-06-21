@@ -69,7 +69,7 @@ public class UsuarioController {
     @Operation(summary = "Alterar Status", description = "Ativa ou inativa um usuário")
     public  ResponseEntity<?> AlterarStatus(@PathVariable Long id, @RequestBody AlterarStatusRequest statusRequest) {
         boolean alterarStatusResult = usuarioService.AlterarStatus(id,statusRequest);
-        return alterarStatusResult ? ResponseEntity.ok("Atualizado com sucesso!") : ResponseEntity.notFound().build();
+        return alterarStatusResult ? ResponseEntity.ok("Status com sucesso!") : ResponseEntity.notFound().build();
     }
 
 }

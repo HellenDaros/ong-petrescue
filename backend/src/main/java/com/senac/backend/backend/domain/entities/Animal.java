@@ -54,6 +54,10 @@ public class Animal {
 
     private EnumStatusAnimal statusAnimal = EnumStatusAnimal.DISPONIVEL;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa_id", referencedColumnName = "id")
+    private Empresa empresa;
+
     public Animal(AnimalRequest animal) {
         this.nameAnimal = animal.nameAnimal();
         this.raca = animal.raca();

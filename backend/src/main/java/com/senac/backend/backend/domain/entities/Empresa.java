@@ -2,7 +2,6 @@ package com.senac.backend.backend.domain.entities;
 
 import com.senac.backend.backend.application.DTO.EmpresaRequest;
 import com.senac.backend.backend.domain.valueobjects.CNPJ;
-import com.senac.backend.backend.domain.valueobjects.CPF;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +29,9 @@ public class Empresa {
 
     @OneToMany(mappedBy = "empresa")
     private List<Usuario> usuarios;
+
+    @OneToMany(mappedBy = "empresa")
+    private List<Animal> animais;
 
     public Empresa(EmpresaRequest empresa) {
         this.nameFantasia = empresa.nameFantasia();

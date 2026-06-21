@@ -1,3 +1,4 @@
+"use client";
 import {
   Heart,
   Dog,
@@ -8,6 +9,7 @@ import {
   Facebook,
 } from "lucide-react";
 import Link from "next/link";
+import GaleriaPublica from "./components/Galeria";
 
 export default function LandingPage() {
   return (
@@ -36,7 +38,10 @@ export default function LandingPage() {
 
           <div className="hidden md:flex gap-8 font-medium text-slate-600">
             <Link href="#sobre" className="hover:text-teal-600 transition">
-              Como funciona
+              Como Funciona
+            </Link>
+            <Link href="#galeria" className="hover:text-teal-600 transition">
+              Galeria
             </Link>
             <Link href="#contato" className="hover:text-teal-600 transition">
               Contato
@@ -90,72 +95,23 @@ export default function LandingPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
-              href="/login"
+              href="/cadastro-adotante"
               className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 md:py-5 px-8 md:px-10 rounded-2xl text-lg shadow-xl transition-all hover:scale-105 active:scale-95 text-center"
             >
-              Sou Adotante
+              Ser um adotante
             </Link>
             <Link
               href="/login"
               className="w-full sm:w-auto bg-white hover:bg-teal-50 text-teal-700 font-bold py-4 md:py-5 px-8 md:px-10 rounded-2xl text-lg shadow-xl transition-all border-b-4 border-stone-200 active:border-b-0 text-center"
             >
-              Sou uma ONG
+              Já tenho uma conta
             </Link>
           </div>
         </div>
       </header>
 
-      {/* --- O RESTANTE DO CÓDIGO PERMANECE IGUAL --- */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-black text-slate-900 mb-4">
-            Galeria de Animais
-          </h2>
-          <p className="text-slate-500 text-lg">
-            Faça login para visualizar os animais disponíveis para adoção ou
-            gerenciar seus resgates.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 opacity-40 pointer-events-none grayscale">
-          {[
-            {
-              name: "Pipoca",
-              img: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=600",
-            },
-            {
-              name: "Mingau",
-              img: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600",
-            },
-            {
-              name: "Bento",
-              img: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?w=600",
-            },
-          ].map((pet, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-[2rem] border border-stone-100 overflow-hidden shadow-sm"
-            >
-              <div className="h-64 overflow-hidden">
-                <img
-                  src={pet.img}
-                  alt={pet.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-8">
-                <div className="h-6 w-1/2 bg-stone-200 rounded"></div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="mt-[-150px] relative z-20 text-center">
-          <Link
-            href="/login"
-            className="bg-teal-600 text-white font-bold py-4 px-8 rounded-full shadow-2xl hover:bg-teal-700 transition-all inline-flex items-center gap-2"
-          >
-            Acesse para ver todos os animais
-          </Link>
-        </div>
+      <section id="galeria">
+        <GaleriaPublica />
       </section>
 
       <section

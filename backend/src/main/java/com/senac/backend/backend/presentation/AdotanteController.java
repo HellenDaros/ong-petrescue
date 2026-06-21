@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,6 +24,15 @@ public class AdotanteController {
         return ResponseEntity.ok( adotanteService.BuscarAdotantePorId(id));
     }
 
+    @GetMapping("/adotantelogado")
+    public ResponseEntity<AdotanteResponse> buscarAdotanteLogado(
+            Authentication authentication) {
+
+        return ResponseEntity.ok(
+                adotanteService.BuscarAdotanteLogado(authentication)
+        );
+    }
+
     @PostMapping
     @Operation(summary = "Criar novo adotante", description = "Cadastra um novo perfil de adotante e seu usuário de acesso")
     public ResponseEntity<Long> salvar(@RequestBody AdotanteRequest adotante){
@@ -37,3 +47,5 @@ public class AdotanteController {
         return alterarResult ? ResponseEntity.ok("Perfil atualizado com sucesso!") : ResponseEntity.notFound().build();
     }
 }
+
+

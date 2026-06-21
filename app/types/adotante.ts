@@ -5,9 +5,10 @@ export class Adotante extends Usuario {
     id: number | null,
     name: string,
     email: string,
+    cpf: string,
     status: string,
     senha: string,
-    cpf: string,
+    role: string | null,
 
     public identidade: string,
     public endereco: string,
@@ -18,7 +19,7 @@ export class Adotante extends Usuario {
     public telefoneFixo: string,
     public telefoneMovel: string,
   ) {
-    super(id, name, email, status, senha, cpf);
+    super(id, name, email, cpf, status, senha, role);
   }
 }
 

@@ -187,7 +187,9 @@ export default function MeuPerfilOng() {
               </label>
 
               <p className="text-slate-700 font-semibold">
-                {empresa.usuarioAdmin.cpf || "Não informado"}
+                {empresa.usuarioAdmin.cpf
+                  ? empresa.usuarioAdmin.cpf
+                  : "Não informado"}
               </p>
             </div>
           </div>

@@ -26,11 +26,14 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         "/auth/login",
                                         "/usuarios/adm",
+                                        "/animais/publicos",
                                         "/swagger-ui/**",
                                 "/webjars/**",
                                 "/swagger-resources/**",
                                 "/v3/api-docs/**"
                                 ).permitAll()
+                                .requestMatchers(HttpMethod.POST, "/adotantes").permitAll()
+                                .requestMatchers(  "/adotantes**").hasAnyRole("ADMIN_ADOTANTE")
                                 .requestMatchers(  "/empresa**").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole( "ADMIN_ONG")
                                 .requestMatchers("/pets/**", "/animais/**").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
