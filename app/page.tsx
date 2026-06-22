@@ -9,9 +9,22 @@ import {
   Facebook,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "./redux/slices/authSlice";
+import { RootState } from "./redux/store";
 import GaleriaPublica from "./components/Galeria";
 
 export default function LandingPage() {
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const usuario = useSelector((state: RootState) => state.auth.usuario);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/");
+  };
+
   return (
     <div className="min-h-screen bg-stone-50 text-slate-800 font-sans selection:bg-teal-100">
       <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-stone-200 px-6 py-4">
@@ -48,25 +61,44 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <Link href="/login" className="group relative flex items-center">
-            <div className="flex items-center gap-2 bg-slate-900 hover:bg-orange-500 text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 shadow-md hover:shadow-orange-200">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2.5}
-                stroke="currentColor"
-                className="w-4 h-4"
+          {usuario ? (
+            <div className="flex items-center gap-3">
+              <Link href="/home" className="group relative flex items-center">
+                <div className="flex items-center gap-2 bg-slate-900 hover:bg-teal-600 text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 shadow-md hover:shadow-orange-200">
+                  <span>Acessar Minha Conta</span>
+                </div>
+              </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="group relative flex items-center"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-                />
-              </svg>
-              Login
+                <div className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 shadow-md hover:shadow-red-200">
+                  <span>Sair</span>
+                </div>
+              </button>
             </div>
-          </Link>
+          ) : (
+            <Link href="/login" className="group relative flex items-center">
+              <div className="flex items-center gap-2 bg-slate-900 hover:bg-orange-500 text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 shadow-md hover:shadow-orange-200">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2.5}
+                  stroke="currentColor"
+                  className="w-4 h-4"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+                  />
+                </svg>
+                Login
+              </div>
+            </Link>
+          )}
         </div>
       </nav>
 

@@ -29,6 +29,11 @@ export default function Sidebar() {
       icon: LayoutDashboard,
       roles: ["ROLE_ADMIN", "ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO_ONG"],
     },
+    {
+      name: "Página Inicial",
+      href: "/",
+      icon: BookImage,
+    },
     { name: "Ong", href: "/ong", icon: Settings, roles: ["ROLE_ADMIN"] },
     {
       name: "Usuários",
