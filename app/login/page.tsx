@@ -1,18 +1,20 @@
 "use client";
 
-import { Mail, Lock, ArrowRight, PawPrint } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { Usuario } from "../types/usuarios";
+import { Mail, Lock, ArrowRight } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { loginService } from "../services/authService";
 import { useDispatch } from "react-redux";
 import { setToken, setUsuario } from "../redux/slices/authSlice";
 import { buscarUsuarioLogado } from "../services/usuarioService";
 import Link from "next/link";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function LoginFormContent() {
   const router = useRouter();
-
+  const searchParams = useSearchParams();
   const dispatch = useDispatch();
+
+  const redirectTo = searchParams.get("redirectTo");
 
   const handleLogin = async (formData: FormData) => {
     const email = formData.get("email")?.toString() ?? "";
@@ -38,12 +40,16 @@ export default function LoginPage() {
         }),
       );
 
-      router.push("/home");
+      router.push(redirectTo || "/home");
     } catch (error) {
       console.error("Erro ao entrar no sistema:", error);
       alert("Erro ao entrar no sistema");
     }
   };
+
+  const registerLink = redirectTo
+    ? `/cadastro-adotante?redirectTo=${encodeURIComponent(redirectTo)}`
+    : "/cadastro-adotante";
 
   return (
     <div className="min-h-screen w-full bg-stone-50 flex flex-col justify-center items-center p-6">
@@ -129,7 +135,7 @@ export default function LoginPage() {
           <p className="text-slate-500 text-xs font-bold uppercase tracking-tight">
             Ainda não tem conta?
             <Link
-              href="/cadastro-adotante"
+              href={registerLink}
               className="ml-2 text-orange-500 font-black hover:text-teal-600 transition-colors underline underline-offset-4 decoration-2"
             >
               Cadastre-se agora
@@ -142,5 +148,13 @@ export default function LoginPage() {
         © 2026 PetRescue
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-stone-50 text-slate-500">Carregando...</div>}>
+      <LoginFormContent />
+    </Suspense>
   );
 }

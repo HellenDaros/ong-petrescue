@@ -25,4 +25,5 @@ export class Adotante extends Usuario {
 
 export interface AdotanteFormProps {
   adotanteExistente?: Adotante;
+  redirectTo?: string;
 }

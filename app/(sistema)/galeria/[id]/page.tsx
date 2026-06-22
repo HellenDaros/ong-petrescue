@@ -7,6 +7,10 @@ import { ChevronLeft, Heart, Share2 } from "lucide-react";
 import { Animal } from "@/app/types/animal";
 import { buscarAnimalPorId } from "@/app/services/animalService";
 import { useFavoritos } from "@/app/redux/useFavoritos";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+import { criarSolicitacaoAdocao } from "@/app/services/adocaoService";
+import { buscarAdotanteLogado } from "@/app/services/adotanteService";
 
 export default function DetalhesAnimalPage() {
   const params = useParams();
@@ -15,6 +19,30 @@ export default function DetalhesAnimalPage() {
 
   const [animal, setAnimal] = useState<Animal | null>(null);
   const [carregando, setCarregando] = useState(true);
+
+  const usuario = useSelector((state: RootState) => state.auth.usuario);
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [enderecoAnimal, setEnderecoAnimal] = useState("");
+  const [concordaTermos, setConcordaTermos] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+
+  useEffect(() => {
+    const carregarAdotante = async () => {
+      try {
+        const profile = await buscarAdotanteLogado();
+        if (profile && profile.endereco) {
+          const fullAddress = `${profile.endereco}, ${profile.bairro}, ${profile.cidade} - ${profile.uf}`;
+          setEnderecoAnimal(fullAddress);
+        }
+      } catch (error) {
+        console.error("Erro ao carregar dados do adotante:", error);
+      }
+    };
+
+    if (usuario && usuario.role === "ROLE_ADOTANTE") {
+      carregarAdotante();
+    }
+  }, [usuario]);
 
   useEffect(() => {
     const buscarDados = async () => {
@@ -34,6 +62,39 @@ export default function DetalhesAnimalPage() {
 
     buscarDados();
   }, [params.id]);
+
+  const handleEnviarSolicitacao = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!enderecoAnimal.trim()) {
+      alert("Por favor, preencha o endereço onde o animal ficará.");
+      return;
+    }
+    if (!concordaTermos) {
+      alert("Você deve concordar com os termos da Lei Federal 9.605/98 para continuar.");
+      return;
+    }
+    if (animal?.id === undefined || animal?.id === null) return;
+
+    setEnviando(true);
+    try {
+      const sucesso = await criarSolicitacaoAdocao({
+        animalId: animal.id,
+        enderecoAnimal: enderecoAnimal,
+      });
+
+      if (sucesso) {
+        alert("Solicitação de adoção enviada com sucesso!");
+        router.push("/adocoes/minhas");
+      } else {
+        alert("Erro ao enviar a solicitação. Tente novamente.");
+      }
+    } catch (error) {
+      console.error("Erro ao solicitar adoção:", error);
+      alert("Erro ao solicitar adoção.");
+    } finally {
+      setEnviando(false);
+    }
+  };
 
   if (carregando) {
     return (
@@ -131,18 +192,84 @@ export default function DetalhesAnimalPage() {
               </div>
             </div>
 
-            <div className="mt-12 flex flex-col sm:flex-row gap-3">
-              <button
-                disabled={!isDisponivel}
-                className={`flex-[2] py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg active:scale-95 ${
-                  isDisponivel
-                    ? "bg-orange-500 hover:bg-orange-600 text-white shadow-orange-100"
-                    : "bg-slate-100 text-slate-300 cursor-not-allowed shadow-none"
-                }`}
-              >
-                {isDisponivel ? "Tenho Interesse" : "Pet não disponível"}
-              </button>
-            </div>
+            {mostrarFormulario ? (
+              <form onSubmit={handleEnviarSolicitacao} className="mt-8 bg-stone-50 p-6 rounded-3xl border border-stone-200 space-y-6">
+                <h3 className="text-lg font-black text-slate-800">Solicitação de Adoção</h3>
+                
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">
+                    Endereço onde ficará o animal
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={enderecoAnimal}
+                    onChange={(e) => setEnderecoAnimal(e.target.value)}
+                    placeholder="Rua, Número, Bairro, Cidade - UF"
+                    className="w-full bg-white border-2 border-stone-200 focus:border-teal-500 outline-none px-5 py-3 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                  />
+                </div>
+
+                <div className="bg-white p-4 rounded-2xl border border-stone-200 space-y-3">
+                  <h4 className="text-xs font-black text-orange-500 uppercase tracking-wider">
+                    Lei Federal nº 9.605/98 (Artigo 32)
+                  </h4>
+                  <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                    Praticar ato de abuso, maus-tratos, ferir ou mutilar animais silvestres, domésticos ou domesticados, nativos ou exóticos é crime federal, sujeito a pena de detenção e multa. Para cães e gatos, a pena é de reclusão de 2 a 5 anos, multa e proibição da guarda.
+                  </p>
+                  
+                  <label className="flex items-start gap-3 cursor-pointer pt-2">
+                    <input
+                      type="checkbox"
+                      required
+                      checked={concordaTermos}
+                      onChange={(e) => setConcordaTermos(e.target.checked)}
+                      className="mt-1 w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-stone-300"
+                    />
+                    <span className="text-xs text-slate-600 font-bold select-none">
+                      Estou ciente e concordo com a Lei Federal 9.605/98 e assumo o compromisso de guarda responsável do animal.
+                    </span>
+                  </label>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setMostrarFormulario(false)}
+                    className="flex-1 py-4 bg-white border border-stone-200 text-slate-500 hover:bg-stone-100 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={enviando}
+                    className="flex-[2] py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-orange-100 active:scale-95 disabled:bg-slate-300"
+                  >
+                    {enviando ? "Enviando..." : "Confirmar Adoção"}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="mt-12 flex flex-col sm:flex-row gap-3">
+                <button
+                  disabled={!isDisponivel}
+                  onClick={() => {
+                    if (usuario?.role !== "ROLE_ADOTANTE") {
+                      alert("Apenas usuários adotantes podem manifestar interesse em adoção.");
+                      return;
+                    }
+                    setMostrarFormulario(true);
+                  }}
+                  className={`flex-[2] py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg active:scale-95 ${
+                    isDisponivel
+                      ? "bg-orange-500 hover:bg-orange-600 text-white shadow-orange-100"
+                      : "bg-slate-100 text-slate-300 cursor-not-allowed shadow-none"
+                  }`}
+                >
+                  {isDisponivel ? "Tenho Interesse" : "Pet não disponível"}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -12,6 +12,7 @@ import {
   PawPrint,
   FilePen,
   User,
+  FileText,
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
@@ -26,14 +27,14 @@ export default function Sidebar() {
       name: "Home",
       href: "/home",
       icon: LayoutDashboard,
-      roles: ["ROLE_ADMIN", "ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO"],
+      roles: ["ROLE_ADMIN", "ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO_ONG"],
     },
     { name: "Ong", href: "/ong", icon: Settings, roles: ["ROLE_ADMIN"] },
     {
       name: "Usuários",
       href: "/usuarios",
       icon: Users,
-      roles: ["ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO"],
+      roles: ["ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO_ONG"],
     },
     {
       name: "Adotante",
@@ -48,10 +49,22 @@ export default function Sidebar() {
       roles: ["ROLE_ADOTANTE"],
     },
     {
+      name: "Minhas Adoções",
+      href: "/adocoes/minhas",
+      icon: FilePen,
+      roles: ["ROLE_ADOTANTE"],
+    },
+    {
       name: "Animais",
       href: "/animais",
       icon: PawPrint,
-      roles: ["ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO"],
+      roles: ["ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO_ONG"],
+    },
+    {
+      name: "Gerenciar Adoções",
+      href: "/adocoes/gerenciamento",
+      icon: FileText,
+      roles: ["ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO_ONG"],
     },
   ];
 

@@ -16,7 +16,10 @@ import {
 import { salvarAdotante } from "@/app/services/adotanteService";
 import { Adotante, AdotanteFormProps } from "@/app/types/adotante";
 
-export default function AdotanteForm({ adotanteExistente }: AdotanteFormProps) {
+export default function AdotanteForm({
+  adotanteExistente,
+  redirectTo,
+}: AdotanteFormProps) {
   const router = useRouter();
 
   const [adotante, setAdotante] = useState<Adotante>(
@@ -89,7 +92,15 @@ export default function AdotanteForm({ adotanteExistente }: AdotanteFormProps) {
     }
 
     alert(isEdicao ? "Perfil atualizado com sucesso!" : "Cadastro realizado!");
-    router.push(isEdicao ? "/home" : "/login");
+    if (isEdicao) {
+      router.push("/home");
+    } else {
+      if (redirectTo) {
+        router.push(`/login?redirectTo=${encodeURIComponent(redirectTo)}`);
+      } else {
+        router.push("/login");
+      }
+    }
   };
 
   return (

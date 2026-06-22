@@ -55,9 +55,15 @@ public class AnimalService {
         try {
             Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-            Animal animal = animalRepository
-                    .findByIdAndEmpresa_Id(id, usuarioLogado.getEmpresa().getId())
-                    .orElseThrow(() -> new RuntimeException("Animal não encontrado."));
+            Animal animal;
+            if ("ROLE_ADOTANTE".equals(usuarioLogado.getRole())) {
+                animal = animalRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Animal não encontrado."));
+            } else {
+                animal = animalRepository
+                        .findByIdAndEmpresa_Id(id, usuarioLogado.getEmpresa().getId())
+                        .orElseThrow(() -> new RuntimeException("Animal não encontrado."));
+            }
 
             return new AnimalResponse(animal);
 

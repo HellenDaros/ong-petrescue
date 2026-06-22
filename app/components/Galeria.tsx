@@ -6,10 +6,25 @@ import { Heart, MapPin, Calendar, ArrowRight, Plus } from "lucide-react";
 import { Animal } from "@/app/types/animal";
 import { buscarListaAnimaisPublico } from "@/app/services/animalService";
 import { useFavoritos } from "@/app/redux/useFavoritos";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+import { useRouter } from "next/navigation";
 
 export default function GaleriaPublica() {
   const [listaAnimais, setListaAnimais] = useState<Animal[]>([]);
   const { addFavorito, removeFavorito, isFavorito } = useFavoritos();
+  const usuario = useSelector((state: RootState) => state.auth.usuario);
+  const router = useRouter();
+
+  const handleCardClick = (animalId: number | null) => {
+    if (animalId === null) return;
+    if (!usuario) {
+      alert("Você deve fazer login para continuar. Caso não tenha uma conta, crie uma.");
+      router.push(`/login?redirectTo=/galeria/${animalId}`);
+    } else {
+      router.push(`/galeria/${animalId}`);
+    }
+  };
 
   const carregarDados = async () => {
     try {
@@ -63,10 +78,10 @@ export default function GaleriaPublica() {
           const favoritado = animal.id !== null && isFavorito(animal.id);
 
           return (
-            <Link
+            <div
               key={animal.id}
-              href={`/galeria/${animal.id}`}
-              className="group bg-white rounded-[2.5rem] overflow-hidden border border-stone-100 shadow-md transition-all hover:-translate-y-2 hover:shadow-xl relative"
+              onClick={() => handleCardClick(animal.id)}
+              className="group bg-white rounded-[2.5rem] overflow-hidden border border-stone-100 shadow-md transition-all hover:-translate-y-2 hover:shadow-xl relative cursor-pointer"
             >
               <button
                 onClick={(e) => handleToggleFavorito(e, animal)}
@@ -122,7 +137,7 @@ export default function GaleriaPublica() {
                   </div>
                 </div>
               </div>
-            </Link>
+            </div>
           );
         })}
 
