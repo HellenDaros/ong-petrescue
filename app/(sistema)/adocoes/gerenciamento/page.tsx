@@ -19,10 +19,13 @@ import {
   ClipboardList,
   Check,
   X,
+  CalendarDays,
 } from "lucide-react";
 
 export default function GerenciamentoAdocoesPage() {
-  const [solicitacoes, setSolicitacoes] = useState<SolicitacaoAdocaoResponse[]>([]);
+  const [solicitacoes, setSolicitacoes] = useState<SolicitacaoAdocaoResponse[]>(
+    [],
+  );
   const [carregando, setCarregando] = useState(true);
   const [processandoId, setProcessandoId] = useState<number | null>(null);
 
@@ -41,7 +44,10 @@ export default function GerenciamentoAdocoesPage() {
     carregarSolicitacoes();
   }, []);
 
-  const handleResponder = async (id: number, novoStatus: "APROVADO" | "REJEITADO") => {
+  const handleResponder = async (
+    id: number,
+    novoStatus: "APROVADO" | "REJEITADO",
+  ) => {
     const confirmacao = confirm(
       `Tem certeza que deseja ${novoStatus === "APROVADO" ? "APROVAR" : "REJEITAR"} esta solicitação de adoção?`,
     );
@@ -54,7 +60,6 @@ export default function GerenciamentoAdocoesPage() {
         alert(
           `Solicitação de adoção ${novoStatus === "APROVADO" ? "aprovada" : "rejeitada"} com sucesso!`,
         );
-        // Atualizar lista local
         setSolicitacoes((prev) =>
           prev.map((sol) =>
             sol.id === id ? { ...sol, statusAdocao: novoStatus } : sol,
@@ -97,6 +102,12 @@ export default function GerenciamentoAdocoesPage() {
     }
   };
 
+  const formatarData = (dataString?: string) => {
+    if (!dataString) return "-";
+    const data = new Date(dataString);
+    return data.toLocaleDateString("pt-BR");
+  };
+
   if (carregando) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -106,14 +117,17 @@ export default function GerenciamentoAdocoesPage() {
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div>
-        <h1 className="text-3xl font-black text-slate-800 tracking-tight">
-          Gerenciamento de Adoções
-        </h1>
-        <p className="text-slate-500 text-sm font-medium mt-1">
-          Analise e responda às solicitações de adoção para os pets da sua ONG.
-        </p>
+    <div className="w-full max-w-7xl mx-auto animate-in fade-in duration-500">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div>
+          <h1 className="text-3xl font-black text-slate-800 tracking-tight">
+            Gerenciamento de Adoções
+          </h1>
+          <p className="text-slate-500 text-sm font-medium">
+            Analise e responda às solicitações de adoção para os pets da sua
+            ONG.
+          </p>
+        </div>
       </div>
 
       {solicitacoes.length === 0 ? (
@@ -125,172 +139,335 @@ export default function GerenciamentoAdocoesPage() {
             Nenhuma solicitação recebida
           </h3>
           <p className="text-slate-500 text-sm font-medium mt-2 max-w-sm mx-auto">
-            Não há solicitações de adoção pendentes ou processadas para seus animais no momento.
+            Não há solicitações de adoção pendentes ou processadas para seus
+            animais no momento.
           </p>
         </div>
       ) : (
-        <div className="space-y-6">
-          {solicitacoes.map((sol) => (
-            <div
-              key={sol.id}
-              className="bg-white rounded-[2.5rem] border border-stone-100 shadow-md p-6 lg:p-8 flex flex-col xl:flex-row gap-8 relative overflow-hidden"
-            >
-              {/* Pet Info */}
-              <div className="w-full xl:w-72 flex-shrink-0 flex flex-col justify-between border-b xl:border-b-0 xl:border-r border-stone-100 pb-6 xl:pb-0 xl:pr-8">
-                <div className="space-y-4">
-                  <div className="relative h-44 w-full rounded-3xl overflow-hidden bg-stone-100">
-                    <img
-                      src={sol.animal.urlFoto}
-                      alt={sol.animal.nameAnimal}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-3 left-3">
-                      <span className="bg-white/95 backdrop-blur-sm text-[#008080] text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg shadow-sm">
-                        {sol.animal.especie}
-                      </span>
-                    </div>
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-black text-slate-800 tracking-tight">
-                      {sol.animal.nameAnimal}
-                    </h2>
-                    <p className="text-[#008080] font-black text-xs uppercase tracking-widest mt-1">
-                      Raça: <span className="text-slate-400">{sol.animal.raca}</span>
-                    </p>
-                  </div>
-                </div>
+        <div className="bg-white rounded-[2.5rem] border border-stone-100 shadow-md overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse min-w-[1000px]">
+              <thead>
+                <tr className="bg-stone-50 border-b border-stone-100 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                  <th className="px-6 py-5 whitespace-nowrap">Pet</th>
+                  <th className="px-6 py-5 whitespace-nowrap">Adotante</th>
+                  <th className="px-6 py-5 whitespace-nowrap">Contato</th>
+                  <th className="px-6 py-5 whitespace-nowrap">
+                    Endereço Adotante
+                  </th>
+                  <th className="px-6 py-5 whitespace-nowrap">
+                    Endereço Destino
+                  </th>
+                  <th className="px-6 py-5 whitespace-nowrap">
+                    Data da Solicitação
+                  </th>
+                  <th className="px-6 py-5 whitespace-nowrap">Status</th>
+                  <th className="px-6 py-5 text-center whitespace-nowrap">
+                    Ações
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-stone-50">
+                {solicitacoes.map((sol) => (
+                  <tr
+                    key={sol.id}
+                    className="hover:bg-stone-50/50 transition-colors group"
+                  >
+                    {/* Pet Info - Foto Menor */}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0 shadow-sm border border-stone-200">
+                          <img
+                            src={sol.animal.urlFoto}
+                            alt={sol.animal.nameAnimal}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div>
+                          <p className="text-sm font-black text-slate-800 leading-none">
+                            {sol.animal.nameAnimal}
+                          </p>
+                          <p className="text-teal-600 font-bold text-[10px] uppercase tracking-widest mt-1">
+                            {sol.animal.especie}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
 
-                <div className="mt-6 flex flex-col gap-2">
-                  <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">
-                    Status da Solicitação
-                  </span>
-                  <div>{getStatusBadge(sol.statusAdocao)}</div>
-                </div>
-              </div>
+                    <td className="px-6 py-4">
+                      <div className="space-y-1">
+                        <p className="text-sm font-bold text-slate-700">
+                          {sol.adotante.name}
+                        </p>
+                        <div className="flex flex-col text-[11px] text-slate-500 font-medium">
+                          <span>CPF: {sol.adotante.cpf?.numero || "N/A"}</span>
+                          {sol.adotante.identidade && (
+                            <>
+                              <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+                              <span>RG: {sol.adotante.identidade}</span>
+                            </>
+                          )}
+                        </div>
+                        {sol.adotante.profissao && (
+                          <p className="text-[10px] text-slate-400 uppercase tracking-wider flex items-center gap-1 mt-0.5">
+                            <Briefcase size={10} />
+                            {sol.adotante.profissao}
+                          </p>
+                        )}
+                      </div>
+                    </td>
 
-              {/* Adopter & Request Details */}
-              <div className="flex-1 flex flex-col justify-between space-y-6">
-                <div>
-                  <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <User size={16} className="text-teal-600" />
-                    Dados do Adotante
-                  </h3>
+                    <td className="px-6 py-4">
+                      <div className="space-y-1.5">
+                        <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
+                          <Phone size={12} className="text-stone-400" />
+                          {sol.adotante.telefoneMovel}
+                        </div>
+                        <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
+                          <Mail size={12} className="text-stone-400" />
+                          <span
+                            className="truncate max-w-[150px]"
+                            title={sol.adotante.email}
+                          >
+                            {sol.adotante.email}
+                          </span>
+                        </div>
+                      </div>
+                    </td>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                        Nome Completo
-                      </span>
-                      <p className="text-slate-700 font-bold text-sm">{sol.adotante.name}</p>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                        CPF
-                      </span>
-                      <p className="text-slate-700 font-bold text-sm">
-                        {sol.adotante.cpf?.numero || "Não informado"}
-                      </p>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                        Identidade (RG)
-                      </span>
-                      <p className="text-slate-700 font-bold text-sm">
-                        {sol.adotante.identidade || "Não informado"}
-                      </p>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                        Contato
-                      </span>
-                      <p className="text-slate-700 font-bold text-sm flex items-center gap-1.5">
-                        <Phone size={14} className="text-stone-400" />
-                        {sol.adotante.telefoneMovel}
-                      </p>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                        E-mail
-                      </span>
-                      <p className="text-slate-700 font-bold text-sm flex items-center gap-1.5">
-                        <Mail size={14} className="text-stone-400" />
-                        {sol.adotante.email}
-                      </p>
-                    </div>
-
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                        Profissão
-                      </span>
-                      <p className="text-slate-700 font-bold text-sm flex items-center gap-1.5">
-                        <Briefcase size={14} className="text-stone-400" />
-                        {sol.adotante.profissao}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="h-px bg-stone-100 w-full" />
-
-                <div className="space-y-4">
-                  <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest flex items-center gap-2">
-                    <FileText size={16} className="text-teal-600" />
-                    Detalhes do Pedido
-                  </h3>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-stone-50 p-5 rounded-3xl border border-stone-100">
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                        <MapPin size={12} className="text-stone-400" />
-                        Endereço de destino do pet
-                      </span>
-                      <p className="text-slate-700 font-bold text-sm leading-relaxed">
+                    <td className="px-6 py-4">
+                      <p className="text-xs font-medium text-slate-600 leading-relaxed max-w-[200px]">
                         {sol.enderecoAnimal}
                       </p>
-                    </div>
+                    </td>
 
-                    <div className="space-y-1">
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
-                        Cadastro do Adotante
-                      </span>
-                      <p className="text-slate-700 font-bold text-sm leading-relaxed">
-                        {sol.adotante.endereco}, {sol.adotante.bairro}
-                        <br />
-                        {sol.adotante.cidade} - {sol.adotante.uf}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                    <td className="px-6 py-4">
+                      <div className="flex flex-col text-xs font-medium text-slate-600 leading-relaxed max-w-[200px]">
+                        <span>{sol.adotante.endereco} -</span>
+                        <span>{sol.adotante.bairro}</span>
+                        <span className="text-slate-400 mt-0.5">
+                          {sol.adotante.cidade} / {sol.adotante.uf}
+                        </span>
+                      </div>
+                    </td>
 
-                {sol.statusAdocao === "PENDENTE" && (
-                  <div className="flex justify-end gap-3 pt-4">
-                    <button
-                      onClick={() => handleResponder(sol.id, "REJEITADO")}
-                      disabled={processandoId !== null}
-                      className="px-6 py-3.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-2 disabled:bg-slate-100 disabled:text-slate-400"
-                    >
-                      <X size={16} strokeWidth={2.5} />
-                      Recusar Adoção
-                    </button>
-                    <button
-                      onClick={() => handleResponder(sol.id, "APROVADO")}
-                      disabled={processandoId !== null}
-                      className="px-6 py-3.5 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-2 shadow-lg shadow-teal-100 disabled:bg-slate-300"
-                    >
-                      <Check size={16} strokeWidth={2.5} />
-                      Aprovar Adoção
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
+                        <CalendarDays size={12} className="text-slate-400" />
+                        {formatarData(sol.dataSolicitacao)}
+                      </div>
+                    </td>
+
+                    {/* Status Info */}
+                    <td className="px-6 py-4">
+                      {getStatusBadge(sol.statusAdocao)}
+                    </td>
+
+                    {/* Ações */}
+                    <td className="px-6 py-4">
+                      {sol.statusAdocao === "PENDENTE" ? (
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => handleResponder(sol.id, "REJEITADO")}
+                            disabled={processandoId !== null}
+                            title="Recusar"
+                            className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl transition-colors disabled:bg-slate-100 disabled:text-slate-400"
+                          >
+                            <X size={16} strokeWidth={2.5} />
+                          </button>
+                          <button
+                            onClick={() => handleResponder(sol.id, "APROVADO")}
+                            disabled={processandoId !== null}
+                            title="Aprovar"
+                            className="p-2.5 bg-teal-50 hover:bg-teal-100 text-teal-600 rounded-xl transition-colors disabled:bg-slate-100 disabled:text-slate-400"
+                          >
+                            <Check size={16} strokeWidth={2.5} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex justify-center text-slate-300">
+                          <span className="text-[10px] font-black uppercase tracking-widest">
+                            Concluído
+                          </span>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
   );
 }
+// {/* <div className="space-y-6">
+//           {solicitacoes.map((sol) => (
+//             <div
+//               key={sol.id}
+//               className="bg-white rounded-[2.5rem] border border-stone-100 shadow-md p-6 lg:p-8 flex flex-col xl:flex-row gap-8 relative overflow-hidden"
+//             >
+//               {/* Pet Info */}
+//               <div className="w-full xl:w-72 flex-shrink-0 flex flex-col justify-between border-b xl:border-b-0 xl:border-r border-stone-100 pb-6 xl:pb-0 xl:pr-8">
+//                 <div className="space-y-4">
+//                   <div className="relative h-44 w-full rounded-3xl overflow-hidden bg-stone-100">
+//                     <img
+//                       src={sol.animal.urlFoto}
+//                       alt={sol.animal.nameAnimal}
+//                       className="w-full h-full object-cover"
+//                     />
+//                     <div className="absolute top-3 left-3">
+//                       <span className="bg-white/95 backdrop-blur-sm text-[#008080] text-[8px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg shadow-sm">
+//                         {sol.animal.especie}
+//                       </span>
+//                     </div>
+//                   </div>
+//                   <div>
+//                     <h2 className="text-2xl font-black text-slate-800 tracking-tight">
+//                       {sol.animal.nameAnimal}
+//                     </h2>
+//                     <p className="text-[#008080] font-black text-xs uppercase tracking-widest mt-1">
+//                       Raça:{" "}
+//                       <span className="text-slate-400">{sol.animal.raca}</span>
+//                     </p>
+//                   </div>
+//                 </div>
+
+//                 <div className="mt-6 flex flex-col gap-2">
+//                   <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">
+//                     Status da Solicitação
+//                   </span>
+//                   <div>{getStatusBadge(sol.statusAdocao)}</div>
+//                 </div>
+//               </div>
+
+//               {/* Adopter & Request Details */}
+//               <div className="flex-1 flex flex-col justify-between space-y-6">
+//                 <div>
+//                   <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest mb-4 flex items-center gap-2">
+//                     <User size={16} className="text-teal-600" />
+//                     Dados do Adotante
+//                   </h3>
+
+//                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+//                     <div className="space-y-1">
+//                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+//                         Nome Completo
+//                       </span>
+//                       <p className="text-slate-700 font-bold text-sm">
+//                         {sol.adotante.name}
+//                       </p>
+//                     </div>
+
+//                     <div className="space-y-1">
+//                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+//                         CPF
+//                       </span>
+//                       <p className="text-slate-700 font-bold text-sm">
+//                         {sol.adotante.cpf?.numero || "Não informado"}
+//                       </p>
+//                     </div>
+
+//                     <div className="space-y-1">
+//                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+//                         Identidade (RG)
+//                       </span>
+//                       <p className="text-slate-700 font-bold text-sm">
+//                         {sol.adotante.identidade || "Não informado"}
+//                       </p>
+//                     </div>
+
+//                     <div className="space-y-1">
+//                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+//                         Contato
+//                       </span>
+//                       <p className="text-slate-700 font-bold text-sm flex items-center gap-1.5">
+//                         <Phone size={14} className="text-stone-400" />
+//                         {sol.adotante.telefoneMovel}
+//                       </p>
+//                     </div>
+
+//                     <div className="space-y-1">
+//                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+//                         E-mail
+//                       </span>
+//                       <p className="text-slate-700 font-bold text-sm flex items-center gap-1.5">
+//                         <Mail size={14} className="text-stone-400" />
+//                         {sol.adotante.email}
+//                       </p>
+//                     </div>
+
+//                     <div className="space-y-1">
+//                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+//                         Profissão
+//                       </span>
+//                       <p className="text-slate-700 font-bold text-sm flex items-center gap-1.5">
+//                         <Briefcase size={14} className="text-stone-400" />
+//                         {sol.adotante.profissao}
+//                       </p>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 <div className="h-px bg-stone-100 w-full" />
+
+//                 <div className="space-y-4">
+//                   <h3 className="text-sm font-black text-slate-800 uppercase tracking-widest flex items-center gap-2">
+//                     <FileText size={16} className="text-teal-600" />
+//                     Detalhes do Pedido
+//                   </h3>
+
+//                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-stone-50 p-5 rounded-3xl border border-stone-100">
+//                     <div className="space-y-1">
+//                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider flex items-center gap-1">
+//                         <MapPin size={12} className="text-stone-400" />
+//                         Endereço de destino do pet
+//                       </span>
+//                       <p className="text-slate-700 font-bold text-sm leading-relaxed">
+//                         {sol.enderecoAnimal}
+//                       </p>
+//                     </div>
+
+//                     <div className="space-y-1">
+//                       <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">
+//                         Cadastro do Adotante
+//                       </span>
+//                       <p className="text-slate-700 font-bold text-sm leading-relaxed">
+//                         {sol.adotante.endereco}, {sol.adotante.bairro}
+//                         <br />
+//                         {sol.adotante.cidade} - {sol.adotante.uf}
+//                       </p>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {sol.statusAdocao === "PENDENTE" && (
+//                   <div className="flex justify-end gap-3 pt-4">
+//                     <button
+//                       onClick={() => handleResponder(sol.id, "REJEITADO")}
+//                       disabled={processandoId !== null}
+//                       className="px-6 py-3.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-2 disabled:bg-slate-100 disabled:text-slate-400"
+//                     >
+//                       <X size={16} strokeWidth={2.5} />
+//                       Recusar Adoção
+//                     </button>
+//                     <button
+//                       onClick={() => handleResponder(sol.id, "APROVADO")}
+//                       disabled={processandoId !== null}
+//                       className="px-6 py-3.5 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-black text-xs uppercase tracking-widest transition-all flex items-center gap-2 shadow-lg shadow-teal-100 disabled:bg-slate-300"
+//                     >
+//                       <Check size={16} strokeWidth={2.5} />
+//                       Aprovar Adoção
+//                     </button>
+//                   </div>
+//                 )}
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+//       )}
+//     </div>
+//   );
+// }
+//          */}

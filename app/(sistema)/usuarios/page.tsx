@@ -35,48 +35,6 @@ export default function Usuarios() {
   };
 
   return (
-    //         <div>
-    //             <div>
-    //                 <h1>Gstão de Usuários</h1>
-    //                 <Link href="/usuario/novo"> + Novo Usuário</Link>
-    //             </div>
-
-    //             <div className="overflow-x-auto">
-    //             <table>
-    //                 <thead>
-    //                     <tr>
-    //                         <th>Código</th>
-    //                         <th>Nome</th>
-    //                         <th>CPF</th>
-    //                         <th>Status</th>
-    //                         <th>Ações</th>
-    //                     </tr>
-    //                 </thead>
-    //                 <tbody>
-    //                     {usuarios.map((usuario) =>
-    //                     <tr key={usuario.codigo}>
-    //                         <td>{usuario.codigo}</td>
-    //                         <td>{usuario.name}</td>
-    //                         <td>{usuario.cpf}</td>
-    //                         <td>{usuario.ativo ? 'Ativo' : 'Inativo'}</td>
-    //                         <td>
-    //                             <Link href={`/usuarios/${usuario.codigo}/editar`}>Editar</Link>
-    //                             <button onClick={()=>handleAlertStatus}>{usuario.ativo? 'Inativar' : 'Ativar'} </button>
-    //                         </td>
-    //                     </tr>
-    //                     )}
-    //                     {usuarios.length === 0 &&
-    //                     (
-    //                         <tr>
-    //                             <td>Nenhum usuario encontrado</td>
-    //                         </tr>
-    //                     )}
-    //                 </tbody>
-    //             </table>
-    //             </div>
-    //         </div>
-    //     )
-    // }
     <div className="w-full max-w-7xl mx-auto animate-in fade-in duration-500">
       {/* Cabeçalho da Página */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
