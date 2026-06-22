@@ -106,12 +106,9 @@ export default function GaleriaPublica() {
                       {animal.raca}
                     </p>
                   </div>
-                  <div className="bg-stone-50 w-9 h-9 rounded-2xl flex items-center justify-center group-hover:bg-orange-50 transition-colors">
-                    <ArrowRight
-                      size={18}
-                      className="text-stone-300 group-hover:text-orange-500 transition-colors"
-                    />
-                  </div>
+                  <button className="bg-stone-100 hover:bg-orange-100 text-orange-500 px-5 py-2.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-colors shadow-sm active:scale-95">
+                    Quero Adotar!
+                  </button>
                 </div>
 
                 <div className="flex justify-between items-center pt-4 border-t border-stone-50">

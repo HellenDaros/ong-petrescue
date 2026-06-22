@@ -41,7 +41,6 @@ export default function Sidebar() {
       icon: User,
       roles: ["ROLE_ADOTANTE"],
     },
-    { name: "Galeria", href: "/galeria", icon: BookImage },
     {
       name: "Favoritos",
       href: "/favoritos",
@@ -91,8 +90,6 @@ export default function Sidebar() {
         {menuPermitido.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
-
-          console.log("usuario sidebar", usuario);
 
           return (
             <Link
