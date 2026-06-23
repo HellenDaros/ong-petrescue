@@ -200,7 +200,7 @@ export default function GerenciamentoAdocoesPage() {
                           {sol.adotante.name}
                         </p>
                         <div className="flex flex-col text-[11px] text-slate-500 font-medium">
-                          <span>CPF: {sol.adotante.cpf?.numero || "N/A"}</span>
+                          <span>CPF: {sol.adotante.cpf || "N/A"}</span>
                           {sol.adotante.identidade && (
                             <>
                               <span className="w-1 h-1 rounded-full bg-slate-300"></span>

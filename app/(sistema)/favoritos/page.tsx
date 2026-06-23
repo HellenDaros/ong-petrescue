@@ -19,11 +19,11 @@ export default function FavoritosPage() {
           </p>
         </div>
 
-        <Link href="/galeria">
+        {/* <Link href="/galeria">
           <button className="flex items-center gap-2 bg-stone-100 hover:bg-stone-200 text-slate-600 px-6 py-3 rounded-2xl font-black transition-all active:scale-95">
             Explorar mais pets
           </button>
-        </Link>
+        </Link> */}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -11,9 +11,7 @@ export interface SolicitacaoAdocaoResponse {
     id: number;
     name: string;
     email: string;
-    cpf: {
-      numero: string;
-    } | null;
+    cpf: string | null;
     identidade: string;
     endereco: string;
     bairro: string;
@@ -47,9 +45,12 @@ export async function criarSolicitacaoAdocao(
   }
 }
 
-export async function buscarMinhasAdocoes(): Promise<SolicitacaoAdocaoResponse[]> {
+export async function buscarMinhasAdocoes(): Promise<
+  SolicitacaoAdocaoResponse[]
+> {
   try {
-    const response = await api.get<SolicitacaoAdocaoResponse[]>("/adocoes/minhas");
+    const response =
+      await api.get<SolicitacaoAdocaoResponse[]>("/adocoes/minhas");
     if (response.status === 200) {
       return response.data;
     }

@@ -9,7 +9,7 @@ import {
 } from "../redux/slices/favoritoSlice";
 import { Animal } from "../types/animal";
 import { useEffect } from "react";
-import { buscarListaAnimais } from "../services/animalService";
+import { buscarListaAnimaisPublico } from "../services/animalService";
 
 export const useFavoritos = () => {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ export const useFavoritos = () => {
     if (!token || favoritos.length === 0) return;
 
     try {
-      const animaisServidor = await buscarListaAnimais();
+      const animaisServidor = await buscarListaAnimaisPublico();
       if (animaisServidor.length === 0) return;
 
       const favsAtualizados = favoritos.map((favLocal) => {

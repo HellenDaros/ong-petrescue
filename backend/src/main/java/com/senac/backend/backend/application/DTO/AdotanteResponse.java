@@ -1,12 +1,11 @@
 package com.senac.backend.backend.application.DTO;
 import com.senac.backend.backend.domain.entities.Adotante;
-import com.senac.backend.backend.domain.valueobjects.CPF;
 
 public record AdotanteResponse(
         Long id,
         String name,
         String email,
-        CPF cpf,
+        String cpf,
         String identidade,
         String endereco,
         String bairro,
@@ -22,7 +21,7 @@ public record AdotanteResponse(
                 adotante.getId(),
                 adotante.getUsuario().getName(),
                 adotante.getUsuario().getEmail(),
-                adotante.getUsuario().getCpf(),
+                adotante.getUsuario().getCpf() != null ? adotante.getUsuario().getCpf().toString() : null,
                 adotante.getIdentidade(),
                 adotante.getEndereco(),
                 adotante.getBairro(),
@@ -34,3 +33,4 @@ public record AdotanteResponse(
         );
     }
 }
+
