@@ -11,6 +11,7 @@ export class Adotante extends Usuario {
     role: string | null,
 
     public identidade: string,
+    public cep: string,
     public endereco: string,
     public bairro: string,
     public cidade: string,

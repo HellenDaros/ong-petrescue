@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { salvarAdotante } from "@/app/services/adotanteService";
 import { Adotante, AdotanteFormProps } from "@/app/types/adotante";
+import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
 
 export default function AdotanteForm({
   adotanteExistente,
@@ -40,8 +41,44 @@ export default function AdotanteForm({
         "",
         "",
         "",
+        "",
       ),
   );
+
+  const handleBuscarCep = async (cep: string) => {
+    const cepLimpo = cep.replace(/\D/g, "");
+
+    if (cepLimpo.length !== 8) {
+      return;
+    }
+
+    try {
+      const endereco = await buscarEnderecoPorCep(cep);
+
+      setAdotante((prev) => ({
+        ...prev,
+        cep: endereco.cep,
+        endereco: endereco.logradouro,
+        bairro: endereco.bairro,
+        cidade: endereco.cidade,
+        uf: endereco.uf,
+      }));
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    }
+  };
+
+  const handleCepChange = async (valor: string) => {
+    handleChange("cep", valor);
+
+    const cepLimpo = valor.replace(/\D/g, "");
+
+    if (cepLimpo.length === 8) {
+      await handleBuscarCep(cepLimpo);
+    }
+  };
 
   const handleChange = (
     campo:
@@ -50,6 +87,7 @@ export default function AdotanteForm({
       | "senha"
       | "cpf"
       | "identidade"
+      | "cep"
       | "endereco"
       | "bairro"
       | "cidade"
@@ -71,6 +109,7 @@ export default function AdotanteForm({
           prev.role,
 
           campo === "identidade" ? valor : prev.identidade,
+          campo === "cep" ? valor : prev.cep,
           campo === "endereco" ? valor : prev.endereco,
           campo === "bairro" ? valor : prev.bairro,
           campo === "cidade" ? valor : prev.cidade,
@@ -84,21 +123,27 @@ export default function AdotanteForm({
 
   const handleSalvar = async (formData: FormData) => {
     const isEdicao = !!adotanteExistente;
-    const sucesso = await salvarAdotante(adotante, isEdicao);
 
-    if (!sucesso) {
-      alert("Erro ao salvar os dados. Tente novamente.");
-      return;
-    }
+    try {
+      await salvarAdotante(adotante, isEdicao);
+      alert(
+        isEdicao ? "Perfil atualizado com sucesso!" : "Cadastro realizado!",
+      );
 
-    alert(isEdicao ? "Perfil atualizado com sucesso!" : "Cadastro realizado!");
-    if (isEdicao) {
-      router.push("/home");
-    } else {
-      if (redirectTo) {
-        router.push(`/login?redirectTo=${encodeURIComponent(redirectTo)}`);
+      if (isEdicao) {
+        router.push("/home");
       } else {
-        router.push("/login");
+        if (redirectTo) {
+          router.push(`/login?redirectTo=${encodeURIComponent(redirectTo)}`);
+        } else {
+          router.push("/login");
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("Ocorreu um erro desconhecido ao salvar os dados.");
       }
     }
   };
@@ -206,13 +251,26 @@ export default function AdotanteForm({
 
           <div className="space-y-2">
             <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+              CEP
+            </label>
+            <input
+              type="text"
+              value={adotante.cep}
+              onChange={(e) => handleCepChange(e.target.value)}
+              placeholder="00000-000"
+              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
               Endereço
             </label>
             <input
               type="text"
-              required
+              readOnly
               value={adotante.endereco}
-              onChange={(e) => handleChange("endereco", e.target.value)}
+              //onChange={(e) => handleChange("endereco", e.target.value)}
               placeholder="Rua, Número, Complemento"
               className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
             />
@@ -224,9 +282,9 @@ export default function AdotanteForm({
             </label>
             <input
               type="text"
-              required
+              readOnly
               value={adotante.bairro}
-              onChange={(e) => handleChange("bairro", e.target.value)}
+              //onChange={(e) => handleChange("bairro", e.target.value)}
               placeholder="Seu bairro"
               className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
             />
@@ -239,9 +297,9 @@ export default function AdotanteForm({
               </label>
               <input
                 type="text"
-                required
+                readOnly
                 value={adotante.cidade}
-                onChange={(e) => handleChange("cidade", e.target.value)}
+                //onChange={(e) => handleChange("cidade", e.target.value)}
                 placeholder="Sua cidade"
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
@@ -252,9 +310,9 @@ export default function AdotanteForm({
               </label>
               <input
                 type="text"
-                required
+                readOnly
                 value={adotante.uf}
-                onChange={(e) => handleChange("uf", e.target.value)}
+                //onChange={(e) => handleChange("uf", e.target.value)}
                 placeholder="Ex: SP"
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />

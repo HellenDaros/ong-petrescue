@@ -6,10 +6,7 @@ public record AdotanteRequest(String name,
                               String cpf,
 
                               String identidade,
-                              String endereco,
-                              String bairro,
-                              String cidade,
-                              String uf,
+                              String cep,
                               String profissao,
                               String telefoneFixo,
                               String telefoneMovel) {

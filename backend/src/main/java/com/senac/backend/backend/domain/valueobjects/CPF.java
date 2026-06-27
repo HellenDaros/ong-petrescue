@@ -1,5 +1,7 @@
 package com.senac.backend.backend.domain.valueobjects;
 
+import com.senac.backend.backend.domain.exceptions.BusinessException;
+
 public class CPF {
 
     private String cpf;
@@ -10,7 +12,7 @@ public class CPF {
 
     public CPF(String cpf){
         if(cpf == null || !isValid(cpf)) {
-        throw new IllegalArgumentException("CPF Inválido!");
+        throw new BusinessException("CPF inválido.");
 
         }
         this.cpf = cpf;

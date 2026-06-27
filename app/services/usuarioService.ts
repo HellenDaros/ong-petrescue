@@ -1,5 +1,6 @@
 import api from "./api";
 import { Usuario } from "../types/usuarios";
+import axios from "axios";
 
 export async function buscarListaUsuarios(): Promise<Usuario[]> {
   const dados = await api.get<Usuario[]>("/usuarios");
@@ -57,7 +58,13 @@ export async function salvarUsuario(
 
     return response.status === 200 || response.status === 201;
   } catch (error) {
-    console.error("Erro ao salvar usuário:", error);
+    if (axios.isAxiosError(error) && error.response) {
+      const erroDoBackend = error.response.data;
+      throw new Error(erroDoBackend);
+    }
+
+    console.error("Erro inesperado no service:", error);
+    throw new Error("Erro de conexão com o servidor. Tente novamente.");
     return false;
   }
 }

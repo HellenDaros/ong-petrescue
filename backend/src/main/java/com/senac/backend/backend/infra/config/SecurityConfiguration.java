@@ -27,6 +27,7 @@ public class SecurityConfiguration {
                                         "/auth/login",
                                         "/usuarios/adm",
                                         "/animais/publicos",
+                                        "/api/enderecos/**",
                                         "/swagger-ui/**",
                                 "/webjars/**",
                                 "/swagger-resources/**",

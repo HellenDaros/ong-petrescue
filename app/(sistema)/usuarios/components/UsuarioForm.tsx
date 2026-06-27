@@ -32,15 +32,18 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
   const handleSalvar = async (formData: FormData) => {
     const isEdicao = !!usuarioExistente;
 
-    const sucesso = await salvarUsuario(usuario, isEdicao);
+    try {
+      await salvarUsuario(usuario, isEdicao);
 
-    if (!sucesso) {
-      alert("Erro ao salvar usuário");
-      return;
+      alert("Usuário salvo com sucesso!");
+      router.push("/usuarios");
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      } else {
+        alert("Ocorreu um erro inesperado ao salvar o usuário.");
+      }
     }
-
-    alert("Usuário salvo com sucesso!");
-    router.push("/usuarios");
   };
 
   return (
@@ -84,19 +87,21 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
             />
           </div>
 
-          <div className="space-y-2">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-              CPF
-            </label>
-            <input
-              type="text"
-              required
-              onChange={(e) => handleChange("cpf", e.target.value)}
-              value={usuario.cpf || ""}
-              placeholder="000.000.000-00"
-              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-            />
-          </div>
+          {!usuarioExistente && (
+            <div className="space-y-2">
+              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                CPF
+              </label>
+              <input
+                type="text"
+                required
+                onChange={(e) => handleChange("cpf", e.target.value)}
+                value={usuario.cpf || ""}
+                placeholder="000.000.000-00"
+                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+              />
+            </div>
+          )}
 
           <div className="space-y-2">
             <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">

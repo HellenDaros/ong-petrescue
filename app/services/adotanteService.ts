@@ -1,5 +1,6 @@
 import api from "./api";
 import { Adotante } from "../types/adotante";
+import axios from "axios";
 
 export async function salvarAdotante(
   adotante: Adotante,
@@ -16,7 +17,13 @@ export async function salvarAdotante(
 
     return response.status === 200 || response.status === 201;
   } catch (error) {
-    console.error("Erro ao salvar adotante:", error);
+    if (axios.isAxiosError(error) && error.response) {
+      const erroDoBackend = error.response.data;
+      throw new Error(erroDoBackend);
+    }
+
+    console.error("Erro inesperado no service:", error);
+    throw new Error("Erro de conexão com o servidor. Tente novamente.");
     return false;
   }
 }

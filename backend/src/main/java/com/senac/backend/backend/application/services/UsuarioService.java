@@ -2,6 +2,7 @@ package com.senac.backend.backend.application.services;
 import com.senac.backend.backend.application.DTO.*;
 import com.senac.backend.backend.domain.entities.Empresa;
 import com.senac.backend.backend.domain.entities.Usuario;
+import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -91,16 +92,24 @@ public class UsuarioService {
                     "ROLE_FUNCIONARIO_ONG"
             );
             return usuarioRepository.save(novoFuncionario).getId();
-        }catch (Exception e){
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            if (e instanceof BusinessException businessException) {
+                throw businessException;
+            }
+            throw new BusinessException("Ocorreu um erro interno ao tentar processar este usuário.");
         }
-
     }
+
     public Long SalvarUsuarioAdmin(UsuarioAdmRequest usuario) {
 
         try {
-            Usuario superAdmin = new Usuario(usuario);
-            return usuarioRepository.save(superAdmin).getId();
+
+            if(usuario.secretKey().equals( secret)) {
+                return usuarioRepository.save(new Usuario(usuario)).getId();
+            }else
+            {
+                return 0L;
+            }
         }catch (Exception e){
             throw new RuntimeException(e);
         }

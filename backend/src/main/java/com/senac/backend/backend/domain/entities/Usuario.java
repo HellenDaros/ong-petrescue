@@ -48,10 +48,6 @@ public class Usuario implements UserDetails {
     @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY)
     private Adotante adotante;
 
-   /* public Usuario getUsuarioLogado(){
-        return (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }*/
-
     public Usuario(UsuarioRequest usuario, Empresa empresa, String role) {
         this.email = usuario.email();
         this.name = usuario.name();
@@ -89,7 +85,7 @@ public class Usuario implements UserDetails {
     }
 
     @Override
-    public @Nullable String getPassword() {
+    public String getPassword() {
         return this.senha;
     }
 

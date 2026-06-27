@@ -1,7 +1,7 @@
 package com.senac.backend.backend.domain.entities;
 
 import com.senac.backend.backend.application.DTO.AdotanteRequest;
-import com.senac.backend.backend.domain.valueobjects.CPF;
+import com.senac.backend.backend.application.DTO.EnderecoResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,6 +24,8 @@ public class Adotante {
 
     private String identidade;
 
+    private String cep;
+
     private String endereco;
 
     private String bairro;
@@ -38,13 +40,14 @@ public class Adotante {
 
     private String telefoneMovel;
 
-    public Adotante(AdotanteRequest adotante, Usuario usuario) {
+    public Adotante(AdotanteRequest adotante, Usuario usuario, EnderecoResponse endereco) {
         this.usuario = usuario;
         this.identidade = adotante.identidade();
-        this.endereco = adotante.endereco();
-        this.bairro = adotante.bairro();
-        this.cidade = adotante.cidade();
-        this.uf = adotante.uf();
+        this.cep = endereco.cep();
+        this.endereco = endereco.logradouro();
+        this.bairro = endereco.bairro();
+        this.cidade = endereco.cidade();
+        this.uf = endereco.uf();
         this.profissao = adotante.profissao();
         this.telefoneFixo = adotante.telefoneFixo();
         this.telefoneMovel = adotante.telefoneMovel();

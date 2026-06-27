@@ -14,17 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
-
 @RestController
 @RequestMapping("/auth")
 @Tag(description = "Serviço responsável por controlar a autenticação de usuários e sessão", name = "Serviço de autenticação")
 public class AuthController {
 
     @Autowired private TokenService tokenService;
-
-    //@Autowired
-    //private UsuarioRepository usuarioRepository;
 
     @Autowired
     private UsuarioService usuarioService;
@@ -34,7 +29,6 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
 
         if(usuarioService.ValidaUsuarioSenha(loginRequest)){
-        //if (loginRequest.email().equals("hellen.daros@alunos.sc.senac.br") && loginRequest.senha().equals("1234")){
 
             var token = tokenService.gerarToken(loginRequest.email());
 
