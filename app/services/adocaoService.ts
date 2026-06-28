@@ -1,37 +1,8 @@
+import {
+  SolicitacaoAdocaoRequest,
+  SolicitacaoAdocaoResponse,
+} from "../types/solicitacaoAdocao";
 import api from "./api";
-
-export interface SolicitacaoAdocaoRequest {
-  animalId: number;
-  enderecoAnimal: string;
-}
-
-export interface SolicitacaoAdocaoResponse {
-  id: number;
-  adotante: {
-    id: number;
-    name: string;
-    email: string;
-    cpf: string | null;
-    identidade: string;
-    endereco: string;
-    bairro: string;
-    cidade: string;
-    uf: string;
-    profissao: string;
-    telefoneFixo: string;
-    telefoneMovel: string;
-  };
-  animal: {
-    id: number;
-    nameAnimal: string;
-    raca: string;
-    especie: string;
-    urlFoto: string;
-  };
-  enderecoAnimal: string;
-  statusAdocao: "PENDENTE" | "APROVADO" | "REJEITADO";
-  dataSolicitacao: string;
-}
 
 export async function criarSolicitacaoAdocao(
   request: SolicitacaoAdocaoRequest,

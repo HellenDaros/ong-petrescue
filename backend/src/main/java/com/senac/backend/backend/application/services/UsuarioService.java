@@ -68,7 +68,11 @@ public class UsuarioService {
 
     public boolean AterarUsuario(Long id, UsuarioRequest usuario) {
 
-        var usuarioBanco = usuarioRepository.findById(id).orElse(null);
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        var usuarioBanco = usuarioRepository
+                .findByIdAndEmpresa_Id(id, usuarioLogado.getEmpresa().getId())
+                .orElse(null);
 
         if (usuarioBanco != null){
             usuarioBanco.setEmail(usuario.email());
@@ -118,7 +122,11 @@ public class UsuarioService {
 
     public boolean AlterarStatus(Long id, AlterarStatusRequest statusRequest) {
 
-        var usuarioBanco = usuarioRepository.findById(id).orElse(null);
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        var usuarioBanco = usuarioRepository
+                .findByIdAndEmpresa_Id(id, usuarioLogado.getEmpresa().getId())
+                .orElse(null);
 
         if (usuarioBanco != null){
             usuarioBanco.setStatus(statusRequest.status());

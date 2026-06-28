@@ -33,6 +33,7 @@ export async function buscarAnimalPorId(id: number): Promise<Animal | null> {
     }
   } catch (error) {
     console.error(`Erro ao buscar animal ${id}:`, error);
+    throw error;
   }
   return null;
 }

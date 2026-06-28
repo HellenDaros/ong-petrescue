@@ -34,6 +34,8 @@ public class Adotante {
 
     private String uf;
 
+    private String complemento;
+
     private String profissao;
 
     private String telefoneFixo;
@@ -48,6 +50,7 @@ public class Adotante {
         this.bairro = endereco.bairro();
         this.cidade = endereco.cidade();
         this.uf = endereco.uf();
+        this.complemento = adotante.complemento();
         this.profissao = adotante.profissao();
         this.telefoneFixo = adotante.telefoneFixo();
         this.telefoneMovel = adotante.telefoneMovel();

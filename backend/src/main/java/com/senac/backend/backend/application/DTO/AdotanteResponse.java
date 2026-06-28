@@ -12,6 +12,7 @@ public record AdotanteResponse(
         String bairro,
         String cidade,
         String uf,
+        String complemento,
         String profissao,
         String telefoneFixo,
         String telefoneMovel
@@ -29,6 +30,7 @@ public record AdotanteResponse(
                 adotante.getBairro(),
                 adotante.getCidade(),
                 adotante.getUf(),
+                adotante.getComplemento(),
                 adotante.getProfissao(),
                 adotante.getTelefoneFixo(),
                 adotante.getTelefoneMovel()

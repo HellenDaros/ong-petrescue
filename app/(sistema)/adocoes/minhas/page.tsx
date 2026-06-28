@@ -1,9 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { buscarMinhasAdocoes, SolicitacaoAdocaoResponse } from "@/app/services/adocaoService";
-import { Calendar, MapPin, CheckCircle, Clock, XCircle, Heart } from "lucide-react";
+import { buscarMinhasAdocoes } from "@/app/services/adocaoService";
+import {
+  Calendar,
+  MapPin,
+  CheckCircle,
+  Clock,
+  XCircle,
+  Heart,
+} from "lucide-react";
 import Link from "next/link";
+import { SolicitacaoAdocaoResponse } from "@/app/types/solicitacaoAdocao";
 
 export default function MinhasAdocoesPage() {
   const [adocoes, setAdocoes] = useState<SolicitacaoAdocaoResponse[]>([]);
@@ -61,7 +69,9 @@ export default function MinhasAdocoesPage() {
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div>
-        <h1 className="text-3xl font-black text-slate-800 tracking-tight">Minhas Adoções</h1>
+        <h1 className="text-3xl font-black text-slate-800 tracking-tight">
+          Minhas Adoções
+        </h1>
         <p className="text-slate-500 text-sm font-medium mt-1">
           Acompanhe o andamento das solicitações de adoção feitas por você.
         </p>
@@ -72,9 +82,12 @@ export default function MinhasAdocoesPage() {
           <div className="bg-stone-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
             <Heart className="text-stone-300" size={32} />
           </div>
-          <h3 className="text-lg font-black text-slate-700">Nenhuma solicitação encontrada</h3>
+          <h3 className="text-lg font-black text-slate-700">
+            Nenhuma solicitação encontrada
+          </h3>
           <p className="text-slate-500 text-sm font-medium mt-2 max-w-sm mx-auto">
-            Você ainda não demonstrou interesse em nenhum de nossos protegidos. Acesse a galeria pública e comece agora!
+            Você ainda não demonstrou interesse em nenhum de nossos protegidos.
+            Acesse a galeria pública e comece agora!
           </p>
           <div className="mt-6">
             <Link
@@ -119,10 +132,18 @@ export default function MinhasAdocoesPage() {
                   <div className="space-y-2 text-xs text-slate-500 font-medium">
                     <div className="flex items-center gap-2">
                       <Calendar size={14} className="text-stone-400" />
-                      <span>Solicitado em: {new Date(adocao.dataSolicitacao).toLocaleDateString("pt-BR")}</span>
+                      <span>
+                        Solicitado em:{" "}
+                        {new Date(adocao.dataSolicitacao).toLocaleDateString(
+                          "pt-BR",
+                        )}
+                      </span>
                     </div>
                     <div className="flex items-start gap-2">
-                      <MapPin size={14} className="text-stone-400 mt-0.5 flex-shrink-0" />
+                      <MapPin
+                        size={14}
+                        className="text-stone-400 mt-0.5 flex-shrink-0"
+                      />
                       <span>Local planejado: {adocao.enderecoAnimal}</span>
                     </div>
                   </div>

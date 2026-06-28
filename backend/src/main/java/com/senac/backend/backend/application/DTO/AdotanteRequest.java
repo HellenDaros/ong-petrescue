@@ -7,6 +7,7 @@ public record AdotanteRequest(String name,
 
                               String identidade,
                               String cep,
+                              String complemento,
                               String profissao,
                               String telefoneFixo,
                               String telefoneMovel) {

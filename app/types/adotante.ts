@@ -16,6 +16,7 @@ export class Adotante extends Usuario {
     public bairro: string,
     public cidade: string,
     public uf: string,
+    public complemento: string | null,
     public profissao: string,
     public telefoneFixo: string,
     public telefoneMovel: string,

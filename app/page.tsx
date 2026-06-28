@@ -14,11 +14,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "./redux/slices/authSlice";
 import { RootState } from "./redux/store";
 import GaleriaPublica from "./components/Galeria";
+import { useEffect, useState } from "react";
 
 export default function LandingPage() {
   const router = useRouter();
   const dispatch = useDispatch();
   const usuario = useSelector((state: RootState) => state.auth.usuario);
+
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    setIsReady(true);
+  }, []);
+
+  if (!isReady) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-stone-50">
+        <p className="text-slate-500">Carregando...</p>
+      </div>
+    );
+  }
 
   const handleLogout = () => {
     dispatch(logout());

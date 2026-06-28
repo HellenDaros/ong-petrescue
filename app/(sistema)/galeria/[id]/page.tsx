@@ -53,8 +53,10 @@ export default function DetalhesAnimalPage() {
             setAnimal(data);
           }
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Erro ao buscar pet:", error);
+        alert(error.message || "Erro ao listar pet");
+        router.push("/");
       } finally {
         setCarregando(false);
       }
@@ -70,7 +72,9 @@ export default function DetalhesAnimalPage() {
       return;
     }
     if (!concordaTermos) {
-      alert("Você deve concordar com os termos da Lei Federal 9.605/98 para continuar.");
+      alert(
+        "Você deve concordar com os termos da Lei Federal 9.605/98 para continuar.",
+      );
       return;
     }
     if (animal?.id === undefined || animal?.id === null) return;
@@ -193,9 +197,14 @@ export default function DetalhesAnimalPage() {
             </div>
 
             {mostrarFormulario ? (
-              <form onSubmit={handleEnviarSolicitacao} className="mt-8 bg-stone-50 p-6 rounded-3xl border border-stone-200 space-y-6">
-                <h3 className="text-lg font-black text-slate-800">Solicitação de Adoção</h3>
-                
+              <form
+                onSubmit={handleEnviarSolicitacao}
+                className="mt-8 bg-stone-50 p-6 rounded-3xl border border-stone-200 space-y-6"
+              >
+                <h3 className="text-lg font-black text-slate-800">
+                  Solicitação de Adoção
+                </h3>
+
                 <div className="space-y-2">
                   <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">
                     Endereço onde ficará o animal
@@ -215,9 +224,13 @@ export default function DetalhesAnimalPage() {
                     Lei Federal nº 9.605/98 (Artigo 32)
                   </h4>
                   <p className="text-xs text-slate-500 leading-relaxed font-medium">
-                    Praticar ato de abuso, maus-tratos, ferir ou mutilar animais silvestres, domésticos ou domesticados, nativos ou exóticos é crime federal, sujeito a pena de detenção e multa. Para cães e gatos, a pena é de reclusão de 2 a 5 anos, multa e proibição da guarda.
+                    Praticar ato de abuso, maus-tratos, ferir ou mutilar animais
+                    silvestres, domésticos ou domesticados, nativos ou exóticos
+                    é crime federal, sujeito a pena de detenção e multa. Para
+                    cães e gatos, a pena é de reclusão de 2 a 5 anos, multa e
+                    proibição da guarda.
                   </p>
-                  
+
                   <label className="flex items-start gap-3 cursor-pointer pt-2">
                     <input
                       type="checkbox"
@@ -227,7 +240,8 @@ export default function DetalhesAnimalPage() {
                       className="mt-1 w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-stone-300"
                     />
                     <span className="text-xs text-slate-600 font-bold select-none">
-                      Estou ciente e concordo com a Lei Federal 9.605/98 e assumo o compromisso de guarda responsável do animal.
+                      Estou ciente e concordo com a Lei Federal 9.605/98 e
+                      assumo o compromisso de guarda responsável do animal.
                     </span>
                   </label>
                 </div>
@@ -255,7 +269,9 @@ export default function DetalhesAnimalPage() {
                   disabled={!isDisponivel}
                   onClick={() => {
                     if (usuario?.role !== "ROLE_ADOTANTE") {
-                      alert("Apenas usuários adotantes podem manifestar interesse em adoção.");
+                      alert(
+                        "Apenas usuários adotantes podem manifestar interesse em adoção.",
+                      );
                       return;
                     }
                     setMostrarFormulario(true);

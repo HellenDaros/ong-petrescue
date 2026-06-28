@@ -82,6 +82,7 @@ public class AdotanteService {
             adotanteBanco.setBairro(endereco.bairro());
             adotanteBanco.setCidade(endereco.cidade());
             adotanteBanco.setUf(endereco.uf());
+            adotanteBanco.setComplemento(adotante.complemento());
             adotanteBanco.setProfissao(adotante.profissao());
             adotanteBanco.setTelefoneFixo(adotante.telefoneFixo());
             adotanteBanco.setTelefoneMovel(adotante.telefoneMovel());

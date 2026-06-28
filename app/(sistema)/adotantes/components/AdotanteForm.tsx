@@ -1,18 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Mail,
-  Lock,
-  User,
-  FileText,
-  MapPin,
-  Phone,
-  Briefcase,
-  ArrowRight,
-} from "lucide-react";
 import { salvarAdotante } from "@/app/services/adotanteService";
 import { Adotante, AdotanteFormProps } from "@/app/types/adotante";
 import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
@@ -31,6 +20,7 @@ export default function AdotanteForm({
         "",
         "",
         "ATIVO",
+        "",
         "",
         "",
         "",
@@ -92,6 +82,7 @@ export default function AdotanteForm({
       | "bairro"
       | "cidade"
       | "uf"
+      | "complemento"
       | "profissao"
       | "telefoneFixo"
       | "telefoneMovel",
@@ -114,6 +105,7 @@ export default function AdotanteForm({
           campo === "bairro" ? valor : prev.bairro,
           campo === "cidade" ? valor : prev.cidade,
           campo === "uf" ? valor : prev.uf,
+          campo === "complemento" ? valor : prev.complemento,
           campo === "profissao" ? valor : prev.profissao,
           campo === "telefoneFixo" ? valor : prev.telefoneFixo,
           campo === "telefoneMovel" ? valor : prev.telefoneMovel,
@@ -147,6 +139,8 @@ export default function AdotanteForm({
       }
     }
   };
+
+  const mostrarEndereco = adotante.endereco !== "";
 
   return (
     <div className="flex-1 flex items-center justify-center p-4 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -237,6 +231,94 @@ export default function AdotanteForm({
 
           <div className="space-y-2">
             <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+              CEP
+            </label>
+            <input
+              type="text"
+              required
+              value={adotante.cep}
+              onChange={(e) => handleCepChange(e.target.value)}
+              placeholder="00000-000"
+              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+            />
+          </div>
+
+          {mostrarEndereco && (
+            <div>
+              <div className="space-y-2">
+                <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                  Endereço
+                </label>
+                <input
+                  type="text"
+                  readOnly
+                  value={adotante.endereco}
+                  //onChange={(e) => handleChange("endereco", e.target.value)}
+                  placeholder="Rua, Número, Complemento"
+                  className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                  Bairro
+                </label>
+                <input
+                  type="text"
+                  readOnly
+                  value={adotante.bairro}
+                  //onChange={(e) => handleChange("bairro", e.target.value)}
+                  placeholder="Seu bairro"
+                  className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                    Cidade
+                  </label>
+                  <input
+                    type="text"
+                    readOnly
+                    value={adotante.cidade}
+                    //onChange={(e) => handleChange("cidade", e.target.value)}
+                    placeholder="Sua cidade"
+                    className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                    UF
+                  </label>
+                  <input
+                    type="text"
+                    readOnly
+                    value={adotante.uf}
+                    //onChange={(e) => handleChange("uf", e.target.value)}
+                    placeholder="Ex: SP"
+                    className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+              Complemento
+            </label>
+            <input
+              type="text"
+              value={adotante.complemento ? adotante.complemento : ""}
+              onChange={(e) => handleChange("complemento", e.target.value)}
+              placeholder="Ex: Casa, Número: 10"
+              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
               Profissão
             </label>
             <input
@@ -247,76 +329,6 @@ export default function AdotanteForm({
               placeholder="Sua ocupação"
               className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
             />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-              CEP
-            </label>
-            <input
-              type="text"
-              value={adotante.cep}
-              onChange={(e) => handleCepChange(e.target.value)}
-              placeholder="00000-000"
-              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-              Endereço
-            </label>
-            <input
-              type="text"
-              readOnly
-              value={adotante.endereco}
-              //onChange={(e) => handleChange("endereco", e.target.value)}
-              placeholder="Rua, Número, Complemento"
-              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-              Bairro
-            </label>
-            <input
-              type="text"
-              readOnly
-              value={adotante.bairro}
-              //onChange={(e) => handleChange("bairro", e.target.value)}
-              placeholder="Seu bairro"
-              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                Cidade
-              </label>
-              <input
-                type="text"
-                readOnly
-                value={adotante.cidade}
-                //onChange={(e) => handleChange("cidade", e.target.value)}
-                placeholder="Sua cidade"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                UF
-              </label>
-              <input
-                type="text"
-                readOnly
-                value={adotante.uf}
-                //onChange={(e) => handleChange("uf", e.target.value)}
-                placeholder="Ex: SP"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-              />
-            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

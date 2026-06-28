@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import {
   buscarAdocoesOng,
   responderSolicitacaoAdocao,
-  SolicitacaoAdocaoResponse,
 } from "@/app/services/adocaoService";
 import {
   CheckCircle,
@@ -21,6 +20,7 @@ import {
   X,
   CalendarDays,
 } from "lucide-react";
+import { SolicitacaoAdocaoResponse } from "@/app/types/solicitacaoAdocao";
 
 export default function GerenciamentoAdocoesPage() {
   const [solicitacoes, setSolicitacoes] = useState<SolicitacaoAdocaoResponse[]>(

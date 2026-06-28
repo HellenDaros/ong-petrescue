@@ -15,4 +15,6 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
     Optional<Animal> findByIdAndEmpresa_Id(Long id, Long empresaId);
 
     List<Animal> findByStatusAnimal(EnumStatusAnimal statusAnimal);
+
+    Optional<Animal> findByIdAndStatusAnimal(Long id, EnumStatusAnimal statusAnimal);
 }

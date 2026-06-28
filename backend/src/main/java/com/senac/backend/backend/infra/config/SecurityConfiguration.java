@@ -18,10 +18,16 @@ public class SecurityConfiguration {
     @Autowired
     private JWTFilter jwtFilter;
 
+    @Autowired
+    private CustomAccessDeniedHandler accessDeniedHandler;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http.cors(Customizer.withDefaults())
                         .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception
+                        .accessDeniedHandler(accessDeniedHandler)
+                )
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(
                                         "/auth/login",
@@ -31,7 +37,8 @@ public class SecurityConfiguration {
                                         "/swagger-ui/**",
                                 "/webjars/**",
                                 "/swagger-resources/**",
-                                "/v3/api-docs/**"
+                                "/v3/api-docs/**",
+                                        "/v3/api-docs"
                                 ).permitAll()
                                 .requestMatchers(HttpMethod.POST, "/adotantes").permitAll()
                                 .requestMatchers("/adotantes/**").hasAnyRole("ADOTANTE")

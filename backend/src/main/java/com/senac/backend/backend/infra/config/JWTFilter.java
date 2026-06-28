@@ -47,27 +47,32 @@ public class JWTFilter extends OncePerRequestFilter {
         if(header != null && header.startsWith("Bearer ")){
             String token = header.replace("Bearer ", "");
 
-            //Validar TOken JWT
-            var retornotoken =tokenService.validarToken(token);
+            try {
 
-            var usuarioLogado  = retornotoken;
+                var usuarioLogado = tokenService.validarToken(token);
 
-            UsernamePasswordAuthenticationToken usuario = new UsernamePasswordAuthenticationToken(
-                    usuarioLogado,
-                    null,
-                    usuarioLogado.getAuthorities()
-            );
+                UsernamePasswordAuthenticationToken usuario =
+                        new UsernamePasswordAuthenticationToken(
+                                usuarioLogado,
+                                null,
+                                usuarioLogado.getAuthorities()
+                        );
 
-            SecurityContextHolder.getContext().setAuthentication(usuario);
+                SecurityContextHolder.getContext().setAuthentication(usuario);
 
-            //System.out.println("Usuario autenticado!" + username);
+            } catch (Exception ex) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token expirado ou inválido");
+                return;
+            }
 
-            //validar token jwt
-        }else {
+        } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("Token não informado ou inválido");
-        return;
+            response.getWriter().write("Token não informado ou inválido");
+            return;
         }
-        filterChain.doFilter(request,response);
+
+        filterChain.doFilter(request, response);
     }
 }
+

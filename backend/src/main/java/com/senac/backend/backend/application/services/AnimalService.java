@@ -57,7 +57,8 @@ public class AnimalService {
 
             Animal animal;
             if ("ROLE_ADOTANTE".equals(usuarioLogado.getRole())) {
-                animal = animalRepository.findById(id)
+                animal = animalRepository
+                        .findByIdAndStatusAnimal(id, EnumStatusAnimal.DISPONIVEL)
                         .orElseThrow(() -> new RuntimeException("Animal não encontrado."));
             } else {
                 animal = animalRepository
