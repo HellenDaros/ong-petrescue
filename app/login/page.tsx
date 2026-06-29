@@ -41,9 +41,13 @@ function LoginFormContent() {
       );
 
       router.push(redirectTo || "/home");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Erro ao entrar no sistema:", error);
-      alert("Erro ao entrar no sistema");
+      const mensagem =
+        error.response?.data && typeof error.response.data === "string"
+          ? error.response.data
+          : "Erro ao entrar no sistema";
+      alert(mensagem);
     }
   };
 
@@ -153,7 +157,13 @@ function LoginFormContent() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-stone-50 text-slate-500">Carregando...</div>}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-stone-50 text-slate-500">
+          Carregando...
+        </div>
+      }
+    >
       <LoginFormContent />
     </Suspense>
   );

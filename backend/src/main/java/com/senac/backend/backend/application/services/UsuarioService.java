@@ -2,6 +2,7 @@ package com.senac.backend.backend.application.services;
 import com.senac.backend.backend.application.DTO.*;
 import com.senac.backend.backend.domain.entities.Empresa;
 import com.senac.backend.backend.domain.entities.Usuario;
+import com.senac.backend.backend.domain.enuns.EnumStatusUsuario;
 import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -24,8 +26,25 @@ public class UsuarioService {
 
     public boolean ValidaUsuarioSenha(LoginRequest loginRequest){
         try {
-            return usuarioRepository.existsUsuarioByEmailContainingAndSenha(loginRequest.email(), loginRequest.senha());
-        }catch (Exception e){
+            boolean existe = usuarioRepository.existsUsuarioByEmailContainingAndSenha(loginRequest.email(), loginRequest.senha());
+            if (!existe) {
+                throw new BusinessException("Usuário ou senha inválidos.");
+            }
+
+            var usuario = usuarioRepository.findAll()
+                    .stream()
+                    .filter(u -> u.getEmail().equals(loginRequest.email()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (usuario != null && usuario.getStatus() != EnumStatusUsuario.ATIVO) {
+                throw new BusinessException("Acesso não permitido. Seu usuário está inativo.");
+            }
+
+            return true;
+        } catch (BusinessException e) {
+            throw e;
+        } catch (Exception e){
             throw new RuntimeException(e);
         }
 

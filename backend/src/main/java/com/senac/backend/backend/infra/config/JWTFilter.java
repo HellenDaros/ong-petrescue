@@ -1,6 +1,7 @@
 package com.senac.backend.backend.infra.config;
 
 import com.senac.backend.backend.application.services.TokenService;
+import com.senac.backend.backend.domain.enuns.EnumStatusUsuario;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -50,6 +51,13 @@ public class JWTFilter extends OncePerRequestFilter {
             try {
 
                 var usuarioLogado = tokenService.validarToken(token);
+
+                if (usuarioLogado == null || usuarioLogado.getStatus() != EnumStatusUsuario.ATIVO) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("text/plain;charset=UTF-8");
+                    response.getWriter().write("Usuario inativo ou invalido");
+                    return;
+                }
 
                 UsernamePasswordAuthenticationToken usuario =
                         new UsernamePasswordAuthenticationToken(
