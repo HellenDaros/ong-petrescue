@@ -34,7 +34,7 @@ export default function Sidebar() {
       href: "/",
       icon: BookImage,
     },
-    { name: "Ong", href: "/ong", icon: Settings, roles: ["ROLE_ADMIN"] },
+    { name: "Ong", href: "/empresa", icon: Settings, roles: ["ROLE_ADMIN"] },
     {
       name: "Usuários",
       href: "/usuarios",
@@ -135,7 +135,7 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="mt-auto pt-6 border-t border-stone-100">
+      {/* <div className="mt-auto pt-6 border-t border-stone-100">
         <button className="flex items-center gap-4 w-full px-4 py-3 rounded-2xl text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all duration-300 group">
           <LogOut
             size={20}
@@ -143,7 +143,7 @@ export default function Sidebar() {
           />
           <span className="text-sm font-bold">Sair do Painel</span>
         </button>
-      </div>
+      </div> */}
     </aside>
   );
 }

@@ -10,12 +10,8 @@ export default function Header() {
   const usuario = store.getState().auth.usuario;
 
   return (
-    /* REMOVIDO: fixed, w-full, top-0 */
-    /* MANTIDO: bg, border e paddings */
     <header className="bg-[#f1f5f4] border-b border-stone-200 px-6 py-3">
-      {/* O max-w-7xl garante que o conteúdo interno não espalhe mais que a galeria */}
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        {/* Lado Esquerdo: Perfil */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center shadow-sm">
             <svg
@@ -37,12 +33,13 @@ export default function Header() {
               {usuario?.name.toLocaleUpperCase() || "USUÁRIO INDEFINIDO"}
             </span>
             <span className="text-teal-600 text-[10px] font-bold uppercase tracking-wider">
-              Painel ONG
+              {usuario?.role == "ROLE_ADOTANTE"
+                ? "Painel Adotante"
+                : "Painel ONG"}
             </span>
           </div>
         </div>
 
-        {/* Lado Direito: Botão Sair */}
         <button
           type="button"
           className="group relative flex items-center"

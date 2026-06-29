@@ -50,7 +50,7 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
       const sucesso = await salvarEmpresa(empresa, isEdicao);
 
       alert("ONG salva com sucesso!");
-      router.push("/ong");
+      router.push("/empresa");
     } catch (error) {
       console.log(error);
       alert(error instanceof Error ? error.message : "Erro ao salvar ONG");
@@ -178,7 +178,7 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
 
           <div className="flex items-center gap-4 pt-4">
             <Link
-              href="/ong"
+              href="/empresa"
               className="flex-1 text-center py-4 rounded-2xl font-black text-slate-400 hover:text-slate-600 hover:bg-stone-50 transition-all"
             >
               Cancelar

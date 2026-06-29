@@ -42,7 +42,7 @@ public class SecurityConfiguration {
                                 ).permitAll()
                                 .requestMatchers(HttpMethod.POST, "/adotantes").permitAll()
                                 .requestMatchers("/adotantes/**").hasAnyRole("ADOTANTE")
-                                .requestMatchers("/empresa**").hasAnyRole("ADMIN")
+                                .requestMatchers("/empresa", "/empresa/**").hasAnyRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, "/usuarios").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
                                 .requestMatchers(HttpMethod.POST, "/adocoes").hasAnyRole("ADOTANTE")
                                 .requestMatchers("/adocoes/minhas").hasAnyRole("ADOTANTE")

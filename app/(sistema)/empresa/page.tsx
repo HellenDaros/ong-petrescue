@@ -66,7 +66,7 @@ export default function MeuPerfilOng() {
           </div>
 
           <Link
-            href="/ong/novo"
+            href="/empresa/novo"
             className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-2xl font-black transition-all shadow-lg shadow-teal-100"
           >
             <svg
@@ -110,7 +110,7 @@ export default function MeuPerfilOng() {
         </div>
 
         <Link
-          href={`/ong/${empresa.id}/editar`}
+          href={`/empresa/${empresa.id}/editar`}
           className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-2xl font-black transition-all shadow-lg shadow-teal-100"
         >
           Editar Dados
