@@ -54,8 +54,12 @@ export default function DetalhesAnimalPage() {
           }
         }
       } catch (error: any) {
-        console.error("Erro ao buscar pet:", error);
-        alert(error.message || "Erro ao listar pet");
+        const mensagemErro =
+          typeof error.response?.data === "string"
+            ? error.response.data
+            : "Erro ao carregar as informações do pet.";
+
+        alert(mensagemErro);
         router.push("/");
       } finally {
         setCarregando(false);

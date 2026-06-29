@@ -6,6 +6,7 @@ import com.senac.backend.backend.application.DTO.AnimalResponse;
 import com.senac.backend.backend.domain.entities.Animal;
 import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.enuns.EnumStatusAnimal;
+import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.AnimalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,27 +53,22 @@ public class AnimalService {
 
     public AnimalResponse BuscarPorId(Long id) {
 
-        try {
             Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             Animal animal;
             if ("ROLE_ADOTANTE".equals(usuarioLogado.getRole())) {
                 animal = animalRepository
                         .findByIdAndStatusAnimal(id, EnumStatusAnimal.DISPONIVEL)
-                        .orElseThrow(() -> new RuntimeException("Animal não encontrado."));
+                        .orElseThrow(() -> new BusinessException("Animal não encontrado."));
             } else {
                 animal = animalRepository
                         .findByIdAndEmpresa_Id(id, usuarioLogado.getEmpresa().getId())
-                        .orElseThrow(() -> new RuntimeException("Animal não encontrado."));
+                        .orElseThrow(() -> new BusinessException("Animal não encontrado."));
             }
 
             return new AnimalResponse(animal);
 
-        } catch (Exception e) {
 
-            throw new RuntimeException(e);
-
-        }
     }
 
     public Long SalvarAnimal(AnimalRequest animalRequest) {

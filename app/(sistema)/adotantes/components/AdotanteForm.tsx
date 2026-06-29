@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { salvarAdotante } from "@/app/services/adotanteService";
 import { Adotante, AdotanteFormProps } from "@/app/types/adotante";
 import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
+import Link from "next/link";
 
 export default function AdotanteForm({
   adotanteExistente,
@@ -200,20 +201,24 @@ export default function AdotanteForm({
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                CPF
-              </label>
-              <input
-                type="text"
-                required
-                value={adotante.cpf ? adotante.cpf : ""}
-                onChange={(e) => handleChange("cpf", e.target.value)}
-                placeholder="000.000.000-00"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-              />
-            </div>
+          <div
+            className={`grid gap-4 ${!adotanteExistente ? "grid-cols-2" : "grid-cols-1"}`}
+          >
+            {!adotanteExistente && (
+              <div className="space-y-2">
+                <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                  CPF
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={adotante.cpf ? adotante.cpf : ""}
+                  onChange={(e) => handleChange("cpf", e.target.value)}
+                  placeholder="000.000.000-00"
+                  className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                />
+              </div>
+            )}
             <div className="space-y-2">
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Identidade (RG)
@@ -360,12 +365,12 @@ export default function AdotanteForm({
           </div>
 
           <div className="flex items-center gap-4 pt-6">
-            <button
-              onClick={() => router.back()}
+            <Link
+              href="/adotantes"
               className="flex-1 text-center py-4 rounded-2xl font-black text-slate-400 hover:text-slate-600 hover:bg-stone-50 transition-all"
             >
               Cancelar
-            </button>
+            </Link>
 
             <button
               type="submit"

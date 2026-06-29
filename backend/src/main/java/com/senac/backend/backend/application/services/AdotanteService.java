@@ -93,7 +93,6 @@ public class AdotanteService {
             usuarioBanco.setName(adotante.name());
             usuarioBanco.setEmail(adotante.email());
             usuarioBanco.setSenha(adotante.senha());
-            usuarioBanco.setCpf(new CPF(adotante.cpf()));
 
             usuarioRepository.save(usuarioBanco);
 

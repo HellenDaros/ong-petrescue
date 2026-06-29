@@ -27,8 +27,6 @@ api.interceptors.response.use(
     }
 
     if (error.response.status === 403) {
-      console.log(error.response);
-      console.log(error.response.data);
       const mensagem =
         typeof error.response.data === "string"
           ? error.response.data
