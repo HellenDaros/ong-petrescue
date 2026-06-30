@@ -4,37 +4,15 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Animal, AnimalFormProps } from "@/app/types/animal";
 import { salvarAnimal } from "@/app/services/animalService";
+import {
+  CONFIRMACAO_LABEL,
+  ESPECIE_LABEL,
+  PORTE_LABEL,
+  SEXO_LABEL,
+} from "../constants/animal-constants";
 
 export default function AnimalForm({ animalExistente }: AnimalFormProps) {
   const router = useRouter();
-
-  const SexoLabel = {
-    MACHO: "Macho",
-    FEMEA: "Fêmea",
-  };
-
-  const EspecieLabel = {
-    CACHORRO: "Cachorro",
-    GATO: "Gato",
-  };
-
-  const PorteLabel = {
-    MINI: "Mini",
-    MEDIO: "Médio",
-    GRANDE: "Grande",
-    GIGANTE: "Gigante",
-  };
-
-  const ConfirmacaoLabel = {
-    SIM: "Sim",
-    NAO: "Não",
-    NAO_ESPECIFICADO: "Não Especificado",
-  };
-
-  const StatusAnimalLabel = {
-    DISPONIVEL: "Disponível",
-    INATIVO: "Inativo",
-  };
 
   const [animal, setAnimal] = useState<Animal>(
     animalExistente ||
@@ -142,7 +120,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
-                {Object.entries(EspecieLabel).map(([key, value]) => (
+                {Object.entries(ESPECIE_LABEL).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value}
                   </option>
@@ -177,7 +155,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
-                {Object.entries(SexoLabel).map(([key, value]) => (
+                {Object.entries(SEXO_LABEL).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value}
                   </option>
@@ -212,7 +190,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
-                {Object.entries(PorteLabel).map(([key, value]) => (
+                {Object.entries(PORTE_LABEL).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value}
                   </option>
@@ -291,7 +269,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
-                {Object.entries(ConfirmacaoLabel).map(([key, value]) => (
+                {Object.entries(CONFIRMACAO_LABEL).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value}
                   </option>
@@ -312,7 +290,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
-                {Object.entries(ConfirmacaoLabel).map(([key, value]) => (
+                {Object.entries(CONFIRMACAO_LABEL).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value}
                   </option>
@@ -331,7 +309,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
-                {Object.entries(ConfirmacaoLabel).map(([key, value]) => (
+                {Object.entries(CONFIRMACAO_LABEL).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value}
                   </option>
