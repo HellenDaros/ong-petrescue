@@ -36,7 +36,6 @@ export default function Usuarios() {
 
   return (
     <div className="w-full max-w-7xl mx-auto animate-in fade-in duration-500">
-      {/* Cabeçalho da Página */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h1 className="text-3xl font-black text-slate-800 tracking-tight">
@@ -69,7 +68,6 @@ export default function Usuarios() {
         </Link>
       </div>
 
-      {/* Tabela de Dados */}
       <div className="bg-white rounded-[2.5rem] shadow-sm border border-stone-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
