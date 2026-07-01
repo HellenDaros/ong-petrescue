@@ -1,13 +1,10 @@
 "use client";
 
-import React from "react";
 import {
   LayoutDashboard,
   PawPrint,
   MessageCircle,
   Settings,
-  HelpCircle,
-  ArrowRight,
 } from "lucide-react";
 
 export default function HomePage() {

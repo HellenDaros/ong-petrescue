@@ -4,10 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import {
-  buscarAdotanteLogado,
-  buscarAdotantePorId,
-} from "@/app/services/adotanteService";
+import { buscarAdotanteLogado } from "@/app/services/adotanteService";
 import { Adotante } from "@/app/types/adotante";
 import { RootState } from "@/app/redux/store";
 

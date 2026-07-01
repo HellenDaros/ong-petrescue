@@ -118,7 +118,6 @@ export default function MeuPerfilOng() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* ONG */}
         <div className="bg-white rounded-[2.5rem] shadow-sm border border-stone-100 p-8">
           <h2 className="text-lg font-bold text-slate-800 mb-6">
             Dados da ONG
