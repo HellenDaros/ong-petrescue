@@ -13,6 +13,7 @@ import {
   FilePen,
   User,
   FileText,
+  Calendar,
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
@@ -63,6 +64,12 @@ export default function Sidebar() {
       name: "Animais",
       href: "/animais",
       icon: PawPrint,
+      roles: ["ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO_ONG"],
+    },
+    {
+      name: "Eventos",
+      href: "/eventos",
+      icon: Calendar,
       roles: ["ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO_ONG"],
     },
     {

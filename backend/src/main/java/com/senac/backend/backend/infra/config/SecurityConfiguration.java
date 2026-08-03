@@ -33,11 +33,12 @@ public class SecurityConfiguration {
                                         "/auth/login",
                                         "/usuarios/adm",
                                         "/animais/publicos",
+                                        "/eventos/publicos/**",
                                         "/api/enderecos/**",
                                         "/swagger-ui/**",
-                                "/webjars/**",
-                                "/swagger-resources/**",
-                                "/v3/api-docs/**",
+                                        "/webjars/**",
+                                        "/swagger-resources/**",
+                                        "/v3/api-docs/**",
                                         "/v3/api-docs"
                                 ).permitAll()
                                 .requestMatchers(HttpMethod.POST, "/adotantes").permitAll()
@@ -49,6 +50,7 @@ public class SecurityConfiguration {
                                 .requestMatchers("/adocoes/ong", "/adocoes/*/status").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
                                 .requestMatchers(HttpMethod.GET, "/animais/*").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG", "ADOTANTE")
                                 .requestMatchers("/pets/**", "/animais/**").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
+                                .requestMatchers("/eventos/**").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
                                 .anyRequest().authenticated()
                         )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
