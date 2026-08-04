@@ -85,7 +85,7 @@ export default function FavoritosPage() {
                   </div>
                   <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-black uppercase">
                     <MapPin size={12} strokeWidth={3} />
-                    PetRescue
+                    I🧡PET
                   </div>
                 </div>
               </div>

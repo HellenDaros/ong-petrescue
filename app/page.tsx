@@ -48,19 +48,8 @@ export default function LandingPage() {
             href="/"
             className="flex items-center gap-2 font-black text-teal-600 text-2xl tracking-tight group"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="w-8 h-8 text-teal-600 group-hover:scale-110 transition-transform"
-            >
-              <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001Z" />
-            </svg>
             <span>
-              PET
-              <span className="text-orange-500 underline decoration-2 underline-offset-4">
-                RESCUE
-              </span>
+              I🧡PET
             </span>
           </Link>
 
@@ -167,7 +156,7 @@ export default function LandingPage() {
       >
         <div className="max-w-4xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-black mb-16 leading-tight">
-            Como funciona o <span className="text-teal-400">PetRescue</span>
+            Como funciona o <span className="text-teal-400">I🧡PET</span>
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
             <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
@@ -202,7 +191,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
           <div>
             <div className="flex items-center justify-center md:justify-start gap-2 font-black text-teal-600 text-2xl mb-4">
-              <span>PETRESCUE</span>
+              <span>I🧡PET</span>
             </div>
             <p className="text-slate-500 max-w-xs">
               Plataforma dedicada a conectar ONGs e adotantes para salvar vidas.
@@ -223,7 +212,7 @@ export default function LandingPage() {
             </Link>
           </div>
           <div className="text-center md:text-right text-slate-400 text-sm">
-            © {new Date().getFullYear()} PetRescue. <br /> Todos os direitos
+            © {new Date().getFullYear()} I🧡PET. <br /> Todos os direitos
             reservados.
           </div>
         </div>

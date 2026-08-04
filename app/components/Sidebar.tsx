@@ -86,23 +86,11 @@ export default function Sidebar() {
 
   return (
     <aside className="w-72 h-screen bg-white border-r border-stone-100 flex flex-col p-6 sticky top-0">
-      {/* Logo Section */}
       <div className="flex items-center gap-3 px-2 mb-12">
-        <div className="bg-teal-600 p-2 rounded-2xl shadow-lg shadow-teal-100">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="white"
-            className="w-6 h-6"
-          >
-            <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001Z" />
-          </svg>
+        <div className=" p-2">
         </div>
-        <span className="text-xl font-black tracking-tighter text-slate-800">
-          PET
-          <span className="text-orange-500 underline decoration-2 underline-offset-4">
-            RESCUE
-          </span>
+        <span className="text-xl text-teal-600 font-black tracking-tighter text-slate-800">
+          I🧡PET
         </span>
       </div>
 

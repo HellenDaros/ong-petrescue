@@ -18,7 +18,7 @@ public class SwaggerConfiguration {
                 .components(new Components().addSecuritySchemes("bearerAuth",
                         new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
 
-                .info(new Info().title("PetRescue")
+                .info(new Info().title("I🧡PET")
                 .version("1.0")
                 .description("Api responsável pela Plataforma de Resgate e Adoção de Animais")
                 .termsOfService("https://www.linkedin.com/in/hellen-dar%C3%B3s-b302a814b"));

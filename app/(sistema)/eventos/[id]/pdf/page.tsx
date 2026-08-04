@@ -86,7 +86,6 @@ export default function EventoPdfPage({
       </div>
 
       <div className="max-w-3xl mx-auto bg-white rounded-3xl border border-stone-200 shadow-2xl p-8 sm:p-12 print:shadow-none print:border-none print:rounded-none print:p-0 print:m-0 print:w-full">
-        {/* Header Branding */}
         <div className="flex justify-between items-center pb-6 border-b-2 border-stone-100 mb-8">
           <div className="flex items-center gap-3">
             <div className="bg-teal-600 p-3 rounded-2xl text-white shadow-md">
@@ -94,7 +93,7 @@ export default function EventoPdfPage({
             </div>
             <div>
               <span className="text-2xl font-black tracking-tighter text-slate-800">
-                PET<span className="text-orange-500">RESCUE</span>
+                I🧡PET
               </span>
               <p className="text-xs font-extrabold text-teal-600 uppercase tracking-widest">
                 {evento.empresaNome || "Feira de Adoção de Animais"}
@@ -200,7 +199,7 @@ export default function EventoPdfPage({
         )}
 
         <div className="mt-8 text-center text-stone-400 text-[11px] font-medium pt-4 border-t border-stone-100">
-          Documento gerado pelo sistema PET RESCUE • Adote com responsabilidade
+          Documento gerado pelo sistema I🧡PET • Adote com responsabilidade
           e amor.
         </div>
       </div>

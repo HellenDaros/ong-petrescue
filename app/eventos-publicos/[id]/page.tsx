@@ -111,7 +111,7 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
 
           <div className="flex items-center gap-2">
             <span className="text-lg font-black tracking-tighter text-slate-800">
-              PET<span className="text-orange-500">RESCUE</span>
+             I🧡PET
             </span>
           </div>
         </div>
@@ -255,7 +255,7 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
                       </div>
                       <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-black uppercase">
                         <MapPin size={12} strokeWidth={3} />
-                        {evento.empresaNome || "PetRescue"}
+                        {evento.empresaNome || "I🧡PET"}
                       </div>
                     </div>
                   </div>
