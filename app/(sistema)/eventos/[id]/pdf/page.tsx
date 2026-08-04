@@ -66,7 +66,7 @@ export default function EventoPdfPage({
   }
 
   return (
-    <div className="w-full min-h-screen bg-stone-100 py-8 px-4 sm:px-6 animate-in fade-in duration-500">
+    <div className="w-full min-h-screen py-8 px-4 sm:px-6 animate-in fade-in duration-500">
       <div className="max-w-3xl mx-auto mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 print:hidden">
         <Link
           href="/eventos"
@@ -88,9 +88,9 @@ export default function EventoPdfPage({
       <div className="max-w-3xl mx-auto bg-white rounded-3xl border border-stone-200 shadow-2xl p-8 sm:p-12 print:shadow-none print:border-none print:rounded-none print:p-0 print:m-0 print:w-full">
         <div className="flex justify-between items-center pb-6 border-b-2 border-stone-100 mb-8">
           <div className="flex items-center gap-3">
-            <div className="bg-teal-600 p-3 rounded-2xl text-white shadow-md">
+            {/* <div className="bg-teal-600 p-3 rounded-2xl text-white shadow-md">
               <PawPrint size={28} />
-            </div>
+            </div> */}
             <div>
               <span className="text-2xl font-black tracking-tighter text-slate-800">
                 I🧡PET
@@ -175,28 +175,7 @@ export default function EventoPdfPage({
             presentes nesta feira e faça o pedido de adoção direto da sua tela!
           </p>
 
-          <span className="text-[11px] text-slate-400 font-mono break-all max-w-md">
-            {publicUrl}
-          </span>
         </div>
-
-        {evento.animais && evento.animais.length > 0 && (
-          <div className="pt-6 border-t border-stone-200">
-            <h3 className="text-xs font-black uppercase tracking-wider text-slate-500 mb-3 text-center">
-              Alguns dos peludinhos que você encontrará aqui hoje:
-            </h3>
-            <div className="flex flex-wrap justify-center gap-2">
-              {evento.animais.map((pet) => (
-                <span
-                  key={pet.id}
-                  className="bg-stone-100 text-slate-700 font-bold text-xs px-3 py-1 rounded-full border border-stone-200"
-                >
-                  🐾 {pet.nameAnimal} ({pet.especie} • {pet.raca})
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
 
         <div className="mt-8 text-center text-stone-400 text-[11px] font-medium pt-4 border-t border-stone-100">
           Documento gerado pelo sistema I🧡PET • Adote com responsabilidade
