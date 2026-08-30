@@ -12,7 +12,9 @@ public record EventoRequest(
         LocalDate data,
         LocalTime horarioInicio,
         LocalTime horarioTermino,
-        String local,
+        String nomeLocal,
+        String cep,
+        String complemento,
         String urlCapa,
         EnumStatusEvento status,
         List<Long> animaisIds

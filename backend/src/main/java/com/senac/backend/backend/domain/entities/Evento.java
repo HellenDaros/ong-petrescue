@@ -33,7 +33,13 @@ public class Evento {
 
     private LocalTime horarioTermino;
 
-    private String local;
+    private String nomeLocal;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    private Endereco endereco;
+
+    private String complemento;
 
     private String urlCapa;
 

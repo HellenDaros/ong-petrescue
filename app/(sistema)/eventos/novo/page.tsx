@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { buscarListaAnimais } from "@/app/services/animalService";
 import { cadastrarEvento } from "@/app/services/eventoService";
+import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
 import { Animal } from "@/app/types/animal";
 import { EventoRequest } from "@/app/types/evento";
 import { ArrowLeft, Calendar, CheckSquare, Square, Search } from "lucide-react";
@@ -17,7 +18,13 @@ export default function NovoEventoPage() {
   const [data, setData] = useState("");
   const [horarioInicio, setHorarioInicio] = useState("");
   const [horarioTermino, setHorarioTermino] = useState("");
-  const [local, setLocal] = useState("");
+  const [nomeLocal, setNomeLocal] = useState("");
+  const [cep, setCep] = useState("");
+  const [endereco, setEndereco] = useState("");
+  const [bairro, setBairro] = useState("");
+  const [cidade, setCidade] = useState("");
+  const [uf, setUf] = useState("");
+  const [complemento, setComplemento] = useState("");
   const [urlCapa, setUrlCapa] = useState("");
 
   const [animaisOng, setAnimaisOng] = useState<Animal[]>([]);
@@ -62,11 +69,42 @@ export default function NovoEventoPage() {
     setAnimaisSelecionados([]);
   };
 
+  const handleBuscarCep = async (cepConsultado: string) => {
+    const cepLimpo = cepConsultado.replace(/\D/g, "");
+
+    if (cepLimpo.length !== 8) {
+      return;
+    }
+
+    try {
+      const enderecoEncontrado = await buscarEnderecoPorCep(cepLimpo);
+
+      setCep(enderecoEncontrado.cep);
+      setEndereco(enderecoEncontrado.logradouro);
+      setBairro(enderecoEncontrado.bairro);
+      setCidade(enderecoEncontrado.cidade);
+      setUf(enderecoEncontrado.uf);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    }
+  };
+
+  const handleCepChange = (valor: string) => {
+    setCep(valor);
+
+    const cepLimpo = valor.replace(/\D/g, "");
+    if (cepLimpo.length === 8) {
+      handleBuscarCep(cepLimpo);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!nome || !descricao || !data || !horarioInicio || !horarioTermino || !local) {
-      alert("Por favor, preencha todos os campos obrigatórios.");
+    if (!nome || !descricao || !data || !horarioInicio || !horarioTermino || !endereco) {
+      alert("Por favor, preencha todos os campos obrigatórios, incluindo o CEP do local.");
       return;
     }
 
@@ -85,7 +123,9 @@ export default function NovoEventoPage() {
         data,
         horarioInicio,
         horarioTermino,
-        local,
+        nomeLocal: nomeLocal || undefined,
+        cep,
+        complemento: complemento || undefined,
         urlCapa: urlCapa || undefined,
         status: "AGENDADO",
         animaisIds: animaisSelecionados,
@@ -205,17 +245,96 @@ export default function NovoEventoPage() {
 
             <div className="md:col-span-2">
               <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                Local *
+                Nome do Local (Opcional)
               </label>
               <input
                 type="text"
-                value={local}
-                onChange={(e) => setLocal(e.target.value)}
-                placeholder="Ex: Parque Ibirapuera - Portão 3, São Paulo/SP"
+                value={nomeLocal}
+                onChange={(e) => setNomeLocal(e.target.value)}
+                placeholder="Ex: Prefeitura, Parque Ibirapuera - Portão 3"
+                className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                CEP *
+              </label>
+              <input
+                type="text"
+                value={cep}
+                onChange={(e) => handleCepChange(e.target.value)}
+                placeholder="00000-000"
                 required
                 className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
               />
             </div>
+
+            <div>
+              <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                Complemento (Opcional)
+              </label>
+              <input
+                type="text"
+                value={complemento}
+                onChange={(e) => setComplemento(e.target.value)}
+                placeholder="Ex: Portão 3"
+                className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+              />
+            </div>
+
+            {endereco && (
+              <>
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                    Endereço
+                  </label>
+                  <input
+                    type="text"
+                    value={endereco}
+                    readOnly
+                    className="w-full px-4 py-3.5 rounded-2xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                    Bairro
+                  </label>
+                  <input
+                    type="text"
+                    value={bairro}
+                    readOnly
+                    className="w-full px-4 py-3.5 rounded-2xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                      Cidade
+                    </label>
+                    <input
+                      type="text"
+                      value={cidade}
+                      readOnly
+                      className="w-full px-4 py-3.5 rounded-2xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                      UF
+                    </label>
+                    <input
+                      type="text"
+                      value={uf}
+                      readOnly
+                      className="w-full px-4 py-3.5 rounded-2xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
 
             <div className="md:col-span-2">
               <label className="block text-xs font-black uppercase text-slate-700 mb-2">

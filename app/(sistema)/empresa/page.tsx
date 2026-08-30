@@ -151,6 +151,22 @@ export default function MeuPerfilOng() {
 
               <p className="text-slate-700 font-semibold">{empresa.cnpj}</p>
             </div>
+
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                Endereço
+              </label>
+
+              <p className="text-slate-700 font-semibold">
+                {empresa.endereco}
+                {empresa.complemento ? `, ${empresa.complemento}` : ""} -{" "}
+                {empresa.bairro}, {empresa.cidade}/{empresa.uf}
+              </p>
+
+              <p className="text-slate-400 text-xs font-semibold mt-1">
+                CEP: {empresa.cep}
+              </p>
+            </div>
           </div>
         </div>
 

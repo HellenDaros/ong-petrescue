@@ -3,6 +3,7 @@ package com.senac.backend.backend.application.services;
 import com.senac.backend.backend.application.DTO.EmpresaRequest;
 import com.senac.backend.backend.application.DTO.EmpresaResponse;
 import com.senac.backend.backend.domain.entities.Empresa;
+import com.senac.backend.backend.domain.entities.Endereco;
 import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.EmpresaRepository;
@@ -23,6 +24,9 @@ public class EmpresaService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private EnderecoService enderecoService;
+
     @Transactional
     public Long SalvarEmpresa(EmpresaRequest empresa) {
         try {
@@ -32,9 +36,11 @@ public class EmpresaService {
                 throw new BusinessException("Já possui uma ONG vinculada.");
             }
 
+            Endereco endereco = enderecoService.buscarOuCriarEndereco(empresa.cep());
+
             Empresa empresaSalva =
                     empresaRepository.save(
-                            new Empresa(empresa)
+                            new Empresa(empresa, endereco)
                     );
 
             Usuario adminOng =
@@ -59,7 +65,12 @@ public class EmpresaService {
         Usuario usuario = (Usuario) authentication.getPrincipal();
         try {
 
-            Empresa empresa = usuario.getEmpresa();
+            if (usuario.getEmpresa() == null) {
+                return null;
+            }
+
+            Empresa empresa = empresaRepository.findById(usuario.getEmpresa().getId())
+                    .orElse(null);
 
             if (empresa == null) {
                 return null;
@@ -88,7 +99,12 @@ public class EmpresaService {
                         .getAuthentication()
                         .getPrincipal();
 
-        Empresa empresa = usuarioLogado.getEmpresa();
+        if (usuarioLogado.getEmpresa() == null) {
+            return false;
+        }
+
+        Empresa empresa = empresaRepository.findById(usuarioLogado.getEmpresa().getId())
+                .orElse(null);
 
         if (empresa == null) {
             return false;
@@ -97,6 +113,11 @@ public class EmpresaService {
         empresa.setNameFantasia(request.nameFantasia());
         empresa.setRazaoSocial(request.razaoSocial());
         empresa.setCnpj(new CNPJ(request.cnpj()));
+
+        Endereco endereco = enderecoService.buscarOuCriarEndereco(request.cep());
+
+        empresa.setEndereco(endereco);
+        empresa.setComplemento(request.complemento());
 
         Usuario administrador =
                 empresa.getUsuarios()

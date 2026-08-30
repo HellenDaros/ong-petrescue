@@ -2,8 +2,8 @@ package com.senac.backend.backend.application.services;
 
 import com.senac.backend.backend.application.DTO.AdotanteRequest;
 import com.senac.backend.backend.application.DTO.AdotanteResponse;
-import com.senac.backend.backend.application.DTO.EnderecoResponse;
 import com.senac.backend.backend.domain.entities.Adotante;
+import com.senac.backend.backend.domain.entities.Endereco;
 import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.AdotanteRepository;
@@ -30,8 +30,7 @@ public class AdotanteService {
     public Long SalvarAdotante(AdotanteRequest adotante) {
         try {
             Usuario usuarioSalvo = usuarioRepository.save(new Usuario(adotante));
-            EnderecoResponse endereco =
-                    enderecoService.buscarEnderecoFormatado(adotante.cep());
+            Endereco endereco = enderecoService.buscarOuCriarEndereco(adotante.cep());
 
             return adotanteRepository.save(
                     new Adotante(adotante, usuarioSalvo, endereco)
@@ -76,12 +75,9 @@ public class AdotanteService {
         if (adotanteBanco != null) {
 
             adotanteBanco.setIdentidade(adotante.identidade());
-            EnderecoResponse endereco =
-                    enderecoService.buscarEnderecoFormatado(adotante.cep());
-            adotanteBanco.setEndereco(endereco.logradouro());
-            adotanteBanco.setBairro(endereco.bairro());
-            adotanteBanco.setCidade(endereco.cidade());
-            adotanteBanco.setUf(endereco.uf());
+            Endereco endereco = enderecoService.buscarOuCriarEndereco(adotante.cep());
+
+            adotanteBanco.setEndereco(endereco);
             adotanteBanco.setComplemento(adotante.complemento());
             adotanteBanco.setProfissao(adotante.profissao());
             adotanteBanco.setTelefoneFixo(adotante.telefoneFixo());

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Evento } from "@/app/types/evento";
+import { Evento, formatarLocalEvento } from "@/app/types/evento";
 import { alterarStatusEvento, listarEventosOng } from "@/app/services/eventoService";
 import { Calendar, MapPin, Clock, Plus, ExternalLink, Edit3, QrCode, CheckCircle2, XCircle } from "lucide-react";
 
@@ -154,7 +154,7 @@ export default function EventosPage() {
                       </div>
                       <div className="flex items-center gap-2 text-slate-600">
                         <MapPin size={14} className="text-teal-600 shrink-0" />
-                        <span className="truncate">{evento.local}</span>
+                        <span className="truncate">{formatarLocalEvento(evento)}</span>
                       </div>
                     </div>
 

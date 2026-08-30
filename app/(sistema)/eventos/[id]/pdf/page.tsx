@@ -3,7 +3,7 @@
 import { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { buscarEventoPorId } from "@/app/services/eventoService";
-import { Evento } from "@/app/types/evento";
+import { Evento, formatarLocalEvento } from "@/app/types/evento";
 import { QRCodeSVG } from "qrcode.react";
 import {
   ArrowLeft,
@@ -144,7 +144,7 @@ export default function EventoPdfPage({
               Local
             </span>
             <span className="text-slate-800 font-extrabold text-sm truncate max-w-[200px]">
-              {evento.local}
+              {formatarLocalEvento(evento)}
             </span>
           </div>
         </div>

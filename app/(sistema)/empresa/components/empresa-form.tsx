@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Empresa, EmpresaFormProps } from "@/app/types/empresa";
 import { salvarEmpresa } from "@/app/services/empresaService";
+import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
 import { Usuario } from "@/app/types/usuarios";
 
 export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
@@ -16,18 +17,58 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
         "",
         "",
         "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
         new Usuario(null, "", "", "", "ATIVO", "", ""),
       ),
   );
 
   const handleEmpresaChange = (
-    campo: "nameFantasia" | "razaoSocial" | "cnpj",
+    campo: "nameFantasia" | "razaoSocial" | "cnpj" | "complemento",
     valor: string,
   ) => {
     setEmpresa((prev) => ({
       ...prev,
       [campo]: valor,
     }));
+  };
+
+  const handleBuscarCep = async (cep: string) => {
+    const cepLimpo = cep.replace(/\D/g, "");
+
+    if (cepLimpo.length !== 8) {
+      return;
+    }
+
+    try {
+      const endereco = await buscarEnderecoPorCep(cep);
+
+      setEmpresa((prev) => ({
+        ...prev,
+        cep: endereco.cep,
+        endereco: endereco.logradouro,
+        bairro: endereco.bairro,
+        cidade: endereco.cidade,
+        uf: endereco.uf,
+      }));
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    }
+  };
+
+  const handleCepChange = async (valor: string) => {
+    setEmpresa((prev) => ({ ...prev, cep: valor }));
+
+    const cepLimpo = valor.replace(/\D/g, "");
+    if (cepLimpo.length === 8) {
+      await handleBuscarCep(cepLimpo);
+    }
   };
 
   const handleAdminChange = (
@@ -62,11 +103,12 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
       <div className="w-full max-w-2xl bg-white rounded-[2.5rem] shadow-xl shadow-stone-200/50 border border-stone-100 overflow-hidden">
         <div className="bg-stone-50/50 px-10 py-8 border-b border-stone-100">
           <h2 className="text-2xl font-black text-slate-800 tracking-tight">
-            Cadastro de ONG
+            {empresaExistente ? "Editar ONG" : "Cadastro de ONG"}
           </h2>
           <p className="text-slate-500 text-sm font-medium">
-            Crie a conta da sua instituição para começar a gerenciar suas
-            adoções.
+            {empresaExistente
+              ? "Atualize os dados da sua instituição."
+              : "Crie a conta da sua instituição para começar a gerenciar suas adoções."}
           </p>
         </div>
 
@@ -120,6 +162,88 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
 
             <div className="space-y-2">
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                CEP
+              </label>
+              <input
+                type="text"
+                required
+                value={empresa.cep}
+                onChange={(e) => handleCepChange(e.target.value)}
+                placeholder="00000-000"
+                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                Complemento (Opcional)
+              </label>
+              <input
+                type="text"
+                value={empresa.complemento ?? ""}
+                onChange={(e) =>
+                  handleEmpresaChange("complemento", e.target.value)
+                }
+                placeholder="Ex: Sala 2"
+                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+              />
+            </div>
+
+            {empresa.endereco !== "" && (
+              <>
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                    Endereço
+                  </label>
+                  <input
+                    type="text"
+                    readOnly
+                    value={empresa.endereco}
+                    placeholder="Rua, Número"
+                    className="w-full bg-stone-50 border-2 border-stone-50 outline-none px-5 py-4 rounded-2xl text-slate-500 font-bold placeholder:text-stone-300"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                    Bairro
+                  </label>
+                  <input
+                    type="text"
+                    readOnly
+                    value={empresa.bairro}
+                    className="w-full bg-stone-50 border-2 border-stone-50 outline-none px-5 py-4 rounded-2xl text-slate-500 font-bold"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                    Cidade
+                  </label>
+                  <input
+                    type="text"
+                    readOnly
+                    value={empresa.cidade}
+                    className="w-full bg-stone-50 border-2 border-stone-50 outline-none px-5 py-4 rounded-2xl text-slate-500 font-bold"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                    UF
+                  </label>
+                  <input
+                    type="text"
+                    readOnly
+                    value={empresa.uf}
+                    className="w-full bg-stone-50 border-2 border-stone-50 outline-none px-5 py-4 rounded-2xl text-slate-500 font-bold"
+                  />
+                </div>
+              </>
+            )}
+
+            <div className="space-y-2">
+              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Nome Completo do Responsável
               </label>
               <input
@@ -163,13 +287,13 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
 
             <div className="space-y-2">
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                Senha
+                Senha{empresaExistente ? " (deixe em branco para manter a atual)" : ""}
               </label>
               <input
                 type="password"
-                required
+                required={!empresaExistente}
                 onChange={(e) => handleAdminChange("senha", e.target.value)}
-                value={empresa.usuarioAdmin.senha}
+                value={empresa.usuarioAdmin.senha ?? ""}
                 placeholder="••••••••"
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
@@ -188,7 +312,7 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
               type="submit"
               className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-2xl font-black transition-all shadow-lg shadow-orange-100 active:scale-95"
             >
-              Finalizar Cadastro
+              {empresaExistente ? "Salvar Alterações" : "Finalizar Cadastro"}
             </button>
           </div>
         </form>

@@ -4,7 +4,7 @@ import { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { buscarEventoPublicoPorId } from "@/app/services/eventoService";
-import { Evento } from "@/app/types/evento";
+import { Evento, formatarLocalEvento } from "@/app/types/evento";
 import { Animal } from "@/app/types/animal";
 import { useFavoritos } from "@/app/redux/useFavoritos";
 import { useSelector } from "react-redux";
@@ -158,7 +158,7 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
 
             <div className="flex items-center gap-2 px-3 py-1">
               <MapPin className="text-orange-400" size={18} />
-              <span>{evento.local}</span>
+              <span>{formatarLocalEvento(evento)}</span>
             </div>
           </div>
         </div>

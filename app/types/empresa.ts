@@ -6,6 +6,12 @@ export class Empresa {
     public nameFantasia: string,
     public razaoSocial: string,
     public cnpj: string,
+    public cep: string,
+    public endereco: string,
+    public bairro: string,
+    public cidade: string,
+    public uf: string,
+    public complemento: string | null,
     public usuarioAdmin: Usuario,
   ) {}
 }

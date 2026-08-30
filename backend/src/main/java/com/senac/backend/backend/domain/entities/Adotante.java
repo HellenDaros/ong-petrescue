@@ -1,7 +1,6 @@
 package com.senac.backend.backend.domain.entities;
 
 import com.senac.backend.backend.application.DTO.AdotanteRequest;
-import com.senac.backend.backend.application.DTO.EnderecoResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,15 +23,9 @@ public class Adotante {
 
     private String identidade;
 
-    private String cep;
-
-    private String endereco;
-
-    private String bairro;
-
-    private String cidade;
-
-    private String uf;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    private Endereco endereco;
 
     private String complemento;
 
@@ -42,14 +35,10 @@ public class Adotante {
 
     private String telefoneMovel;
 
-    public Adotante(AdotanteRequest adotante, Usuario usuario, EnderecoResponse endereco) {
+    public Adotante(AdotanteRequest adotante, Usuario usuario, Endereco endereco) {
         this.usuario = usuario;
         this.identidade = adotante.identidade();
-        this.cep = endereco.cep();
-        this.endereco = endereco.logradouro();
-        this.bairro = endereco.bairro();
-        this.cidade = endereco.cidade();
-        this.uf = endereco.uf();
+        this.endereco = endereco;
         this.complemento = adotante.complemento();
         this.profissao = adotante.profissao();
         this.telefoneFixo = adotante.telefoneFixo();

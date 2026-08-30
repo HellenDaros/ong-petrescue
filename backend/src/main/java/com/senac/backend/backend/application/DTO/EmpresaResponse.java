@@ -7,6 +7,12 @@ public record EmpresaResponse(Long id,
                               String nameFantasia,
                               String razaoSocial,
                               String cnpj,
+                              String cep,
+                              String endereco,
+                              String bairro,
+                              String cidade,
+                              String uf,
+                              String complemento,
 
                               UsuarioResponse usuarioAdmin) {
     public EmpresaResponse(Empresa empresa, Usuario administrador) {
@@ -15,6 +21,12 @@ public record EmpresaResponse(Long id,
                 empresa.getNameFantasia(),
                 empresa.getRazaoSocial(),
                 empresa.getCnpj().toString(),
+                empresa.getEndereco().getCep(),
+                empresa.getEndereco().getLogradouro(),
+                empresa.getEndereco().getBairro(),
+                empresa.getEndereco().getCidade(),
+                empresa.getEndereco().getUf(),
+                empresa.getComplemento(),
 
                 new UsuarioResponse(administrador)
         );

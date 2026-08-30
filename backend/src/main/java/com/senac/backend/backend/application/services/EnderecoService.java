@@ -2,6 +2,8 @@ package com.senac.backend.backend.application.services;
 
 import com.senac.backend.backend.application.DTO.EnderecoResponse;
 import com.senac.backend.backend.application.DTO.ViaCepResponse;
+import com.senac.backend.backend.domain.entities.Endereco;
+import com.senac.backend.backend.domain.repository.EnderecoRepository;
 import com.senac.backend.backend.infra.external.ViaCepClient;
 import org.springframework.stereotype.Service;
 
@@ -9,9 +11,11 @@ import org.springframework.stereotype.Service;
 public class EnderecoService {
 
     private final ViaCepClient viaCepClient;
+    private final EnderecoRepository enderecoRepository;
 
-    public EnderecoService(ViaCepClient viaCepClient) {
+    public EnderecoService(ViaCepClient viaCepClient, EnderecoRepository enderecoRepository) {
         this.viaCepClient = viaCepClient;
+        this.enderecoRepository = enderecoRepository;
     }
 
     public EnderecoResponse buscarEnderecoFormatado(String cep) {
@@ -27,5 +31,12 @@ public class EnderecoService {
                 response.getUf() );
 
         return endereco;
+    }
+
+    public Endereco buscarOuCriarEndereco(String cep) {
+        EnderecoResponse enderecoFormatado = buscarEnderecoFormatado(cep);
+
+        return enderecoRepository.findByCep(enderecoFormatado.cep())
+                .orElseGet(() -> enderecoRepository.save(new Endereco(enderecoFormatado)));
     }
 }

@@ -4,5 +4,7 @@ public record EmpresaRequest(
                              String nameFantasia,
                              String razaoSocial,
                              String cnpj,
+                             String cep,
+                             String complemento,
                              UsuarioRequest usuarioAdmin) {
 }

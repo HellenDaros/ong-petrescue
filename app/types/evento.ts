@@ -7,7 +7,13 @@ export interface Evento {
   data: string; // YYYY-MM-DD
   horarioInicio: string; // HH:mm
   horarioTermino: string; // HH:mm
-  local: string;
+  nomeLocal?: string;
+  cep: string;
+  endereco: string;
+  bairro: string;
+  cidade: string;
+  uf: string;
+  complemento?: string;
   urlCapa?: string;
   status: "AGENDADO" | "ENCERRADO";
   empresaId?: number;
@@ -21,7 +27,9 @@ export interface EventoRequest {
   data: string;
   horarioInicio: string;
   horarioTermino: string;
-  local: string;
+  nomeLocal?: string;
+  cep: string;
+  complemento?: string;
   urlCapa?: string;
   status?: "AGENDADO" | "ENCERRADO";
   animaisIds: number[];
@@ -29,4 +37,18 @@ export interface EventoRequest {
 
 export interface AlterarStatusEventoRequest {
   status: "AGENDADO" | "ENCERRADO";
+}
+
+export function formatarLocalEvento(evento: Evento): string {
+  const enderecoCompleto = [
+    evento.endereco,
+    evento.bairro,
+    evento.cidade && evento.uf ? `${evento.cidade}/${evento.uf}` : evento.cidade,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  return evento.nomeLocal
+    ? [evento.nomeLocal, enderecoCompleto].filter(Boolean).join(" - ")
+    : enderecoCompleto;
 }

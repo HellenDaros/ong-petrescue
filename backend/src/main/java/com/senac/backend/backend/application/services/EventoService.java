@@ -4,6 +4,7 @@ import com.senac.backend.backend.application.DTO.AlterarStatusEventoRequest;
 import com.senac.backend.backend.application.DTO.EventoRequest;
 import com.senac.backend.backend.application.DTO.EventoResponse;
 import com.senac.backend.backend.domain.entities.Animal;
+import com.senac.backend.backend.domain.entities.Endereco;
 import com.senac.backend.backend.domain.entities.Evento;
 import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.enuns.EnumStatusEvento;
@@ -28,6 +29,9 @@ public class EventoService {
 
     @Autowired
     private AnimalRepository animalRepository;
+
+    @Autowired
+    private EnderecoService enderecoService;
 
     @Transactional(readOnly = true)
     public List<EventoResponse> listarTodosPorOng() {
@@ -76,13 +80,17 @@ public class EventoService {
             throw new BusinessException("Usuário não possui uma ONG associada.");
         }
 
+        Endereco endereco = enderecoService.buscarOuCriarEndereco(request.cep());
+
         Evento evento = new Evento();
         evento.setNome(request.nome());
         evento.setDescricao(request.descricao());
         evento.setData(request.data());
         evento.setHorarioInicio(request.horarioInicio());
         evento.setHorarioTermino(request.horarioTermino());
-        evento.setLocal(request.local());
+        evento.setNomeLocal(request.nomeLocal());
+        evento.setEndereco(endereco);
+        evento.setComplemento(request.complemento());
         evento.setUrlCapa(request.urlCapa());
         evento.setStatus(request.status() != null ? request.status() : EnumStatusEvento.AGENDADO);
         evento.setEmpresa(usuarioLogado.getEmpresa());
@@ -107,12 +115,17 @@ public class EventoService {
         Evento eventoBanco = eventoRepository.findByIdAndEmpresa_Id(id, usuarioLogado.getEmpresa().getId())
                 .orElseThrow(() -> new BusinessException("Evento não encontrado."));
 
+        Endereco endereco = enderecoService.buscarOuCriarEndereco(request.cep());
+
         eventoBanco.setNome(request.nome());
         eventoBanco.setDescricao(request.descricao());
         eventoBanco.setData(request.data());
         eventoBanco.setHorarioInicio(request.horarioInicio());
         eventoBanco.setHorarioTermino(request.horarioTermino());
-        eventoBanco.setLocal(request.local());
+        eventoBanco.setNomeLocal(request.nomeLocal());
+        eventoBanco.setEndereco(endereco);
+        eventoBanco.setComplemento(request.complemento());
+
         eventoBanco.setUrlCapa(request.urlCapa());
         if (request.status() != null) {
             eventoBanco.setStatus(request.status());

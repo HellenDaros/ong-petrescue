@@ -27,15 +27,23 @@ public class Empresa {
     @Embedded
     private CNPJ cnpj;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    private Endereco endereco;
+
+    private String complemento;
+
     @OneToMany(mappedBy = "empresa")
     private List<Usuario> usuarios;
 
     @OneToMany(mappedBy = "empresa")
     private List<Animal> animais;
 
-    public Empresa(EmpresaRequest empresa) {
+    public Empresa(EmpresaRequest empresa, Endereco endereco) {
         this.nameFantasia = empresa.nameFantasia();
         this.razaoSocial = empresa.razaoSocial();
         this.cnpj = new CNPJ(empresa.cnpj());
+        this.endereco = endereco;
+        this.complemento = empresa.complemento();
     }
 }
