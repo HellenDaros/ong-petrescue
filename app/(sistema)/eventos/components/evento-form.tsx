@@ -105,7 +105,14 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
   };
 
   const handleCepChange = (valor: string) => {
-    setEvento((prev) => ({ ...prev, cep: valor }));
+    setEvento((prev) => ({
+      ...prev,
+      cep: valor,
+      endereco: "",
+      bairro: "",
+      cidade: "",
+      uf: "",
+    }));
 
     const cepLimpo = valor.replace(/\D/g, "");
     if (cepLimpo.length === 8) {
@@ -137,20 +144,10 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
   };
 
   const handleSalvar = async () => {
-    if (
-      !evento.nome ||
-      !evento.descricao ||
-      !evento.data ||
-      !evento.horarioInicio ||
-      !evento.horarioTermino ||
-      !evento.endereco
-    ) {
-      alert(
-        "Por favor, preencha todos os campos obrigatórios, incluindo o CEP do local.",
-      );
-      return;
-    }
-
+    // nome, descricao, data, horarioInicio e horarioTermino já são
+    // garantidos pelo `required` dos próprios inputs. O endereço não é
+    // validado aqui: quem confirma se o CEP é válido é o backend, que
+    // devolve uma mensagem específica sobre o motivo da falha.
     if (!isEdicao && evento.animais.length === 0) {
       const confirmaSemAnimais = confirm(
         "Nenhum animal foi selecionado para este evento. Deseja cadastrar o evento assim mesmo?",
@@ -181,10 +178,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
       alert(`Evento ${isEdicao ? "atualizado" : "cadastrado"} com sucesso!`);
       router.push("/eventos");
     } catch (error) {
-      console.error(
-        `Erro ao ${isEdicao ? "atualizar" : "cadastrar"} evento:`,
-        error,
-      );
+      console.log(error);
       alert(
         error instanceof Error
           ? error.message

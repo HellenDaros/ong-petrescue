@@ -63,7 +63,14 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
   };
 
   const handleCepChange = async (valor: string) => {
-    setEmpresa((prev) => ({ ...prev, cep: valor }));
+    setEmpresa((prev) => ({
+      ...prev,
+      cep: valor,
+      endereco: "",
+      bairro: "",
+      cidade: "",
+      uf: "",
+    }));
 
     const cepLimpo = valor.replace(/\D/g, "");
     if (cepLimpo.length === 8) {
@@ -287,7 +294,10 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
 
             <div className="space-y-2">
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                Senha{empresaExistente ? " (deixe em branco para manter a atual)" : ""}
+                Senha
+                {empresaExistente
+                  ? " (deixe em branco para manter a atual)"
+                  : ""}
               </label>
               <input
                 type="password"

@@ -24,17 +24,17 @@ api.interceptors.response.use(
 
         window.location.href = "/login";
       }
-    }
 
-    if (error.response.status === 403) {
-      const mensagem =
-        typeof error.response.data === "string"
-          ? error.response.data
-          : "Você não possui permissão para acessar este recurso.";
+      if (error.response.status === 403) {
+        const mensagem =
+          typeof error.response.data === "string" && error.response.data
+            ? error.response.data
+            : "Você não possui permissão para acessar este recurso.";
 
-      alert(mensagem);
+        alert(mensagem);
 
-      window.location.href = "/";
+        window.location.href = "/";
+      }
     }
 
     return Promise.reject(error);

@@ -11,7 +11,11 @@ export async function buscarEnderecoPorCep(
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
-      throw new Error(error.response.data);
+      const mensagem =
+        typeof error.response.data === "string"
+          ? error.response.data
+          : "CEP não encontrado. Verifique o número informado.";
+      throw new Error(mensagem);
     }
 
     throw new Error("Erro ao consultar o CEP.");

@@ -63,6 +63,10 @@ export default function AdotanteForm({
 
   const handleCepChange = async (valor: string) => {
     handleChange("cep", valor);
+    handleChange("endereco", "");
+    handleChange("bairro", "");
+    handleChange("cidade", "");
+    handleChange("uf", "");
 
     const cepLimpo = valor.replace(/\D/g, "");
 
