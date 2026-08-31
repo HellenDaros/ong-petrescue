@@ -39,6 +39,10 @@ export interface AlterarStatusEventoRequest {
   status: "AGENDADO" | "ENCERRADO";
 }
 
+export interface EventoFormProps {
+  eventoExistente?: Evento;
+}
+
 export function formatarLocalEvento(evento: Evento): string {
   const enderecoCompleto = [
     evento.endereco,

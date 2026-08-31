@@ -40,7 +40,11 @@ export default function EventosPage() {
       carregarEventos();
     } catch (error) {
       console.error("Erro ao alterar status:", error);
-      alert("Falha ao alterar o status do evento.");
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Falha ao alterar o status do evento.",
+      );
     }
   };
 
