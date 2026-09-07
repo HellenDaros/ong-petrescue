@@ -19,7 +19,6 @@ export function maskCNPJ(value: string): string {
     .replace(/(\d{4})(\d{1,2})$/, "$1-$2");
 }
 
-/** Celular: (00) 00000-0000 — 11 dígitos, com o 9º dígito. */
 export function maskCelular(value: string): string {
   const d = onlyDigits(value).slice(0, 11);
 
@@ -27,14 +26,4 @@ export function maskCelular(value: string): string {
   if (d.length <= 2) return `(${d}`;
   if (d.length <= 7) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
-}
-
-/** Telefone fixo: (00) 0000-0000 — 10 dígitos. */
-export function maskTelefoneFixo(value: string): string {
-  const d = onlyDigits(value).slice(0, 10);
-
-  if (d.length === 0) return "";
-  if (d.length <= 2) return `(${d}`;
-  if (d.length <= 6) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
-  return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
 }

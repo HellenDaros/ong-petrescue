@@ -5,12 +5,7 @@ import { useRouter } from "next/navigation";
 import { salvarAdotante } from "@/app/services/adotanteService";
 import { Adotante, AdotanteFormProps } from "@/app/types/adotante";
 import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
-import {
-  maskCelular,
-  maskCPF,
-  maskTelefoneFixo,
-  onlyDigits,
-} from "@/app/utils/masks";
+import { maskCelular, maskCPF, onlyDigits } from "@/app/utils/masks";
 import Link from "next/link";
 
 export default function AdotanteForm({
@@ -132,7 +127,6 @@ export default function AdotanteForm({
         ...adotante,
         cpf: onlyDigits(adotante.cpf || ""),
         telefoneMovel: onlyDigits(adotante.telefoneMovel || ""),
-        telefoneFixo: onlyDigits(adotante.telefoneFixo || ""),
       };
       await salvarAdotante(payload, isEdicao);
       alert(
@@ -371,10 +365,8 @@ export default function AdotanteForm({
               </label>
               <input
                 type="text"
-                value={maskTelefoneFixo(adotante.telefoneFixo)}
-                onChange={(e) =>
-                  handleChange("telefoneFixo", maskTelefoneFixo(e.target.value))
-                }
+                value={adotante.telefoneFixo}
+                onChange={(e) => handleChange("telefoneFixo", e.target.value)}
                 placeholder="(00) 0000-0000"
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
