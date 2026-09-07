@@ -114,9 +114,9 @@ export default function DetalhesSolicitacaoModal({
             <button
               type="button"
               onClick={onFechar}
-              className="inline-flex p-2 rounded-xl text-slate-300 hover:text-slate-500 hover:bg-stone-100 transition-all"
+              className="inline-flex -mt-3 -mr-3 p-2.5 rounded-xl text-slate-300 hover:text-slate-500 hover:bg-stone-100 transition-all"
             >
-              <X size={18} strokeWidth={3} />
+              <X size={22} strokeWidth={3} />
             </button>
             <div>{getStatusBadge(solicitacao.statusAdocao)}</div>
           </div>
