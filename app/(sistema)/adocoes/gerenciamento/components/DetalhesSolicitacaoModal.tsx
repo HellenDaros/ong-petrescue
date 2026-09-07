@@ -62,7 +62,12 @@ export default function DetalhesSolicitacaoModal({
     animal.vacinado === "SIM" && !!animal.vacinadoDescricao;
 
   return (
-    <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onFechar();
+      }}
+      className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+    >
       <div className="w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden bg-white rounded-[2rem] shadow-2xl border border-stone-100">
         <div className="flex items-start justify-between px-8 pt-8 pb-6 border-b border-stone-100 bg-white shrink-0">
           <div className="flex items-center gap-4">
@@ -117,7 +122,7 @@ export default function DetalhesSolicitacaoModal({
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-8 space-y-8 [scrollbar-width:thin] [scrollbar-color:#d6d3d1_transparent]">
+        <div className="flex-1 overflow-y-auto p-8 space-y-4 [scrollbar-width:thin] [scrollbar-color:#d6d3d1_transparent]">
           <div className="space-y-4">
             <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">
               Dados do Adotante
