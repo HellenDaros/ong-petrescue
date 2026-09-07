@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ChevronLeft, Heart, Share2 } from "lucide-react";
+import { CheckCircle2, ChevronLeft, Heart, PenTool, Share2 } from "lucide-react";
 import { Animal } from "@/app/types/animal";
 import { buscarAnimalPorId } from "@/app/services/animalService";
 import { useFavoritos } from "@/app/redux/useFavoritos";
@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { criarSolicitacaoAdocao } from "@/app/services/adocaoService";
 import { buscarAdotanteLogado } from "@/app/services/adotanteService";
+import AssinaturaModal from "@/app/components/AssinaturaModal";
 
 export default function DetalhesAnimalPage() {
   const params = useParams();
@@ -25,6 +26,8 @@ export default function DetalhesAnimalPage() {
   const [enderecoAnimal, setEnderecoAnimal] = useState("");
   const [concordaTermos, setConcordaTermos] = useState(false);
   const [enviando, setEnviando] = useState(false);
+  const [assinatura, setAssinatura] = useState<string | null>(null);
+  const [modalAssinaturaAberto, setModalAssinaturaAberto] = useState(false);
 
   useEffect(() => {
     const carregarAdotante = async () => {
@@ -81,6 +84,10 @@ export default function DetalhesAnimalPage() {
       );
       return;
     }
+    if (!assinatura) {
+      alert("Você precisa assinar o termo de compromisso antes de enviar.");
+      return;
+    }
     if (animal?.id === undefined || animal?.id === null) return;
 
     setEnviando(true);
@@ -88,6 +95,7 @@ export default function DetalhesAnimalPage() {
       const sucesso = await criarSolicitacaoAdocao({
         animalId: animal.id,
         enderecoAnimal: enderecoAnimal,
+        assinaturaBase64: assinatura,
       });
 
       if (sucesso) {
@@ -250,6 +258,38 @@ export default function DetalhesAnimalPage() {
                   </label>
                 </div>
 
+                <div className="bg-white p-4 rounded-2xl border border-stone-200 space-y-3">
+                  <h4 className="text-xs font-black text-slate-500 uppercase tracking-wider">
+                    Assinatura do Termo de Compromisso
+                  </h4>
+                  <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                    Assine digitalmente para confirmar que está ciente da lei e
+                    do compromisso de guarda responsável.
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={() => setModalAssinaturaAberto(true)}
+                    className={`w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${
+                      assinatura
+                        ? "bg-teal-50 text-teal-600 border-2 border-teal-100 hover:bg-teal-100"
+                        : "bg-white text-slate-500 border-2 border-dashed border-stone-300 hover:border-teal-400 hover:text-teal-600"
+                    }`}
+                  >
+                    {assinatura ? (
+                      <>
+                        <CheckCircle2 size={14} strokeWidth={3} />
+                        Assinatura Salva · Editar
+                      </>
+                    ) : (
+                      <>
+                        <PenTool size={14} strokeWidth={3} />
+                        Realizar Assinatura
+                      </>
+                    )}
+                  </button>
+                </div>
+
                 <div className="flex gap-3">
                   <button
                     type="button"
@@ -260,7 +300,12 @@ export default function DetalhesAnimalPage() {
                   </button>
                   <button
                     type="submit"
-                    disabled={enviando}
+                    disabled={enviando || !assinatura}
+                    title={
+                      !assinatura
+                        ? "Assine o termo para habilitar o envio"
+                        : undefined
+                    }
                     className="flex-[2] py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-orange-100 active:scale-95 disabled:bg-slate-300"
                   >
                     {enviando ? "Enviando..." : "Confirmar Adoção"}
@@ -293,6 +338,17 @@ export default function DetalhesAnimalPage() {
           </div>
         </div>
       </div>
+
+      {modalAssinaturaAberto && (
+        <AssinaturaModal
+          assinaturaAtual={assinatura}
+          onFechar={() => setModalAssinaturaAberto(false)}
+          onSalvar={(assinaturaBase64) => {
+            setAssinatura(assinaturaBase64);
+            setModalAssinaturaAberto(false);
+          }}
+        />
+      )}
     </main>
   );
 }

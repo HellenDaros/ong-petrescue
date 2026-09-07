@@ -46,11 +46,16 @@ public class SolicitacaoAdocaoService {
             throw new RuntimeException("Animal não está disponível para adoção.");
         }
 
+        if (request.assinaturaBase64() == null || request.assinaturaBase64().isBlank()) {
+            throw new RuntimeException("É necessário assinar o termo de adoção antes de enviar a solicitação.");
+        }
+
         SolicitacaoAdocao solicitacao = new SolicitacaoAdocao();
         solicitacao.setAdotante(adotante);
         solicitacao.setAnimal(animal);
         solicitacao.setEnderecoAnimal(request.enderecoAnimal());
         solicitacao.setStatusAdocao(EnumStatusAdocao.PENDENTE);
+        solicitacao.setAssinaturaBase64(request.assinaturaBase64());
         solicitacao.setDataSolicitacao(LocalDateTime.now());
 
         return solicitacaoAdocaoRepository.save(solicitacao).getId();

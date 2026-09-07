@@ -1,6 +1,7 @@
 export interface SolicitacaoAdocaoRequest {
   animalId: number;
   enderecoAnimal: string;
+  assinaturaBase64: string;
 }
 
 export interface SolicitacaoAdocaoResponse {
@@ -29,5 +30,6 @@ export interface SolicitacaoAdocaoResponse {
   };
   enderecoAnimal: string;
   statusAdocao: "PENDENTE" | "APROVADO" | "REJEITADO";
+  assinaturaBase64: string | null;
   dataSolicitacao: string;
 }
