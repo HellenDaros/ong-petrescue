@@ -10,6 +10,7 @@ import {
   PORTE_LABEL,
   SEXO_LABEL,
 } from "../constants/animal-constants";
+import { maskCelular, onlyDigits } from "@/app/utils/masks";
 
 export default function AnimalForm({ animalExistente }: AnimalFormProps) {
   const router = useRouter();
@@ -64,7 +65,11 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
   };
 
   const handleSalvar = async () => {
-    const sucesso = await salvarAnimal(animal, !!animalExistente);
+    const payload = {
+      ...animal,
+      telefoneDoador: onlyDigits(animal.telefoneDoador),
+    };
+    const sucesso = await salvarAnimal(payload, !!animalExistente);
 
     if (sucesso) {
       alert("Animal salvo com sucesso!");
@@ -235,9 +240,11 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
               <input
                 type="text"
                 required
-                onChange={(e) => handleChange("telefoneDoador", e.target.value)}
-                value={animal.telefoneDoador}
-                placeholder="(48) 9 9999-9999"
+                onChange={(e) =>
+                  handleChange("telefoneDoador", maskCelular(e.target.value))
+                }
+                value={maskCelular(animal.telefoneDoador)}
+                placeholder="(48) 99999-9999"
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>

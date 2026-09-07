@@ -5,7 +5,12 @@ import { useRouter } from "next/navigation";
 import { salvarAdotante } from "@/app/services/adotanteService";
 import { Adotante, AdotanteFormProps } from "@/app/types/adotante";
 import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
-import { maskCPF, onlyDigits } from "@/app/utils/masks";
+import {
+  maskCelular,
+  maskCPF,
+  maskTelefoneFixo,
+  onlyDigits,
+} from "@/app/utils/masks";
 import Link from "next/link";
 
 export default function AdotanteForm({
@@ -123,7 +128,12 @@ export default function AdotanteForm({
     const isEdicao = !!adotanteExistente;
 
     try {
-      const payload = { ...adotante, cpf: onlyDigits(adotante.cpf || "") };
+      const payload = {
+        ...adotante,
+        cpf: onlyDigits(adotante.cpf || ""),
+        telefoneMovel: onlyDigits(adotante.telefoneMovel || ""),
+        telefoneFixo: onlyDigits(adotante.telefoneFixo || ""),
+      };
       await salvarAdotante(payload, isEdicao);
       alert(
         isEdicao ? "Perfil atualizado com sucesso!" : "Cadastro realizado!",
@@ -347,8 +357,10 @@ export default function AdotanteForm({
               <input
                 type="text"
                 required
-                value={adotante.telefoneMovel}
-                onChange={(e) => handleChange("telefoneMovel", e.target.value)}
+                value={maskCelular(adotante.telefoneMovel)}
+                onChange={(e) =>
+                  handleChange("telefoneMovel", maskCelular(e.target.value))
+                }
                 placeholder="(00) 00000-0000"
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
@@ -359,8 +371,10 @@ export default function AdotanteForm({
               </label>
               <input
                 type="text"
-                value={adotante.telefoneFixo}
-                onChange={(e) => handleChange("telefoneFixo", e.target.value)}
+                value={maskTelefoneFixo(adotante.telefoneFixo)}
+                onChange={(e) =>
+                  handleChange("telefoneFixo", maskTelefoneFixo(e.target.value))
+                }
                 placeholder="(00) 0000-0000"
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />

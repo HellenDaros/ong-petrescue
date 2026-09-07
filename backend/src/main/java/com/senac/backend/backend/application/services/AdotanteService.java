@@ -8,6 +8,7 @@ import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.AdotanteRepository;
 import com.senac.backend.backend.domain.repository.UsuarioRepository;
+import com.senac.backend.backend.domain.valueobjects.Celular;
 import com.senac.backend.backend.domain.valueobjects.CPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -81,7 +82,7 @@ public class AdotanteService {
             adotanteBanco.setComplemento(adotante.complemento());
             adotanteBanco.setProfissao(adotante.profissao());
             adotanteBanco.setTelefoneFixo(adotante.telefoneFixo());
-            adotanteBanco.setTelefoneMovel(adotante.telefoneMovel());
+            adotanteBanco.setTelefoneMovel(new Celular(adotante.telefoneMovel()));
 
             adotanteRepository.save(adotanteBanco);
 

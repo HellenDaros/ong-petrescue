@@ -33,7 +33,7 @@ public record AdotanteResponse(
                 adotante.getComplemento(),
                 adotante.getProfissao(),
                 adotante.getTelefoneFixo(),
-                adotante.getTelefoneMovel()
+                adotante.getTelefoneMovel() != null ? adotante.getTelefoneMovel().toString() : null
         );
     }
 }
