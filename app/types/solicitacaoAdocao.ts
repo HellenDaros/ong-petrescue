@@ -31,6 +31,7 @@ export interface SolicitacaoAdocaoResponse {
     castrado: string;
     vermifugado: string;
     vacinado: string;
+    vacinadoDescricao: string | null;
   };
   enderecoAnimal: string;
   statusAdocao: "PENDENTE" | "APROVADO" | "REJEITADO";

@@ -1,10 +1,12 @@
 "use client";
 
+import { useState } from "react";
 import {
   Briefcase,
   CalendarDays,
   FileSignature,
   IdCard,
+  Info,
   Mail,
   MapPin,
   Phone,
@@ -49,11 +51,15 @@ export default function DetalhesSolicitacaoModal({
   onFechar,
 }: DetalhesSolicitacaoModalProps) {
   const { adotante, animal } = solicitacao;
+  const [mostrarInfoVacina, setMostrarInfoVacina] = useState(false);
 
   const formatarData = (dataString?: string) => {
     if (!dataString) return "-";
     return new Date(dataString).toLocaleDateString("pt-BR");
   };
+
+  const temDescricaoVacina =
+    animal.vacinado === "SIM" && !!animal.vacinadoDescricao;
 
   return (
     <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -78,9 +84,25 @@ export default function DetalhesSolicitacaoModal({
                 Castrado: {rotuloConfirmacao(animal.castrado)} · Vermifugado:{" "}
                 {rotuloConfirmacao(animal.vermifugado)}
               </p>
-              <p className="text-slate-400 font-bold text-[10px] uppercase tracking-wider mt-0.5">
+              <div className="relative flex items-center gap-1 text-slate-400 font-bold text-[10px] uppercase tracking-wider mt-0.5">
                 Vacinado: {rotuloConfirmacao(animal.vacinado)}
-              </p>
+                {temDescricaoVacina && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setMostrarInfoVacina((v) => !v)}
+                      className="text-slate-400 hover:text-teal-600 transition-colors"
+                    >
+                      <Info size={12} />
+                    </button>
+                    {mostrarInfoVacina && (
+                      <div className="absolute left-0 top-full mt-2 w-60 bg-slate-800 text-white text-[10px] normal-case font-medium tracking-normal leading-relaxed rounded-xl p-3 shadow-xl z-10">
+                        {animal.vacinadoDescricao}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
           </div>
           <div className="text-right space-y-2 shrink-0">
