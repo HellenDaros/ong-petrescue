@@ -6,16 +6,16 @@ import {
   responderSolicitacaoAdocao,
 } from "@/app/services/adocaoService";
 import {
-  Briefcase,
   Phone,
-  Mail,
   ClipboardList,
   Check,
   X,
   CalendarDays,
+  Eye,
 } from "lucide-react";
 import { SolicitacaoAdocaoResponse } from "@/app/types/solicitacaoAdocao";
 import { getStatusBadge } from "../utils/status-badge";
+import DetalhesSolicitacaoModal from "./components/DetalhesSolicitacaoModal";
 
 export default function GerenciamentoAdocoesPage() {
   const [solicitacoes, setSolicitacoes] = useState<SolicitacaoAdocaoResponse[]>(
@@ -23,6 +23,8 @@ export default function GerenciamentoAdocoesPage() {
   );
   const [carregando, setCarregando] = useState(true);
   const [processandoId, setProcessandoId] = useState<number | null>(null);
+  const [solicitacaoDetalhe, setSolicitacaoDetalhe] =
+    useState<SolicitacaoAdocaoResponse | null>(null);
 
   const carregarSolicitacoes = async () => {
     try {
@@ -115,17 +117,14 @@ export default function GerenciamentoAdocoesPage() {
       ) : (
         <div className="bg-white rounded-[2.5rem] border border-stone-100 shadow-md overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[1000px]">
+            <table className="w-full text-left border-collapse min-w-[820px]">
               <thead>
                 <tr className="bg-stone-50 border-b border-stone-100 text-[10px] font-black text-slate-400 uppercase tracking-widest">
                   <th className="px-6 py-5 whitespace-nowrap">Pet</th>
                   <th className="px-6 py-5 whitespace-nowrap">Adotante</th>
                   <th className="px-6 py-5 whitespace-nowrap">Contato</th>
                   <th className="px-6 py-5 whitespace-nowrap">
-                    Endereço Adotante
-                  </th>
-                  <th className="px-6 py-5 whitespace-nowrap">
-                    Endereço Destino
+                    Endereço do Animal
                   </th>
                   <th className="px-6 py-5 whitespace-nowrap">
                     Data da Solicitação
@@ -163,60 +162,25 @@ export default function GerenciamentoAdocoesPage() {
                     </td>
 
                     <td className="px-6 py-4">
-                      <div className="space-y-1">
-                        <p className="text-sm font-bold text-slate-700">
-                          {sol.adotante.name}
-                        </p>
-                        <div className="flex flex-col text-[11px] text-slate-500 font-medium">
-                          <span>CPF: {sol.adotante.cpf || "N/A"}</span>
-                          {sol.adotante.identidade && (
-                            <>
-                              <span className="w-1 h-1 rounded-full bg-slate-300"></span>
-                              <span>RG: {sol.adotante.identidade}</span>
-                            </>
-                          )}
-                        </div>
-                        {sol.adotante.profissao && (
-                          <p className="text-[10px] text-slate-400 uppercase tracking-wider flex items-center gap-1 mt-0.5">
-                            <Briefcase size={10} />
-                            {sol.adotante.profissao}
-                          </p>
-                        )}
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <div className="space-y-1.5">
-                        <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
-                          <Phone size={12} className="text-stone-400" />
-                          {sol.adotante.telefoneMovel}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
-                          <Mail size={12} className="text-stone-400" />
-                          <span
-                            className="truncate max-w-[150px]"
-                            title={sol.adotante.email}
-                          >
-                            {sol.adotante.email}
-                          </span>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-4">
-                      <p className="text-xs font-medium text-slate-600 leading-relaxed max-w-[200px]">
-                        {sol.enderecoAnimal}
+                      <p className="text-sm font-bold text-slate-700">
+                        {sol.adotante.name}
+                      </p>
+                      <p className="text-[11px] text-slate-500 font-medium">
+                        CPF: {sol.adotante.cpf || "N/A"}
                       </p>
                     </td>
 
                     <td className="px-6 py-4">
-                      <div className="flex flex-col text-xs font-medium text-slate-600 leading-relaxed max-w-[200px]">
-                        <span>{sol.adotante.endereco} -</span>
-                        <span>{sol.adotante.bairro}</span>
-                        <span className="text-slate-400 mt-0.5">
-                          {sol.adotante.cidade} / {sol.adotante.uf}
-                        </span>
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
+                        <Phone size={12} className="text-stone-400" />
+                        {sol.adotante.telefoneMovel || "N/A"}
                       </div>
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <p className="text-xs font-medium text-slate-600 leading-relaxed max-w-[220px]">
+                        {sol.enderecoAnimal}
+                      </p>
                     </td>
 
                     <td className="px-6 py-4">
@@ -231,32 +195,44 @@ export default function GerenciamentoAdocoesPage() {
                     </td>
 
                     <td className="px-6 py-4">
-                      {sol.statusAdocao === "PENDENTE" ? (
-                        <div className="flex items-center justify-center gap-2">
-                          <button
-                            onClick={() => handleResponder(sol.id, "REJEITADO")}
-                            disabled={processandoId !== null}
-                            title="Recusar"
-                            className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl transition-colors disabled:bg-slate-100 disabled:text-slate-400"
-                          >
-                            <X size={16} strokeWidth={2.5} />
-                          </button>
-                          <button
-                            onClick={() => handleResponder(sol.id, "APROVADO")}
-                            disabled={processandoId !== null}
-                            title="Aprovar"
-                            className="p-2.5 bg-teal-50 hover:bg-teal-100 text-teal-600 rounded-xl transition-colors disabled:bg-slate-100 disabled:text-slate-400"
-                          >
-                            <Check size={16} strokeWidth={2.5} />
-                          </button>
-                        </div>
-                      ) : (
-                        <div className="flex justify-center text-slate-300">
-                          <span className="text-[10px] font-black uppercase tracking-widest">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => setSolicitacaoDetalhe(sol)}
+                          title="Ver detalhes"
+                          className="p-2.5 bg-stone-100 hover:bg-stone-200 text-slate-500 rounded-xl transition-colors"
+                        >
+                          <Eye size={16} strokeWidth={2.5} />
+                        </button>
+
+                        {sol.statusAdocao === "PENDENTE" ? (
+                          <>
+                            <button
+                              onClick={() =>
+                                handleResponder(sol.id, "REJEITADO")
+                              }
+                              disabled={processandoId !== null}
+                              title="Recusar"
+                              className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl transition-colors disabled:bg-slate-100 disabled:text-slate-400"
+                            >
+                              <X size={16} strokeWidth={2.5} />
+                            </button>
+                            <button
+                              onClick={() =>
+                                handleResponder(sol.id, "APROVADO")
+                              }
+                              disabled={processandoId !== null}
+                              title="Aprovar"
+                              className="p-2.5 bg-teal-50 hover:bg-teal-100 text-teal-600 rounded-xl transition-colors disabled:bg-slate-100 disabled:text-slate-400"
+                            >
+                              <Check size={16} strokeWidth={2.5} />
+                            </button>
+                          </>
+                        ) : (
+                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
                             Concluído
                           </span>
-                        </div>
-                      )}
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -264,6 +240,13 @@ export default function GerenciamentoAdocoesPage() {
             </table>
           </div>
         </div>
+      )}
+
+      {solicitacaoDetalhe && (
+        <DetalhesSolicitacaoModal
+          solicitacao={solicitacaoDetalhe}
+          onFechar={() => setSolicitacaoDetalhe(null)}
+        />
       )}
     </div>
   );

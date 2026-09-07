@@ -25,8 +25,12 @@ export interface SolicitacaoAdocaoResponse {
     id: number;
     nameAnimal: string;
     raca: string;
+    idade: string;
     especie: string;
     urlFoto: string;
+    castrado: string;
+    vermifugado: string;
+    vacinado: string;
   };
   enderecoAnimal: string;
   statusAdocao: "PENDENTE" | "APROVADO" | "REJEITADO";
