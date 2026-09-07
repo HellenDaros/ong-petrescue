@@ -207,26 +207,20 @@ export default function AdotanteForm({
             />
           </div>
 
-          <div
-            className={`grid gap-4 ${!adotanteExistente ? "grid-cols-2" : "grid-cols-1"}`}
-          >
-            {!adotanteExistente && (
-              <div className="space-y-2">
-                <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                  CPF
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={maskCPF(adotante.cpf || "")}
-                  onChange={(e) =>
-                    handleChange("cpf", maskCPF(e.target.value))
-                  }
-                  placeholder="000.000.000-00"
-                  className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-                />
-              </div>
-            )}
+          <div className="grid gap-4 grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                CPF
+              </label>
+              <input
+                type="text"
+                required
+                value={maskCPF(adotante.cpf || "")}
+                onChange={(e) => handleChange("cpf", maskCPF(e.target.value))}
+                placeholder="000.000.000-00"
+                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+              />
+            </div>
             <div className="space-y-2">
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Identidade (RG)

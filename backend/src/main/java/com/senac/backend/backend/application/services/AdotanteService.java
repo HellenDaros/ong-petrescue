@@ -88,6 +88,7 @@ public class AdotanteService {
             var usuarioBanco = adotanteBanco.getUsuario();
             usuarioBanco.setName(adotante.name());
             usuarioBanco.setEmail(adotante.email());
+            usuarioBanco.setCpf(new CPF(adotante.cpf()));
             usuarioBanco.setSenha(adotante.senha());
 
             usuarioRepository.save(usuarioBanco);

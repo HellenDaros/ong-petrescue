@@ -151,7 +151,7 @@ export default function MeuPerfilAdotante() {
                 Nome Completo
               </label>
               <p className="text-slate-700 font-semibold">
-                {usuario?.name || "Não informado"}
+                {perfil.name || "Não informado"}
               </p>
             </div>
             <div>
@@ -159,7 +159,7 @@ export default function MeuPerfilAdotante() {
                 CPF
               </label>
               <p className="text-slate-700 font-semibold">
-                {usuario?.cpf || "Não informado"}
+                {perfil.cpf || "Não informado"}
               </p>
             </div>
             <div>
@@ -167,7 +167,7 @@ export default function MeuPerfilAdotante() {
                 E-mail
               </label>
               <p className="text-slate-700 font-semibold">
-                {usuario?.email || "Não informado"}
+                {perfil.email || "Não informado"}
               </p>
             </div>
             <div>
