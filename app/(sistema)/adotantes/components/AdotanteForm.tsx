@@ -196,11 +196,12 @@ export default function AdotanteForm({
           <div className="space-y-2">
             <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
               Senha
+              {adotanteExistente ? " (deixe em branco para manter a atual)" : ""}
             </label>
             <input
               type="password"
               required={!adotanteExistente}
-              value={adotante.senha}
+              value={adotante.senha || ""}
               onChange={(e) => handleChange("senha", e.target.value)}
               placeholder="••••••••"
               className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"

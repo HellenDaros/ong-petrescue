@@ -5,6 +5,7 @@ import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.enuns.EnumStatusUsuario;
 import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.UsuarioRepository;
+import com.senac.backend.backend.domain.valueobjects.CPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -96,7 +97,11 @@ public class UsuarioService {
         if (usuarioBanco != null){
             usuarioBanco.setEmail(usuario.email());
             usuarioBanco.setName(usuario.name());
-            usuarioBanco.setSenha(usuario.senha());
+            usuarioBanco.setCpf(new CPF(usuario.cpf()));
+
+            if (usuario.senha() != null && !usuario.senha().isBlank()) {
+                usuarioBanco.setSenha(usuario.senha());
+            }
 
             usuarioRepository.save(usuarioBanco);
             return true;
