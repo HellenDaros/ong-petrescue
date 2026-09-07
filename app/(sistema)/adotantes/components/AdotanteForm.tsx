@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { salvarAdotante } from "@/app/services/adotanteService";
 import { Adotante, AdotanteFormProps } from "@/app/types/adotante";
 import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
+import { maskCPF, onlyDigits } from "@/app/utils/masks";
 import Link from "next/link";
 
 export default function AdotanteForm({
@@ -122,7 +123,8 @@ export default function AdotanteForm({
     const isEdicao = !!adotanteExistente;
 
     try {
-      await salvarAdotante(adotante, isEdicao);
+      const payload = { ...adotante, cpf: onlyDigits(adotante.cpf || "") };
+      await salvarAdotante(payload, isEdicao);
       alert(
         isEdicao ? "Perfil atualizado com sucesso!" : "Cadastro realizado!",
       );
@@ -216,8 +218,10 @@ export default function AdotanteForm({
                 <input
                   type="text"
                   required
-                  value={adotante.cpf ? adotante.cpf : ""}
-                  onChange={(e) => handleChange("cpf", e.target.value)}
+                  value={maskCPF(adotante.cpf || "")}
+                  onChange={(e) =>
+                    handleChange("cpf", maskCPF(e.target.value))
+                  }
                   placeholder="000.000.000-00"
                   className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
                 />

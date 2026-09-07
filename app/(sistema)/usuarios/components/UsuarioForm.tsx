@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Usuario, UsuarioFormProps } from "@/app/types/usuarios";
 import { salvarUsuario } from "@/app/services/usuarioService";
+import { maskCPF, onlyDigits } from "@/app/utils/masks";
 
 export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
   const router = useRouter();
@@ -33,7 +34,8 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
     const isEdicao = !!usuarioExistente;
 
     try {
-      await salvarUsuario(usuario, isEdicao);
+      const payload = { ...usuario, cpf: onlyDigits(usuario.cpf || "") };
+      await salvarUsuario(payload, isEdicao);
 
       alert("Usuário salvo com sucesso!");
       router.push("/usuarios");
@@ -95,8 +97,8 @@ export default function UsuarioForm({ usuarioExistente }: UsuarioFormProps) {
               <input
                 type="text"
                 required
-                onChange={(e) => handleChange("cpf", e.target.value)}
-                value={usuario.cpf || ""}
+                onChange={(e) => handleChange("cpf", maskCPF(e.target.value))}
+                value={maskCPF(usuario.cpf || "")}
                 placeholder="000.000.000-00"
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />

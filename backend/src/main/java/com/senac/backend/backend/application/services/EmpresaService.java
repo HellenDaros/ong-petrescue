@@ -9,6 +9,7 @@ import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.EmpresaRepository;
 import com.senac.backend.backend.domain.repository.UsuarioRepository;
 import com.senac.backend.backend.domain.valueobjects.CNPJ;
+import com.senac.backend.backend.domain.valueobjects.CPF;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -130,6 +131,7 @@ public class EmpresaService {
 
             administrador.setName(request.usuarioAdmin().name());
             administrador.setEmail(request.usuarioAdmin().email());
+            administrador.setCpf(new CPF(request.usuarioAdmin().cpf()));
 
             if (request.usuarioAdmin().senha() != null
                     && !request.usuarioAdmin().senha().isBlank()) {

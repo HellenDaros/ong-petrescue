@@ -6,6 +6,7 @@ import { Empresa, EmpresaFormProps } from "@/app/types/empresa";
 import { salvarEmpresa } from "@/app/services/empresaService";
 import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
 import { Usuario } from "@/app/types/usuarios";
+import { maskCNPJ, maskCPF, onlyDigits } from "@/app/utils/masks";
 
 export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
   const router = useRouter();
@@ -95,7 +96,15 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
     const isEdicao = !!empresaExistente;
 
     try {
-      const sucesso = await salvarEmpresa(empresa, isEdicao);
+      const payload = {
+        ...empresa,
+        cnpj: onlyDigits(empresa.cnpj),
+        usuarioAdmin: {
+          ...empresa.usuarioAdmin,
+          cpf: onlyDigits(empresa.usuarioAdmin.cpf || ""),
+        },
+      };
+      const sucesso = await salvarEmpresa(payload, isEdicao);
 
       alert("ONG salva com sucesso!");
       router.push("/empresa");
@@ -144,8 +153,10 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
               <input
                 type="text"
                 required
-                onChange={(e) => handleEmpresaChange("cnpj", e.target.value)}
-                value={empresa.cnpj}
+                onChange={(e) =>
+                  handleEmpresaChange("cnpj", maskCNPJ(e.target.value))
+                }
+                value={maskCNPJ(empresa.cnpj)}
                 placeholder="00.000.000/0000-00"
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
@@ -270,9 +281,11 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
               <input
                 type="text"
                 required
-                value={empresa.usuarioAdmin.cpf ?? ""}
+                value={maskCPF(empresa.usuarioAdmin.cpf ?? "")}
                 placeholder="000.000.000-00"
-                onChange={(e) => handleAdminChange("cpf", e.target.value)}
+                onChange={(e) =>
+                  handleAdminChange("cpf", maskCPF(e.target.value))
+                }
                 className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
