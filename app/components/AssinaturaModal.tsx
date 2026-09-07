@@ -138,7 +138,7 @@ export default function AssinaturaModal({
             onPointerMove={handlePointerMove}
             onPointerUp={finalizarTraco}
             onPointerLeave={finalizarTraco}
-            className="w-full h-56 rounded-2xl border-2 border-dashed border-stone-300 bg-stone-50 touch-none cursor-crosshair"
+            className="w-full h-56 rounded-2xl border-2 border-dashed border-stone-300 bg-stone-50 touch-none cursor-default"
           />
         </div>
 
