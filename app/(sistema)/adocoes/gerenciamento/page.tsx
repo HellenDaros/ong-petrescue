@@ -8,14 +8,14 @@ import {
 import {
   Phone,
   ClipboardList,
-  Check,
-  X,
+  ClipboardCheck,
   CalendarDays,
   Eye,
 } from "lucide-react";
 import { SolicitacaoAdocaoResponse } from "@/app/types/solicitacaoAdocao";
 import { getStatusBadge } from "../utils/status-badge";
 import DetalhesSolicitacaoModal from "./components/DetalhesSolicitacaoModal";
+import ResponderSolicitacaoModal from "./components/ResponderSolicitacaoModal";
 
 export default function GerenciamentoAdocoesPage() {
   const [solicitacoes, setSolicitacoes] = useState<SolicitacaoAdocaoResponse[]>(
@@ -24,6 +24,8 @@ export default function GerenciamentoAdocoesPage() {
   const [carregando, setCarregando] = useState(true);
   const [processandoId, setProcessandoId] = useState<number | null>(null);
   const [solicitacaoDetalhe, setSolicitacaoDetalhe] =
+    useState<SolicitacaoAdocaoResponse | null>(null);
+  const [solicitacaoResponder, setSolicitacaoResponder] =
     useState<SolicitacaoAdocaoResponse | null>(null);
 
   const carregarSolicitacoes = async () => {
@@ -45,11 +47,6 @@ export default function GerenciamentoAdocoesPage() {
     id: number,
     novoStatus: "APROVADO" | "REJEITADO",
   ) => {
-    const confirmacao = confirm(
-      `Tem certeza que deseja ${novoStatus === "APROVADO" ? "APROVAR" : "REJEITAR"} esta solicitação de adoção?`,
-    );
-    if (!confirmacao) return;
-
     setProcessandoId(id);
     try {
       const sucesso = await responderSolicitacaoAdocao(id, novoStatus);
@@ -62,6 +59,7 @@ export default function GerenciamentoAdocoesPage() {
             sol.id === id ? { ...sol, statusAdocao: novoStatus } : sol,
           ),
         );
+        setSolicitacaoResponder(null);
       } else {
         alert("Erro ao responder solicitação de adoção. Tente novamente.");
       }
@@ -199,38 +197,20 @@ export default function GerenciamentoAdocoesPage() {
                         <button
                           onClick={() => setSolicitacaoDetalhe(sol)}
                           title="Ver detalhes"
-                          className="p-2.5 bg-stone-100 hover:bg-stone-200 text-slate-500 rounded-xl transition-colors"
+                          className="p-2.5 bg-teal-50 hover:bg-teal-100 text-teal-600 rounded-xl transition-colors"
                         >
                           <Eye size={16} strokeWidth={2.5} />
                         </button>
 
-                        {sol.statusAdocao === "PENDENTE" ? (
-                          <>
-                            <button
-                              onClick={() =>
-                                handleResponder(sol.id, "REJEITADO")
-                              }
-                              disabled={processandoId !== null}
-                              title="Recusar"
-                              className="p-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl transition-colors disabled:bg-slate-100 disabled:text-slate-400"
-                            >
-                              <X size={16} strokeWidth={2.5} />
-                            </button>
-                            <button
-                              onClick={() =>
-                                handleResponder(sol.id, "APROVADO")
-                              }
-                              disabled={processandoId !== null}
-                              title="Aprovar"
-                              className="p-2.5 bg-teal-50 hover:bg-teal-100 text-teal-600 rounded-xl transition-colors disabled:bg-slate-100 disabled:text-slate-400"
-                            >
-                              <Check size={16} strokeWidth={2.5} />
-                            </button>
-                          </>
-                        ) : (
-                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-300">
-                            Concluído
-                          </span>
+                        {sol.statusAdocao === "PENDENTE" && (
+                          <button
+                            onClick={() => setSolicitacaoResponder(sol)}
+                            disabled={processandoId !== null}
+                            title="Responder solicitação"
+                            className="p-2.5 bg-orange-50 hover:bg-orange-100 text-orange-600 rounded-xl transition-colors disabled:bg-slate-100 disabled:text-slate-400"
+                          >
+                            <ClipboardCheck size={16} strokeWidth={2.5} />
+                          </button>
                         )}
                       </div>
                     </td>
@@ -246,6 +226,15 @@ export default function GerenciamentoAdocoesPage() {
         <DetalhesSolicitacaoModal
           solicitacao={solicitacaoDetalhe}
           onFechar={() => setSolicitacaoDetalhe(null)}
+        />
+      )}
+
+      {solicitacaoResponder && (
+        <ResponderSolicitacaoModal
+          solicitacao={solicitacaoResponder}
+          processando={processandoId !== null}
+          onFechar={() => setSolicitacaoResponder(null)}
+          onResponder={(status) => handleResponder(solicitacaoResponder.id, status)}
         />
       )}
     </div>
