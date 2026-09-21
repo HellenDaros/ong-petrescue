@@ -42,7 +42,6 @@ function LoginFormContent() {
 
       router.push(redirectTo || "/home");
     } catch (error: any) {
-      console.error("Erro ao entrar no sistema:", error);
       const mensagem =
         error.response?.data && typeof error.response.data === "string"
           ? error.response.data
