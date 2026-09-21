@@ -284,11 +284,13 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                Nome do Doador
+                Nome do Doador{" "}
+                <span className="normal-case font-medium text-stone-300">
+                  (opcional)
+                </span>
               </label>
               <input
                 type="text"
-                required
                 onChange={(e) => handleChange("nameDoador", e.target.value)}
                 value={animal.nameDoador}
                 placeholder="Ex: Pedro"
@@ -298,11 +300,13 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
 
             <div className="space-y-2">
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                Telefone Doador
+                Telefone Doador{" "}
+                <span className="normal-case font-medium text-stone-300">
+                  (opcional)
+                </span>
               </label>
               <input
                 type="text"
-                required
                 onChange={(e) =>
                   handleChange("telefoneDoador", maskCelular(e.target.value))
                 }
