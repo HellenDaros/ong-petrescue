@@ -12,8 +12,33 @@ import {
 } from "../constants/animal-constants";
 import { maskCelular, onlyDigits } from "@/app/utils/masks";
 
+type UnidadeIdade = "meses" | "anos";
+
+function parseIdade(idade: string): { valor: string; unidade: UnidadeIdade } {
+  const match = idade.match(/\d+/);
+  const valor = match ? match[0] : "";
+  const unidade: UnidadeIdade = /ano/i.test(idade) ? "anos" : "meses";
+  return { valor, unidade };
+}
+
+function formatIdade(valor: string, unidade: UnidadeIdade): string {
+  if (!valor) return "";
+  const numero = Number(valor);
+  if (unidade === "anos") {
+    return `${valor} ${numero === 1 ? "ano" : "anos"}`;
+  }
+  return `${valor} ${numero === 1 ? "mês" : "meses"}`;
+}
+
 export default function AnimalForm({ animalExistente }: AnimalFormProps) {
   const router = useRouter();
+
+  const [idadeValor, setIdadeValor] = useState<string>(
+    () => parseIdade(animalExistente?.idade || "").valor,
+  );
+  const [idadeUnidade, setIdadeUnidade] = useState<UnidadeIdade>(
+    () => parseIdade(animalExistente?.idade || "").unidade,
+  );
 
   const [animal, setAnimal] = useState<Animal>(
     animalExistente ||
@@ -62,6 +87,14 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
         campo === "statusAnimal" ? valor : prev.statusAnimal,
       );
     });
+  };
+
+  const handleIdadeChange = (valor: string, unidade: UnidadeIdade) => {
+    if (Number(valor) < 0) return;
+
+    setIdadeValor(valor);
+    setIdadeUnidade(unidade);
+    handleChange("idade", formatIdade(valor, unidade));
   };
 
   const handleSalvar = async () => {
@@ -172,14 +205,44 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
               <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Idade
               </label>
-              <input
-                type="text"
-                required
-                onChange={(e) => handleChange("idade", e.target.value)}
-                value={animal.idade}
-                placeholder="Ex: 2 meses"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={0}
+                  required
+                  onKeyDown={(e) => {
+                    if (e.key === "-" || e.key === "e") e.preventDefault();
+                  }}
+                  onChange={(e) =>
+                    handleIdadeChange(e.target.value, idadeUnidade)
+                  }
+                  value={idadeValor}
+                  placeholder="Ex: 2"
+                  className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                />
+                <div className="flex bg-stone-50 rounded-2xl p-1 shrink-0">
+                  {(["meses", "anos"] as const).map((unidade) => (
+                    <label
+                      key={unidade}
+                      className={`px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wide cursor-pointer transition-all text-center ${
+                        idadeUnidade === unidade
+                          ? "bg-[#008080] text-white shadow"
+                          : "text-slate-400 hover:text-slate-600"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        name="idadeUnidade"
+                        value={unidade}
+                        checked={idadeUnidade === unidade}
+                        onChange={() => handleIdadeChange(idadeValor, unidade)}
+                        className="sr-only"
+                      />
+                      {unidade === "meses" ? "Meses" : "Anos"}
+                    </label>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
