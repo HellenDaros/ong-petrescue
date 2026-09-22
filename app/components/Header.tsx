@@ -1,19 +1,32 @@
 "use client";
+import { Menu } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
 import { store } from "../redux/store";
 
-export default function Header() {
+interface HeaderProps {
+  onOpenMobileMenu?: () => void;
+}
+
+export default function Header({ onOpenMobileMenu }: HeaderProps) {
   // const { usuario, logout } = useAuth();
 
   const dispatch = useDispatch();
   const usuario = store.getState().auth.usuario;
 
   return (
-    <header className="bg-[#f1f5f4] border-b border-stone-200 px-6 py-3">
+    <header className="bg-[#f1f5f4] border-b border-stone-200 px-4 md:px-6 py-3">
       <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center shadow-sm">
+        <div className="flex items-center gap-3 min-w-0">
+          <button
+            type="button"
+            onClick={onOpenMobileMenu}
+            className="md:hidden shrink-0 text-slate-600 hover:text-teal-600 p-1"
+            aria-label="Abrir menu"
+          >
+            <Menu size={24} />
+          </button>
+          <div className="w-10 h-10 shrink-0 rounded-full bg-orange-500 flex items-center justify-center shadow-sm">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -28,8 +41,8 @@ export default function Header() {
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
           </div>
-          <div className="flex flex-col">
-            <span className="text-slate-800 font-black text-base tracking-tight leading-tight">
+          <div className="flex flex-col min-w-0">
+            <span className="text-slate-800 font-black text-base tracking-tight leading-tight truncate">
               {usuario?.name.toLocaleUpperCase() || "USUÁRIO INDEFINIDO"}
             </span>
             <span className="text-teal-600 text-[10px] font-bold uppercase tracking-wider">

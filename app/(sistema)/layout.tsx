@@ -16,9 +16,15 @@ export default function SistemaLayout({
   const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+    const salvo = localStorage.getItem("sidebar-collapsed");
+    if (salvo === "true") {
+      setCollapsed(true);
+    }
   }, []);
 
   useEffect(() => {
@@ -27,16 +33,28 @@ export default function SistemaLayout({
     }
   }, [mounted, usuario, router]);
 
+  const handleToggleCollapse = () => {
+    setCollapsed((prev) => {
+      localStorage.setItem("sidebar-collapsed", String(!prev));
+      return !prev;
+    });
+  };
+
   if (!mounted) {
     return null;
   }
 
   return (
     <div className="flex h-screen bg-stone-50 overflow-hidden">
-      <Sidebar />
+      <Sidebar
+        collapsed={collapsed}
+        onToggleCollapse={handleToggleCollapse}
+        mobileOpen={mobileOpen}
+        onCloseMobile={() => setMobileOpen(false)}
+      />
 
-      <div className="flex flex-col flex-1 overflow-y-auto relative">
-        <Header />
+      <div className="flex flex-col flex-1 overflow-y-auto relative min-w-0">
+        <Header onOpenMobileMenu={() => setMobileOpen(true)} />
 
         <main className="flex-1 flex flex-col justify-center py-8 px-6 md:px-12">
           <div className="w-full max-w-7xl mx-auto">{children}</div>
