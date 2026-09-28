@@ -115,8 +115,8 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
 
   return (
     <div className="flex-1 flex items-center justify-center p-6">
-      <div className="w-full max-w-2xl bg-white rounded-[2.5rem] shadow-xl shadow-stone-200/50 border border-stone-100 overflow-hidden">
-        <div className="bg-stone-50/50 px-10 py-8 border-b border-stone-100">
+      <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl shadow-stone-200/50 border border-stone-100 overflow-hidden">
+        <div className="bg-stone-50/50 px-6 py-5 border-b border-stone-100">
           <h2 className="text-2xl font-black text-[#008080] tracking-tight">
             {animalExistente ? "Editar Pet" : "Novo Protegido"}
           </h2>
@@ -132,8 +132,8 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
           }}
           className="p-10 space-y-6"
         >
-          <div className="space-y-2">
-            <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+          <div className="space-y-1">
+            <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
               Nome do Pet
             </label>
             <input
@@ -142,20 +142,20 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
               onChange={(e) => handleChange("nameAnimal", e.target.value)}
               value={animal.nameAnimal}
               placeholder="Ex: Bolinha"
-              className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+              className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Espécie
               </label>
               <select
                 value={animal.especie}
                 required
                 onChange={(e) => handleChange("especie", e.target.value)}
-                className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
                 {Object.entries(ESPECIE_LABEL).map(([key, value]) => (
@@ -166,8 +166,8 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
               </select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Raça
               </label>
               <input
@@ -176,21 +176,21 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 onChange={(e) => handleChange("raca", e.target.value)}
                 value={animal.raca}
                 placeholder="Vira-lata, Poodle..."
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Sexo
               </label>
               <select
                 value={animal.sexo}
                 required
                 onChange={(e) => handleChange("sexo", e.target.value)}
-                className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
                 {Object.entries(SEXO_LABEL).map(([key, value]) => (
@@ -201,8 +201,8 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
               </select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Idade
               </label>
               <div className="flex items-center gap-2">
@@ -218,7 +218,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                   }
                   value={idadeValor}
                   placeholder="Ex: 2"
-                  className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                  className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
                 />
                 <div className="flex bg-stone-50 rounded-2xl p-1 shrink-0">
                   {(["meses", "anos"] as const).map((unidade) => (
@@ -247,15 +247,15 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Porte
               </label>
               <select
                 value={animal.porte}
                 required
                 onChange={(e) => handleChange("porte", e.target.value)}
-                className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
                 {Object.entries(PORTE_LABEL).map(([key, value]) => (
@@ -266,8 +266,8 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
               </select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Cor da Pelagem
               </label>
               <input
@@ -276,14 +276,14 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 onChange={(e) => handleChange("corPelagem", e.target.value)}
                 value={animal.corPelagem}
                 placeholder="Ex: Preto e Branco"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Nome do Doador{" "}
                 <span className="normal-case font-medium text-stone-300">
                   (opcional)
@@ -294,12 +294,12 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 onChange={(e) => handleChange("nameDoador", e.target.value)}
                 value={animal.nameDoador}
                 placeholder="Ex: Pedro"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Telefone Doador{" "}
                 <span className="normal-case font-medium text-stone-300">
                   (opcional)
@@ -312,14 +312,14 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 }
                 value={maskCelular(animal.telefoneDoador)}
                 placeholder="(48) 99999-9999"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 URL da Foto
               </label>
               <input
@@ -328,19 +328,19 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 onChange={(e) => handleChange("urlFoto", e.target.value)}
                 value={animal.urlFoto}
                 placeholder="http://..."
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Castrado?
               </label>
               <select
                 value={animal.castrado}
                 required
                 onChange={(e) => handleChange("castrado", e.target.value)}
-                className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
                 {Object.entries(CONFIRMACAO_LABEL).map(([key, value]) => (
@@ -353,15 +353,15 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Vermifugado?
               </label>
               <select
                 value={animal.vermifugado}
                 required
                 onChange={(e) => handleChange("vermifugado", e.target.value)}
-                className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
                 {Object.entries(CONFIRMACAO_LABEL).map(([key, value]) => (
@@ -372,15 +372,15 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
               </select>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Vacinado?
               </label>
               <select
                 value={animal.vacinado}
                 required
                 onChange={(e) => handleChange("vacinado", e.target.value)}
-                className="w-full bg-stone-50 border-2 border-transparent focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all"
               >
                 <option value="">Selecione...</option>
                 {Object.entries(CONFIRMACAO_LABEL).map(([key, value]) => (
@@ -394,7 +394,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
 
           {animal.vacinado === "SIM" && (
             <div className="space-y-2 animate-in fade-in slide-in-from-top-2 duration-300">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Quais Vacinas? (Descrição)
               </label>
               <input
@@ -405,7 +405,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                 }
                 value={animal.vacinadoDescricao}
                 placeholder="Ex: V10, Raiva..."
-                className="w-full bg-teal-50/30 border-2 border-teal-100 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-teal-200"
+                className="w-full bg-teal-50/30 border border-teal-100 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-teal-200"
               />
             </div>
           )}
@@ -413,14 +413,14 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
           <div className="flex items-center gap-4 pt-4">
             <Link
               href="/animais"
-              className="flex-1 text-center py-4 rounded-2xl font-black text-slate-400 hover:text-slate-600 hover:bg-stone-50 transition-all"
+              className="flex-1 text-center py-2.5 text-sm rounded-xl font-black text-slate-400 hover:text-slate-600 hover:bg-stone-50 transition-all"
             >
               Cancelar
             </Link>
 
             <button
               type="submit"
-              className="flex-1 bg-[#008080] hover:bg-teal-700 text-white py-4 rounded-2xl font-black transition-all shadow-lg shadow-teal-100 active:scale-95"
+              className="flex-1 bg-[#008080] hover:bg-teal-700 text-white py-2.5 text-sm rounded-xl font-black transition-all shadow-lg shadow-teal-100 active:scale-95"
             >
               Salvar Pet
             </button>

@@ -214,10 +214,10 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
           e.preventDefault();
           handleSalvar();
         }}
-        className="space-y-8"
+        className="space-y-5"
       >
         {/* Event details card */}
-        <div className="bg-white rounded-[2rem] border border-stone-100 shadow-md p-6 sm:p-8 space-y-6">
+        <div className="bg-white rounded-3xl border border-stone-100 shadow-md p-5 space-y-4">
           <h2 className="text-xl font-black text-slate-800 border-b border-stone-100 pb-3 flex items-center gap-2">
             <Calendar className="text-teal-600" size={20} />
             {isEdicao ? "Informações Gerais" : "Informações do Evento"}
@@ -234,7 +234,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                 onChange={(e) => handleChange("nome", e.target.value)}
                 placeholder="Ex: Feira de Adoção - Praça Central 15/09"
                 required
-                className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
               />
             </div>
 
@@ -248,7 +248,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                 onChange={(e) => handleChange("descricao", e.target.value)}
                 placeholder="Descreva a proposta do evento, avisos para visitantes e detalhes..."
                 required
-                className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
               />
             </div>
 
@@ -261,7 +261,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                 value={evento.data}
                 onChange={(e) => handleChange("data", e.target.value)}
                 required
-                className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
               />
             </div>
 
@@ -277,7 +277,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                     handleChange("horarioInicio", e.target.value)
                   }
                   required
-                  className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                  className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
                 />
               </div>
               <div>
@@ -291,7 +291,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                     handleChange("horarioTermino", e.target.value)
                   }
                   required
-                  className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                  className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
                 />
               </div>
             </div>
@@ -305,7 +305,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                 value={evento.nomeLocal}
                 onChange={(e) => handleChange("nomeLocal", e.target.value)}
                 placeholder="Ex: Prefeitura, Parque Ibirapuera - Portão 3"
-                className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
               />
             </div>
 
@@ -319,7 +319,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                 onChange={(e) => handleCepChange(e.target.value)}
                 placeholder="00000-000"
                 required
-                className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
               />
             </div>
 
@@ -332,7 +332,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                 value={evento.complemento}
                 onChange={(e) => handleChange("complemento", e.target.value)}
                 placeholder="Ex: Portão 3"
-                className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
               />
             </div>
 
@@ -346,7 +346,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                     type="text"
                     value={evento.endereco}
                     readOnly
-                    className="w-full px-4 py-3.5 rounded-2xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                    className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
                   />
                 </div>
 
@@ -358,7 +358,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                     type="text"
                     value={evento.bairro}
                     readOnly
-                    className="w-full px-4 py-3.5 rounded-2xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                    className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
                   />
                 </div>
 
@@ -371,7 +371,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                       type="text"
                       value={evento.cidade}
                       readOnly
-                      className="w-full px-4 py-3.5 rounded-2xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                      className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
                     />
                   </div>
                   <div>
@@ -382,7 +382,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                       type="text"
                       value={evento.uf}
                       readOnly
-                      className="w-full px-4 py-3.5 rounded-2xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                      className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
                     />
                   </div>
                 </div>
@@ -402,7 +402,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                       status: e.target.value as "AGENDADO" | "ENCERRADO",
                     }))
                   }
-                  className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                  className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
                 >
                   <option value="AGENDADO">Agendado</option>
                   <option value="ENCERRADO">Encerrado</option>
@@ -419,14 +419,14 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                 value={evento.urlCapa}
                 onChange={(e) => handleChange("urlCapa", e.target.value)}
                 placeholder="https://exemplo.com/imagem-do-evento.jpg"
-                className="w-full px-4 py-3.5 rounded-2xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
               />
             </div>
           </div>
         </div>
 
         {/* Animal selection card */}
-        <div className="bg-white rounded-[2rem] border border-stone-100 shadow-md p-6 sm:p-8 space-y-6">
+        <div className="bg-white rounded-3xl border border-stone-100 shadow-md p-5 space-y-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-stone-100 pb-4">
             <div>
               <h2 className="text-xl font-black text-slate-800">
@@ -547,7 +547,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
         <div className="flex justify-end gap-4">
           <Link
             href="/eventos"
-            className="px-6 py-3.5 rounded-2xl border border-stone-300 text-slate-600 font-bold text-sm hover:bg-stone-100 transition-all"
+            className="px-5 py-2.5 rounded-xl border border-stone-300 text-slate-600 font-bold text-sm hover:bg-stone-100 transition-all"
           >
             Cancelar
           </Link>
@@ -555,7 +555,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
           <button
             type="submit"
             disabled={salvando}
-            className="px-8 py-3.5 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white font-black text-sm shadow-lg shadow-teal-100 transition-all disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-black text-sm shadow-lg shadow-teal-100 transition-all disabled:opacity-50"
           >
             {salvando
               ? isEdicao

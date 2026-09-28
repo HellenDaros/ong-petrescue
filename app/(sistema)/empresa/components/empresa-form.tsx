@@ -116,9 +116,9 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
 
   return (
     <div className="flex-1 flex items-center justify-center p-6">
-      <div className="w-full max-w-2xl bg-white rounded-[2.5rem] shadow-xl shadow-stone-200/50 border border-stone-100 overflow-hidden">
-        <div className="bg-stone-50/50 px-10 py-8 border-b border-stone-100">
-          <h2 className="text-2xl font-black text-slate-800 tracking-tight">
+      <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl shadow-stone-200/50 border border-stone-100 overflow-hidden">
+        <div className="bg-stone-50/50 px-6 py-5 border-b border-stone-100">
+          <h2 className="text-xl font-black text-slate-800 tracking-tight">
             {empresaExistente ? "Editar ONG" : "Cadastro de ONG"}
           </h2>
           <p className="text-slate-500 text-sm font-medium">
@@ -130,8 +130,8 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
 
         <form action={handleSalvar} className="p-10 space-y-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Nome Fantasia
               </label>
               <input
@@ -142,12 +142,12 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
                 }
                 value={empresa.nameFantasia}
                 placeholder="Ex: Abrigo dos Pets"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 CNPJ
               </label>
               <input
@@ -158,12 +158,12 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
                 }
                 value={maskCNPJ(empresa.cnpj)}
                 placeholder="00.000.000/0000-00"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Razão Social
               </label>
               <input
@@ -174,12 +174,12 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
                 }
                 value={empresa.razaoSocial}
                 placeholder="Ex: Associação de Proteção Animal LTDA"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 CEP
               </label>
               <input
@@ -188,12 +188,12 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
                 value={empresa.cep}
                 onChange={(e) => handleCepChange(e.target.value)}
                 placeholder="00000-000"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Complemento (Opcional)
               </label>
               <input
@@ -203,14 +203,14 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
                   handleEmpresaChange("complemento", e.target.value)
                 }
                 placeholder="Ex: Sala 2"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
 
             {empresa.endereco !== "" && (
               <>
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                     Endereço
                   </label>
                   <input
@@ -218,50 +218,50 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
                     readOnly
                     value={empresa.endereco}
                     placeholder="Rua, Número"
-                    className="w-full bg-stone-50 border-2 border-stone-50 outline-none px-5 py-4 rounded-2xl text-slate-500 font-bold placeholder:text-stone-300"
+                    className="w-full bg-stone-50 border border-stone-200 outline-none px-4 py-2.5 text-sm rounded-xl text-slate-500 font-bold placeholder:text-stone-300"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                     Bairro
                   </label>
                   <input
                     type="text"
                     readOnly
                     value={empresa.bairro}
-                    className="w-full bg-stone-50 border-2 border-stone-50 outline-none px-5 py-4 rounded-2xl text-slate-500 font-bold"
+                    className="w-full bg-stone-50 border border-stone-200 outline-none px-4 py-2.5 text-sm rounded-xl text-slate-500 font-bold"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                     Cidade
                   </label>
                   <input
                     type="text"
                     readOnly
                     value={empresa.cidade}
-                    className="w-full bg-stone-50 border-2 border-stone-50 outline-none px-5 py-4 rounded-2xl text-slate-500 font-bold"
+                    className="w-full bg-stone-50 border border-stone-200 outline-none px-4 py-2.5 text-sm rounded-xl text-slate-500 font-bold"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                     UF
                   </label>
                   <input
                     type="text"
                     readOnly
                     value={empresa.uf}
-                    className="w-full bg-stone-50 border-2 border-stone-50 outline-none px-5 py-4 rounded-2xl text-slate-500 font-bold"
+                    className="w-full bg-stone-50 border border-stone-200 outline-none px-4 py-2.5 text-sm rounded-xl text-slate-500 font-bold"
                   />
                 </div>
               </>
             )}
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Nome Completo do Responsável
               </label>
               <input
@@ -270,12 +270,12 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
                 onChange={(e) => handleAdminChange("name", e.target.value)}
                 value={empresa.usuarioAdmin.name}
                 placeholder="João da Silva"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 CPF do Responsável
               </label>
               <input
@@ -286,12 +286,12 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
                 onChange={(e) =>
                   handleAdminChange("cpf", maskCPF(e.target.value))
                 }
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 E-mail de Login
               </label>
               <input
@@ -301,12 +301,12 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
                 onChange={(e) => handleAdminChange("email", e.target.value)}
                 value={empresa.usuarioAdmin.email}
                 placeholder="admin@ong.com"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-[11px] font-black uppercase tracking-widest text-slate-400 ml-1">
+            <div className="space-y-1">
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Senha
                 {empresaExistente
                   ? " (deixe em branco para manter a atual)"
@@ -318,7 +318,7 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
                 onChange={(e) => handleAdminChange("senha", e.target.value)}
                 value={empresa.usuarioAdmin.senha ?? ""}
                 placeholder="••••••••"
-                className="w-full bg-stone-50 border-2 border-stone-50 focus:border-teal-500 focus:bg-white outline-none px-5 py-4 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
               />
             </div>
           </div>
@@ -326,14 +326,14 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
           <div className="flex items-center gap-4 pt-4">
             <Link
               href="/empresa"
-              className="flex-1 text-center py-4 rounded-2xl font-black text-slate-400 hover:text-slate-600 hover:bg-stone-50 transition-all"
+              className="flex-1 text-center py-2.5 text-sm rounded-xl font-black text-slate-400 hover:text-slate-600 hover:bg-stone-50 transition-all"
             >
               Cancelar
             </Link>
 
             <button
               type="submit"
-              className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-2xl font-black transition-all shadow-lg shadow-orange-100 active:scale-95"
+              className="flex-1 bg-orange-500 hover:bg-orange-600 text-white py-2.5 text-sm rounded-xl font-black transition-all shadow-lg shadow-orange-100 active:scale-95"
             >
               {empresaExistente ? "Salvar Alterações" : "Finalizar Cadastro"}
             </button>

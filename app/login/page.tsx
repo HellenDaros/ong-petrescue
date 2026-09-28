@@ -55,25 +55,25 @@ function LoginFormContent() {
     : "/cadastro-adotante";
 
   return (
-    <div className="min-h-screen w-full bg-stone-50 flex flex-col justify-center items-center p-6">
-      <div className="flex items-center gap-2 font-black text-teal-600 text-3xl mb-8 pointer-events-none animate-in fade-in slide-in-from-top-4 duration-700">
+    <div className="min-h-screen w-full bg-stone-50 flex flex-col justify-center items-center p-4">
+      <div className="flex items-center gap-2 font-black text-teal-600 text-xl mb-4 pointer-events-none animate-in fade-in slide-in-from-top-4 duration-700">
         
         <span className="tracking-tighter uppercase">
           I🧡PET
         </span>
       </div>
 
-      <div className="w-full max-w-[450px] bg-white rounded-[3rem] shadow-2xl shadow-stone-200/60 border border-stone-100 p-8 md:p-12 animate-in fade-in zoom-in duration-500">
-        <div className="text-center mb-10">
-          <h1 className="text-3xl font-black text-slate-800 tracking-tight">
+      <div className="w-full max-w-85 bg-white rounded-3xl shadow-xl shadow-stone-200/60 border border-stone-100 p-5 md:p-6 animate-in fade-in zoom-in duration-500">
+        <div className="text-center mb-4">
+          <h1 className="text-xl font-black text-slate-800 tracking-tight">
             Bem-vindo!
           </h1>
-          <p className="text-slate-500 text-sm font-medium mt-2">
+          <p className="text-slate-500 text-[11px] font-medium mt-0.5">
             Acesse sua conta para continuar
           </p>
         </div>
 
-        <form action={handleLogin} className="space-y-6">
+        <form action={handleLogin} className="space-y-3">
           <div className="space-y-2">
             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-1">
               E-mail
@@ -83,11 +83,11 @@ function LoginFormContent() {
                 type="email"
                 name="email"
                 placeholder="exemplo@email.com"
-                className="w-full pl-14 pr-6 py-4 rounded-[1.5rem] bg-stone-50 border border-stone-200 outline-none text-sm font-bold text-slate-700 transition-all focus:border-teal-500 focus:ring-4 focus:ring-teal-500/5 group-hover:border-stone-300"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-stone-50 border border-stone-200 outline-none text-xs font-bold text-slate-700 transition-all focus:border-teal-500 focus:ring-4 focus:ring-teal-500/5 group-hover:border-stone-300"
               />
               <Mail
-                className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-600 transition-colors"
-                size={20}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-600 transition-colors"
+                size={14}
               />
             </div>
           </div>
@@ -103,29 +103,29 @@ function LoginFormContent() {
                 type="password"
                 name="senha"
                 placeholder="••••••••"
-                className="w-full pl-14 pr-6 py-4 rounded-[1.5rem] bg-stone-50 border border-stone-200 outline-none text-sm font-bold text-slate-700 transition-all focus:border-teal-500 focus:ring-4 focus:ring-teal-500/5 group-hover:border-stone-300"
+                className="w-full pl-9 pr-3 py-2 rounded-xl bg-stone-50 border border-stone-200 outline-none text-xs font-bold text-slate-700 transition-all focus:border-teal-500 focus:ring-4 focus:ring-teal-500/5 group-hover:border-stone-300"
               />
               <Lock
-                className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-600 transition-colors"
-                size={20}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-600 transition-colors"
+                size={14}
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full py-4 mt-4 bg-slate-900 hover:bg-teal-600 text-white rounded-[1.5rem] font-black text-base shadow-xl shadow-slate-200 transition-all duration-300 flex items-center justify-center gap-3 group active:scale-[0.97]"
+            className="w-full py-2 mt-1 bg-slate-900 hover:bg-teal-600 text-white rounded-xl font-black text-xs shadow-xl shadow-slate-200 transition-all duration-300 flex items-center justify-center gap-3 group active:scale-[0.97]"
           >
             Acessar Sistema
             <ArrowRight
-              size={20}
+              size={14}
               className="group-hover:translate-x-1 transition-transform"
             />
           </button>
         </form>
 
-        <div className="mt-10 pt-8 border-t border-stone-100 text-center">
-          <p className="text-slate-500 text-xs font-bold uppercase tracking-tight">
+        <div className="mt-4 pt-3 border-t border-stone-100 text-center">
+          <p className="text-slate-500 text-[10px] font-bold uppercase tracking-tight">
             Ainda não tem conta?
             <Link
               href={registerLink}
@@ -137,7 +137,7 @@ function LoginFormContent() {
         </div>
       </div>
 
-      <p className="mt-8 text-stone-400 text-[10px] font-bold uppercase tracking-widest">
+      <p className="mt-4 text-stone-400 text-[9px] font-bold uppercase tracking-widest">
         © 2026 I🧡PET
       </p>
     </div>
