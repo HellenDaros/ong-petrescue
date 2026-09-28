@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState, use } from "react";
-import Link from "next/link";
+import BotaoVoltar from "@/app/components/BotaoVoltar";
 import { buscarEventoPorId } from "@/app/services/eventoService";
 import { Evento, formatarLocalEvento } from "@/app/types/evento";
 import { QRCodeSVG } from "qrcode.react";
 import {
-  ArrowLeft,
   Printer,
   Calendar,
   Clock,
@@ -66,16 +65,12 @@ export default function EventoPdfPage({
   }
 
   return (
-    <div className="w-full min-h-screen py-8 px-4 sm:px-6 animate-in fade-in duration-500">
-      <div className="max-w-3xl mx-auto mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 print:hidden">
-        <Link
-          href="/eventos"
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-teal-600 font-bold text-sm bg-white px-4 py-2.5 rounded-xl border border-stone-200 shadow-sm transition-all"
-        >
-          <ArrowLeft size={16} />
-          Voltar para Lista de Eventos
-        </Link>
+    <div className="w-full min-h-screen animate-in fade-in duration-500">
+      <div className="print:hidden">
+        <BotaoVoltar href="/eventos">Voltar para Eventos</BotaoVoltar>
+      </div>
 
+      <div className="max-w-3xl mx-auto my-4 flex justify-end print:hidden">
         <button
           onClick={handlePrint}
           className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-6 py-2.5 rounded-xl font-black text-sm shadow-md transition-all active:scale-95"

@@ -9,7 +9,7 @@ import {
 
 export default function HomePage() {
   return (
-    <div className="max-w-5xl mx-auto space-y-10 animate-in fade-in duration-500">
+    <div className="w-full max-w-5xl mx-auto my-auto space-y-10 animate-in fade-in duration-500">
       <section className="bg-white p-8 rounded-[2rem] border border-stone-100 shadow-sm flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-black text-slate-800">

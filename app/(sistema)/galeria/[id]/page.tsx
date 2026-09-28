@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { CheckCircle2, ChevronLeft, Heart, PenTool, Share2 } from "lucide-react";
+import { CheckCircle2, Heart, PenTool, Share2 } from "lucide-react";
+import BotaoVoltar from "@/app/components/BotaoVoltar";
 import { Animal } from "@/app/types/animal";
 import { buscarAnimalPorId } from "@/app/services/animalService";
 import { useFavoritos } from "@/app/redux/useFavoritos";
@@ -126,58 +127,55 @@ export default function DetalhesAnimalPage() {
   const isDisponivel = animal.statusAnimal === "DISPONIVEL";
 
   return (
-    <main className="min-h-screen bg-stone-50/40 py-8 md:py-16 px-4 font-[family-name:var(--font-poppins)]">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-6 md:mb-10 px-2">
-          <Link
-            href="/galeria"
-            className="inline-flex items-center gap-2 text-slate-400 hover:text-[#008080] font-black text-xs uppercase tracking-widest transition-colors"
+    <main className="font-[family-name:var(--font-poppins)]">
+      <BotaoVoltar href="/galeria">Voltar para a Galeria</BotaoVoltar>
+
+      <div
+        className={`mx-auto mt-3 transition-all ${mostrarFormulario ? "max-w-5xl" : "max-w-3xl"}`}
+      >
+        <div className="bg-white rounded-3xl shadow-xl shadow-stone-200/50 border border-stone-50 overflow-hidden flex flex-col md:flex-row">
+          <div
+            className={`w-full h-[260px] md:h-auto md:min-h-[320px] relative ${mostrarFormulario ? "md:w-[38%]" : "md:w-[45%]"}`}
           >
-            <ChevronLeft size={16} strokeWidth={3} />
-            Voltar para galeria
-          </Link>
-
-          <div className="flex gap-2">
-            <button
-              onClick={() => {
-                if (animal.id)
-                  favoritado ? removeFavorito(animal.id) : addFavorito(animal);
-              }}
-              className={`p-3 rounded-2xl transition-all shadow-sm border ${
-                favoritado
-                  ? "bg-red-500 text-white border-red-500"
-                  : "bg-white text-slate-300 border-stone-100 hover:text-red-400"
-              }`}
-            >
-              <Heart
-                size={20}
-                fill={favoritado ? "currentColor" : "none"}
-                strokeWidth={2.5}
-              />
-            </button>
-            <button className="p-3 bg-white rounded-2xl shadow-sm text-slate-300 border border-stone-100 hover:text-[#008080] transition-all">
-              <Share2 size={20} strokeWidth={2.5} />
-            </button>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-[2.5rem] md:rounded-[3.5rem] shadow-2xl shadow-stone-200/50 border border-stone-50 overflow-hidden flex flex-col md:flex-row">
-          <div className="w-full md:w-[45%] h-[350px] md:h-auto relative">
             <img
               src={animal.urlFoto}
               alt={animal.nameAnimal}
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-6 left-6">
-              <span className="bg-white/95 backdrop-blur-sm text-[#008080] text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl shadow-md">
+            <div className="absolute top-4 left-4">
+              <span className="bg-white/95 backdrop-blur-sm text-[#008080] text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg shadow-md">
                 {animal.especie}
               </span>
             </div>
+            <div className="absolute top-4 right-4 flex gap-2">
+              <button
+                onClick={() => {
+                  if (animal.id)
+                    favoritado ? removeFavorito(animal.id) : addFavorito(animal);
+                }}
+                className={`p-2 rounded-xl transition-all shadow-md backdrop-blur-sm ${
+                  favoritado
+                    ? "bg-red-500 text-white"
+                    : "bg-white/90 text-slate-400 hover:text-red-500"
+                }`}
+              >
+                <Heart
+                  size={16}
+                  fill={favoritado ? "currentColor" : "none"}
+                  strokeWidth={2.5}
+                />
+              </button>
+              <button className="p-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-md text-slate-400 hover:text-[#008080] transition-all">
+                <Share2 size={16} strokeWidth={2.5} />
+              </button>
+            </div>
           </div>
 
-          <div className="w-full md:w-[55%] p-8 md:p-12 lg:p-16 flex flex-col justify-between">
+          <div
+            className={`w-full p-6 flex flex-col justify-between ${mostrarFormulario ? "md:w-[62%] md:p-6" : "md:w-[55%] md:p-8"}`}
+          >
             <div>
-              <div className="flex flex-col gap-1 mb-6">
+              <div className="flex flex-col gap-1 mb-4">
                 <div
                   className={`w-fit px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest mb-2 ${
                     isDisponivel
@@ -187,7 +185,7 @@ export default function DetalhesAnimalPage() {
                 >
                   {animal.statusAnimal}
                 </div>
-                <h1 className="text-4xl md:text-5xl font-black text-slate-800 tracking-tighter leading-none">
+                <h1 className="text-3xl font-black text-slate-800 tracking-tighter leading-none">
                   {animal.nameAnimal}
                 </h1>
                 <p className="text-[#008080] font-black text-xs uppercase tracking-widest mt-2">
@@ -195,13 +193,13 @@ export default function DetalhesAnimalPage() {
                 </p>
               </div>
 
-              <div className="h-px bg-stone-100 w-full mb-8" />
+              <div className="h-px bg-stone-100 w-full mb-5" />
 
-              <div className="space-y-4">
+              <div className="space-y-2">
                 <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">
                   Conheça o amigo
                 </h3>
-                <p className="text-slate-500 leading-relaxed font-medium text-lg italic">
+                <p className="text-slate-500 leading-relaxed font-medium text-sm italic">
                   "{animal.nameAnimal} é um(a) {animal.especie} que está
                   aguardando por um lar cheio de amor."
                 </p>
@@ -211,14 +209,14 @@ export default function DetalhesAnimalPage() {
             {mostrarFormulario ? (
               <form
                 onSubmit={handleEnviarSolicitacao}
-                className="mt-8 bg-stone-50 p-6 rounded-3xl border border-stone-200 space-y-6"
+                className="mt-4 bg-stone-50 p-3 rounded-2xl border border-stone-200 space-y-3"
               >
-                <h3 className="text-lg font-black text-slate-800">
+                <h3 className="text-base font-black text-slate-800">
                   Solicitação de Adoção
                 </h3>
 
-                <div className="space-y-2">
-                  <label className="text-[11px] font-black uppercase tracking-widest text-slate-500">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">
                     Endereço onde ficará o animal
                   </label>
                   <input
@@ -227,15 +225,15 @@ export default function DetalhesAnimalPage() {
                     value={enderecoAnimal}
                     onChange={(e) => setEnderecoAnimal(e.target.value)}
                     placeholder="Rua, Número, Bairro, Cidade - UF"
-                    className="w-full bg-white border-2 border-stone-200 focus:border-teal-500 outline-none px-5 py-3 rounded-2xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                    className="w-full bg-white border border-stone-200 focus:border-teal-500 outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
                   />
                 </div>
 
-                <div className="bg-white p-4 rounded-2xl border border-stone-200 space-y-3">
+                <div className="bg-white p-3 rounded-xl border border-stone-200 space-y-2">
                   <h4 className="text-xs font-black text-orange-500 uppercase tracking-wider">
                     Lei Federal nº 9.605/98 (Artigo 32)
                   </h4>
-                  <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                  <p className="text-[11px] text-slate-500 leading-snug font-medium">
                     Praticar ato de abuso, maus-tratos, ferir ou mutilar animais
                     silvestres, domésticos ou domesticados, nativos ou exóticos
                     é crime federal, sujeito a pena de detenção e multa. Para
@@ -243,7 +241,7 @@ export default function DetalhesAnimalPage() {
                     proibição da guarda.
                   </p>
 
-                  <label className="flex items-start gap-3 cursor-pointer pt-2">
+                  <label className="flex items-start gap-2 cursor-pointer pt-1">
                     <input
                       type="checkbox"
                       required
@@ -251,18 +249,18 @@ export default function DetalhesAnimalPage() {
                       onChange={(e) => setConcordaTermos(e.target.checked)}
                       className="mt-1 w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-stone-300"
                     />
-                    <span className="text-xs text-slate-600 font-bold select-none">
+                    <span className="text-[11px] leading-snug text-slate-600 font-bold select-none">
                       Estou ciente e concordo com a Lei Federal 9.605/98 e
                       assumo o compromisso de guarda responsável do animal.
                     </span>
                   </label>
                 </div>
 
-                <div className="bg-white p-4 rounded-2xl border border-stone-200 space-y-3">
+                <div className="bg-white p-3 rounded-xl border border-stone-200 space-y-2">
                   <h4 className="text-xs font-black text-slate-500 uppercase tracking-wider">
                     Assinatura do Termo de Compromisso
                   </h4>
-                  <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                  <p className="text-[11px] text-slate-500 leading-snug font-medium">
                     Assine digitalmente para confirmar que está ciente da lei e
                     do compromisso de guarda responsável.
                   </p>
@@ -270,7 +268,7 @@ export default function DetalhesAnimalPage() {
                   <button
                     type="button"
                     onClick={() => setModalAssinaturaAberto(true)}
-                    className={`w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${
+                    className={`w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${
                       assinatura
                         ? "bg-teal-50 text-teal-600 border-2 border-teal-100 hover:bg-teal-100"
                         : "bg-white text-slate-500 border-2 border-dashed border-stone-300 hover:border-teal-400 hover:text-teal-600"
@@ -294,7 +292,7 @@ export default function DetalhesAnimalPage() {
                   <button
                     type="button"
                     onClick={() => setMostrarFormulario(false)}
-                    className="flex-1 py-4 bg-white border border-stone-200 text-slate-500 hover:bg-stone-100 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all"
+                    className="flex-1 py-2.5 bg-white border border-stone-200 text-slate-500 hover:bg-stone-100 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all"
                   >
                     Cancelar
                   </button>
@@ -306,14 +304,14 @@ export default function DetalhesAnimalPage() {
                         ? "Assine o termo para habilitar o envio"
                         : undefined
                     }
-                    className="flex-[2] py-4 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-orange-100 active:scale-95 disabled:bg-slate-300"
+                    className="flex-[2] py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-orange-100 active:scale-95 disabled:bg-slate-300"
                   >
                     {enviando ? "Enviando..." : "Confirmar Adoção"}
                   </button>
                 </div>
               </form>
             ) : (
-              <div className="mt-12 flex flex-col sm:flex-row gap-3">
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 <button
                   disabled={!isDisponivel}
                   onClick={() => {
@@ -325,7 +323,7 @@ export default function DetalhesAnimalPage() {
                     }
                     setMostrarFormulario(true);
                   }}
-                  className={`flex-[2] py-4 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg active:scale-95 ${
+                  className={`flex-[2] py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg active:scale-95 ${
                     isDisponivel
                       ? "bg-orange-500 hover:bg-orange-600 text-white shadow-orange-100"
                       : "bg-slate-100 text-slate-300 cursor-not-allowed shadow-none"

@@ -9,7 +9,8 @@ import { Animal } from "@/app/types/animal";
 import { useFavoritos } from "@/app/redux/useFavoritos";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { Calendar, Clock, MapPin, Heart, ArrowLeft, AlertTriangle, PawPrint, Sparkles } from "lucide-react";
+import { Calendar, Clock, MapPin, Heart, AlertTriangle, PawPrint, Sparkles } from "lucide-react";
+import BotaoVoltar from "@/app/components/BotaoVoltar";
 
 export default function EventoPublicoPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
@@ -97,20 +98,14 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
   const isEncerrado = evento.status === "ENCERRADO";
 
   return (
-    <div className="min-h-screen bg-stone-50 pb-24">
+    <div className="min-h-screen bg-stone-50 pb-12">
       {/* Top Banner / Navigation */}
       <header className="bg-white border-b border-stone-200 sticky top-0 z-20 backdrop-blur-md bg-white/90">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-slate-600 hover:text-teal-600 font-bold text-sm transition-all"
-          >
-            <ArrowLeft size={18} />
-            Página Inicial
-          </Link>
+        <div className="max-w-6xl mx-auto px-6 py-2 flex justify-between items-center">
+          <BotaoVoltar href="/">Página Inicial</BotaoVoltar>
 
           <div className="flex items-center gap-2">
-            <span className="text-lg font-black tracking-tighter text-slate-800">
+            <span className="text-base font-black tracking-tighter text-slate-800">
              I🧡PET
             </span>
           </div>
@@ -118,7 +113,7 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
       </header>
 
       {/* Event Header Hero */}
-      <section className="bg-gradient-to-b from-teal-900 to-slate-900 text-white py-16 px-6 relative overflow-hidden">
+      <section className="bg-gradient-to-b from-teal-900 to-slate-900 text-white py-10 px-6 relative overflow-hidden">
         {evento.urlCapa && (
           <div className="absolute inset-0 opacity-20 overflow-hidden">
             <img
@@ -129,35 +124,35 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
           </div>
         )}
 
-        <div className="max-w-5xl mx-auto relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-teal-300 text-xs font-black uppercase tracking-widest mb-6 border border-white/10">
-            <Sparkles size={14} />
+        <div className="max-w-4xl mx-auto relative z-10 text-center">
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-teal-300 text-[10px] font-black uppercase tracking-widest mb-4 border border-white/10">
+            <Sparkles size={12} />
             {evento.empresaNome || "Evento de Adoção de Animais"}
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black mb-4 tracking-tight leading-tight">
+          <h1 className="text-2xl sm:text-4xl font-black mb-3 tracking-tight leading-tight">
             {evento.nome}
           </h1>
 
-          <p className="text-slate-300 text-base sm:text-lg max-w-3xl mx-auto font-medium mb-8 leading-relaxed">
+          <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto font-medium mb-5 leading-relaxed">
             {evento.descricao}
           </p>
 
-          <div className="inline-flex flex-wrap justify-center gap-4 bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10 text-xs sm:text-sm font-bold">
+          <div className="inline-flex flex-wrap justify-center gap-2 bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/10 text-xs font-bold">
             <div className="flex items-center gap-2 px-3 py-1">
-              <Calendar className="text-orange-400" size={18} />
+              <Calendar className="text-orange-400" size={16} />
               <span>{evento.data}</span>
             </div>
 
             <div className="flex items-center gap-2 px-3 py-1 border-x border-white/10">
-              <Clock className="text-orange-400" size={18} />
+              <Clock className="text-orange-400" size={16} />
               <span>
                 {evento.horarioInicio} às {evento.horarioTermino}
               </span>
             </div>
 
             <div className="flex items-center gap-2 px-3 py-1">
-              <MapPin className="text-orange-400" size={18} />
+              <MapPin className="text-orange-400" size={16} />
               <span>{formatarLocalEvento(evento)}</span>
             </div>
           </div>
@@ -166,16 +161,16 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
 
       {/* Closed Event Warning Notice */}
       {isEncerrado && (
-        <div className="max-w-7xl mx-auto px-6 mt-8">
-          <div className="bg-amber-500/10 border-2 border-amber-500/30 rounded-3xl p-6 flex items-center gap-4 text-amber-900">
-            <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0">
-              <AlertTriangle size={24} />
+        <div className="max-w-6xl mx-auto px-6 mt-6">
+          <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex items-center gap-3 text-amber-900">
+            <div className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0">
+              <AlertTriangle size={20} />
             </div>
             <div>
-              <h3 className="font-black text-base uppercase tracking-wider">
+              <h3 className="font-black text-sm uppercase tracking-wider">
                 Este evento já foi encerrado
               </h3>
-              <p className="text-xs sm:text-sm font-medium text-amber-800">
+              <p className="text-xs font-medium text-amber-800">
                 A feira presencial de adoção foi finalizada, porém a lista dos animais participantes continua disponível para consulta e solicitação de adoção online.
               </p>
             </div>
@@ -184,17 +179,17 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
       )}
 
       {/* Animals Catalog Section (Matches GaleriaPublica card design) */}
-      <section className="py-12 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-black text-slate-900 mb-2">
+      <section className="py-6 px-6 max-w-6xl mx-auto">
+        <div className="text-center mb-5">
+          <h2 className="text-xl md:text-2xl font-black text-slate-900 mb-1">
             Animais Presentes na Feira
           </h2>
-          <p className="text-slate-500 text-base font-medium">
+          <p className="text-slate-500 text-xs md:text-sm font-medium">
             Estes são os peludinhos selecionados pela ONG para este evento ({evento.animais?.length || 0} animais).
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {evento.animais &&
             evento.animais.map((animal) => {
               const favoritado = animal.id !== null && isFavorito(animal.id);
@@ -203,52 +198,52 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
                 <div
                   key={animal.id}
                   onClick={() => handleCardClick(animal.id)}
-                  className="group bg-white rounded-[2.5rem] overflow-hidden border border-stone-100 shadow-md transition-all hover:-translate-y-2 hover:shadow-xl relative cursor-pointer"
+                  className="group bg-white rounded-3xl overflow-hidden border border-stone-100 shadow-md transition-all hover:-translate-y-2 hover:shadow-xl relative cursor-pointer"
                 >
                   <button
                     onClick={(e) => handleToggleFavorito(e, animal)}
-                    className={`absolute top-4 right-4 z-10 p-2.5 rounded-2xl transition-all shadow-sm backdrop-blur-md ${
+                    className={`absolute top-3 right-3 z-10 p-2 rounded-xl transition-all shadow-sm backdrop-blur-md ${
                       favoritado
                         ? "bg-red-500 text-white scale-110"
                         : "bg-white/80 text-slate-400 hover:text-red-500 hover:scale-110"
                     }`}
                   >
                     <Heart
-                      size={20}
+                      size={16}
                       fill={favoritado ? "currentColor" : "none"}
                       strokeWidth={2.5}
                     />
                   </button>
 
-                  <div className="relative h-56 w-full overflow-hidden">
+                  <div className="relative h-44 w-full overflow-hidden">
                     <img
                       src={animal.urlFoto}
                       alt={animal.nameAnimal}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div className="absolute top-4 left-4">
+                    <div className="absolute top-3 left-3">
                       <span className="bg-white/90 backdrop-blur-sm text-[#008080] text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
                         {animal.especie}
                       </span>
                     </div>
                   </div>
 
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-4">
+                  <div className="p-4">
+                    <div className="flex justify-between items-start gap-2 mb-3">
                       <div>
-                        <h3 className="text-xl font-black text-slate-800 leading-tight">
+                        <h3 className="text-base font-black text-slate-800 leading-tight">
                           {animal.nameAnimal}
                         </h3>
                         <p className="text-slate-400 font-bold text-[11px] uppercase tracking-wider">
                           {animal.raca}
                         </p>
                       </div>
-                      <button className="bg-stone-100 hover:bg-orange-100 text-orange-500 px-5 py-2.5 rounded-2xl font-black text-xs uppercase tracking-widest transition-colors shadow-sm active:scale-95">
+                      <button className="shrink-0 whitespace-nowrap bg-stone-100 hover:bg-orange-100 text-orange-500 px-3 py-2 rounded-xl font-black text-[10px] uppercase tracking-wider transition-colors shadow-sm active:scale-95">
                         Quero Adotar!
                       </button>
                     </div>
 
-                    <div className="flex justify-between items-center pt-4 border-t border-stone-50">
+                    <div className="flex justify-between items-center pt-3 border-t border-stone-50">
                       <div className="flex items-center gap-1.5 text-teal-600 text-[10px] font-black uppercase">
                         <Calendar size={12} strokeWidth={3} />
                         {animal.statusAnimal}
@@ -264,11 +259,11 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
             })}
 
           {(!evento.animais || evento.animais.length === 0) && (
-            <div className="col-span-full py-20 text-center bg-white rounded-[3rem] border-2 border-dashed border-stone-200 p-8">
-              <div className="w-16 h-16 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-4 text-stone-300">
-                <PawPrint size={32} />
+            <div className="col-span-full py-8 text-center bg-white rounded-2xl border border-dashed border-stone-200 p-4">
+              <div className="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-2 text-stone-300">
+                <PawPrint size={20} />
               </div>
-              <p className="text-slate-500 font-bold uppercase text-xs tracking-widest">
+              <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">
                 Nenhum animal foi associado a este evento até o momento.
               </p>
             </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import BotaoVoltar from "@/app/components/BotaoVoltar";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Adotante } from "@/app/types/adotante";
@@ -39,18 +39,8 @@ export default function EditarAdotante() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-500">
-      <header className="flex flex-col gap-2">
-        <Link
-          href="/home"
-          className="text-sm font-bold text-slate-400 hover:text-teal-600 transition-colors w-fit"
-        >
-          &larr; Voltar
-        </Link>
-        <h1 className="text-2xl font-black text-slate-800 tracking-tight">
-          Editar Adotante #{codigo}
-        </h1>
-      </header>
+    <div className="animate-in fade-in duration-500">
+      <BotaoVoltar href="/home">Voltar</BotaoVoltar>
 
       <AdotanteForm adotanteExistente={adotante} />
     </div>

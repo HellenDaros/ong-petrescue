@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import BotaoVoltar from "@/app/components/BotaoVoltar";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Empresa } from "@/app/types/empresa";
@@ -49,12 +49,7 @@ export default function EditarEmpresaPage() {
 
   return (
     <div>
-      <Link
-        href="/empresa"
-        className="text-sm font-bold text-slate-400 hover:text-teal-600 transition-colors w-fit"
-      >
-        &larr; Voltar
-      </Link>
+      <BotaoVoltar href="/empresa">Voltar para gestão de Empresas</BotaoVoltar>
 
       <EmpresaForm empresaExistente={empresa} />
     </div>

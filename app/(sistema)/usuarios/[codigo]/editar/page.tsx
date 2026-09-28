@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import UsuarioForm from "../../components/UsuarioForm";
 import { Usuario } from "@/app/types/usuarios";
 import { buscarUsuarioPorId } from "@/app/services/usuarioService";
-import { ChevronLeft } from "lucide-react";
+import BotaoVoltar from "@/app/components/BotaoVoltar";
 
 export default function EditarUsuario() {
   const params = useParams();
@@ -30,13 +30,7 @@ export default function EditarUsuario() {
   if (!usuario) return <div className="p-8">Carregando dados...</div>;
   return (
     <div>
-      <Link
-        href="/usuarios"
-        className="inline-flex items-center gap-2 text-slate-400 hover:text-[#008080] font-black text-xs uppercase tracking-widest transition-colors"
-      >
-        <ChevronLeft size={16} strokeWidth={3} />
-        Voltar para gestão de Usuários
-      </Link>
+      <BotaoVoltar href="/usuarios">Voltar para gestão de Usuários</BotaoVoltar>
       <UsuarioForm usuarioExistente={usuario} />
     </div>
   );

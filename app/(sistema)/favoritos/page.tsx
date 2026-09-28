@@ -105,12 +105,6 @@ export default function FavoritosPage() {
               Você ainda não favoritou nenhum pet. Vá até a galeria e clique no
               coração!
             </p>
-            <Link
-              href="/galeria"
-              className="inline-block mt-8 text-[#008080] font-black text-sm underline decoration-2 underline-offset-4 hover:text-teal-700"
-            >
-              Voltar para a Galeria
-            </Link>
           </div>
         )}
       </div>

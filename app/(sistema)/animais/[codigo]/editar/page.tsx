@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AnimalForm from "../../components/animal-form";
-import { ChevronLeft } from "lucide-react";
+import BotaoVoltar from "@/app/components/BotaoVoltar";
 import { Animal } from "@/app/types/animal";
 import { buscarAnimalPorId } from "@/app/services/animalService";
 
@@ -32,13 +32,7 @@ export default function EditarAnimal() {
 
   return (
     <div>
-      <Link
-        href="/animais"
-        className="inline-flex items-center gap-2 text-slate-400 hover:text-[#008080] font-black text-xs uppercase tracking-widest transition-colors"
-      >
-        <ChevronLeft size={16} strokeWidth={3} />
-        Voltar para gestão de Animais
-      </Link>
+      <BotaoVoltar href="/animais">Voltar para gestão de Animais</BotaoVoltar>
 
       <AnimalForm animalExistente={animal} />
     </div>
