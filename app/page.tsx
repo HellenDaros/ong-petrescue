@@ -42,18 +42,18 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-stone-50 text-slate-800 font-sans selection:bg-teal-100">
-      <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-stone-200 px-6 py-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+      <nav className="fixed w-full z-50 bg-white/90 backdrop-blur-md border-b border-stone-200 px-6 py-2">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
           <Link
             href="/"
-            className="flex items-center gap-2 font-black text-teal-600 text-2xl tracking-tight group"
+            className="flex items-center gap-2 font-black text-teal-600 text-xl tracking-tight group"
           >
             <span>
               I🧡PET
             </span>
           </Link>
 
-          <div className="hidden md:flex gap-8 font-medium text-slate-600">
+          <div className="hidden md:flex gap-6 text-sm font-medium text-slate-600">
             <Link href="#sobre" className="hover:text-teal-600 transition">
               Como Funciona
             </Link>
@@ -68,7 +68,7 @@ export default function LandingPage() {
           {usuario ? (
             <div className="flex items-center gap-3">
               <Link href="/home" className="group relative flex items-center">
-                <div className="flex items-center gap-2 bg-slate-900 hover:bg-teal-600 text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 shadow-md hover:shadow-orange-200">
+                <div className="flex items-center gap-2 bg-slate-900 hover:bg-teal-600 text-white px-4 py-2 text-sm rounded-full font-bold transition-all duration-300 shadow-md hover:shadow-orange-200">
                   <span>Acessar Minha Conta</span>
                 </div>
               </Link>
@@ -77,14 +77,14 @@ export default function LandingPage() {
                 onClick={handleLogout}
                 className="group relative flex items-center"
               >
-                <div className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 shadow-md hover:shadow-red-200">
+                <div className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 text-sm rounded-full font-bold transition-all duration-300 shadow-md hover:shadow-red-200">
                   <span>Sair</span>
                 </div>
               </button>
             </div>
           ) : (
             <Link href="/login" className="group relative flex items-center">
-              <div className="flex items-center gap-2 bg-slate-900 hover:bg-orange-500 text-white px-6 py-2.5 rounded-full font-bold transition-all duration-300 shadow-md hover:shadow-orange-200">
+              <div className="flex items-center gap-2 bg-slate-900 hover:bg-orange-500 text-white px-4 py-2 text-sm rounded-full font-bold transition-all duration-300 shadow-md hover:shadow-orange-200">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -106,7 +106,7 @@ export default function LandingPage() {
         </div>
       </nav>
 
-      <header className="relative min-h-screen flex items-center justify-center bg-teal-700 text-white overflow-hidden pt-32 pb-12 md:pt-40">
+      <header className="relative min-h-screen flex items-center justify-center bg-teal-700 text-white overflow-hidden pt-24 pb-10 md:pt-24">
         <div className="absolute inset-0">
           <img
             src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?auto=format&fit=crop&q=80&w=2000"
@@ -114,17 +114,17 @@ export default function LandingPage() {
             className="w-full h-full object-cover mix-blend-overlay opacity-50"
           />
         </div>
-        <div className="relative z-10 text-center px-2 max-w-4xl">
-          <span className="inline-block bg-white/20 backdrop-blur-sm text-white px-4 py-1.5 rounded-full text-sm font-semibold mb-6 animate-fade-in">
+        <div className="relative z-10 text-center px-4 max-w-3xl">
+          <span className="inline-block bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold mb-4 animate-fade-in">
             🐶 Unindo ONGs e Adotantes em uma só rede
           </span>
 
-          <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight tracking-tighter">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4 leading-tight tracking-tighter">
             Amor não se compra, <br />
             <span className="text-orange-400">se adota.</span>
           </h1>
 
-          <p className="text-lg md:text-2xl mb-10 text-teal-50 max-w-2xl mx-auto leading-relaxed opacity-90">
+          <p className="text-sm md:text-lg mb-6 text-teal-50 max-w-xl mx-auto leading-relaxed opacity-90">
             Conectamos ONGs comprometidas a pessoas que buscam transformar vidas
             através da adoção responsável.
           </p>
@@ -132,13 +132,13 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/cadastro-adotante"
-              className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-bold py-4 md:py-5 px-8 md:px-10 rounded-2xl text-lg shadow-xl transition-all hover:scale-105 active:scale-95 text-center"
+              className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 md:py-3 px-6 md:px-8 rounded-xl text-sm shadow-xl transition-all hover:scale-105 active:scale-95 text-center"
             >
               Ser um adotante
             </Link>
             <Link
               href="/login"
-              className="w-full sm:w-auto bg-white hover:bg-teal-50 text-teal-700 font-bold py-4 md:py-5 px-8 md:px-10 rounded-2xl text-lg shadow-xl transition-all border-b-4 border-stone-200 active:border-b-0 text-center"
+              className="w-full sm:w-auto bg-white hover:bg-teal-50 text-teal-700 font-bold py-2.5 md:py-3 px-6 md:px-8 rounded-xl text-sm shadow-xl transition-all border-b-4 border-stone-200 active:border-b-0 text-center"
             >
               Já tenho uma conta
             </Link>
@@ -152,30 +152,30 @@ export default function LandingPage() {
 
       <section
         id="sobre"
-        className="bg-slate-900 py-24 px-6 rounded-[3rem] mx-4 mb-24 text-white text-center"
+        className="bg-slate-900 py-10 px-6 w-full mb-10 text-white text-center"
       >
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black mb-16 leading-tight">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-xl md:text-2xl font-black mb-6 leading-tight">
             Como funciona o <span className="text-teal-400">I🧡PET</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
-              <h4 className="text-orange-400 font-bold mb-4">Para ONGs</h4>
-              <p className="text-slate-400 text-sm">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+            <div className="bg-white/5 p-5 rounded-2xl border border-white/10">
+              <h4 className="text-orange-400 font-bold text-sm mb-2">Para ONGs</h4>
+              <p className="text-slate-400 text-xs leading-relaxed">
                 Um painel exclusivo para gerenciar seus animais e adotantes de
                 forma 100% privada e segura.
               </p>
             </div>
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
-              <h4 className="text-teal-400 font-bold mb-4">Para Adotantes</h4>
-              <p className="text-slate-400 text-sm">
+            <div className="bg-white/5 p-5 rounded-2xl border border-white/10">
+              <h4 className="text-teal-400 font-bold text-sm mb-2">Para Adotantes</h4>
+              <p className="text-slate-400 text-xs leading-relaxed">
                 Crie seu perfil, candidate-se a adoções e acompanhe o status da
                 sua aprovação em tempo real.
               </p>
             </div>
-            <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
-              <h4 className="text-blue-400 font-bold mb-4">Privacidade</h4>
-              <p className="text-slate-400 text-sm">
+            <div className="bg-white/5 p-5 rounded-2xl border border-white/10">
+              <h4 className="text-blue-400 font-bold text-sm mb-2">Privacidade</h4>
+              <p className="text-slate-400 text-xs leading-relaxed">
                 O sistema garante que cada ONG tenha visibilidade apenas dos
                 seus próprios dados e processos.
               </p>
@@ -186,32 +186,32 @@ export default function LandingPage() {
 
       <footer
         id="contato"
-        className="bg-stone-50 py-16 px-6 border-t border-stone-200"
+        className="bg-stone-50 py-5 px-6 border-t border-stone-200"
       >
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
           <div>
-            <div className="flex items-center justify-center md:justify-start gap-2 font-black text-teal-600 text-2xl mb-4">
+            <div className="flex items-center justify-center md:justify-start gap-2 font-black text-teal-600 text-lg mb-1">
               <span>I🧡PET</span>
             </div>
-            <p className="text-slate-500 max-w-xs">
+            <p className="text-slate-500 text-xs max-w-xs">
               Plataforma dedicada a conectar ONGs e adotantes para salvar vidas.
             </p>
           </div>
-          <div className="flex gap-6">
+          <div className="flex gap-3">
             <Link
               href="#"
-              className="p-3 bg-white shadow-sm rounded-full text-slate-400 hover:text-teal-600 transition duration-300"
+              className="p-2 bg-white shadow-sm rounded-full text-slate-400 hover:text-teal-600 transition duration-300"
             >
-              <Instagram />
+              <Instagram size={16} />
             </Link>
             <Link
               href="#"
-              className="p-3 bg-white shadow-sm rounded-full text-slate-400 hover:text-teal-600 transition duration-300"
+              className="p-2 bg-white shadow-sm rounded-full text-slate-400 hover:text-teal-600 transition duration-300"
             >
-              <Facebook />
+              <Facebook size={16} />
             </Link>
           </div>
-          <div className="text-center md:text-right text-slate-400 text-sm">
+          <div className="text-center md:text-right text-slate-400 text-xs leading-relaxed">
             © {new Date().getFullYear()} I🧡PET. <br /> Todos os direitos
             reservados.
           </div>
