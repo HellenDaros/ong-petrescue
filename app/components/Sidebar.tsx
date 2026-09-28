@@ -111,13 +111,13 @@ export default function Sidebar({
       <aside
         className={`
           fixed md:sticky top-0 left-0 h-screen bg-white border-r border-stone-100
-          flex flex-col p-6 z-50 transition-all duration-300 ease-in-out
+          flex flex-col p-4 z-50 transition-all duration-300 ease-in-out
           ${mobileOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0
-          ${collapsed ? "w-72 md:w-24" : "w-72"}
+          ${collapsed ? "w-60 md:w-16" : "w-60"}
         `}
       >
         <div
-          className={`flex items-center gap-3 px-2 mb-12 ${collapsed ? "md:justify-center md:px-0" : ""}`}
+          className={`flex items-center gap-3 px-2 mb-8 ${collapsed ? "md:justify-center md:px-0" : ""}`}
         >
           <span
             className={`text-xl text-teal-600 font-black tracking-tighter text-slate-800 ${collapsed ? "md:hidden" : ""}`}
@@ -139,15 +139,15 @@ export default function Sidebar({
           type="button"
           onClick={onToggleCollapse}
           title={collapsed ? "Expandir menu" : "Encolher menu"}
-          className="hidden md:flex absolute -right-3 top-9 w-6 h-6 items-center justify-center rounded-full bg-white border border-stone-200 shadow-md text-slate-400 hover:text-teal-600 hover:border-teal-200 transition-colors z-10"
+          className="hidden md:flex absolute -right-3 top-6 w-6 h-6 items-center justify-center rounded-full bg-white border border-stone-200 shadow-md text-slate-400 hover:text-teal-600 hover:border-teal-200 transition-colors z-10"
         >
           {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
         </button>
 
         {/* Navigation */}
-        <nav className="flex-1 space-y-2 overflow-y-auto">
+        <nav className="flex-1 space-y-1 overflow-y-auto">
           {!collapsed && (
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 ml-4 mb-4">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 ml-3 mb-3">
               Menu Principal
             </p>
           )}
@@ -163,7 +163,7 @@ export default function Sidebar({
                 onClick={onCloseMobile}
                 title={collapsed ? item.name : undefined}
                 className={`
-                  flex items-center gap-4 px-4 py-3.5 rounded-2xl font-bold text-sm transition-all duration-300 group
+                  flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 group
                   ${collapsed ? "md:justify-center md:px-0" : ""}
                   ${
                     isActive
@@ -173,7 +173,7 @@ export default function Sidebar({
                 `}
               >
                 <Icon
-                  size={20}
+                  size={18}
                   className={`shrink-0 ${isActive ? "text-teal-600" : "text-slate-400 group-hover:text-slate-600"}`}
                 />
                 <span className={collapsed ? "md:hidden" : ""}>

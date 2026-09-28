@@ -27,6 +27,17 @@ export default function SistemaLayout({
     }
   }, []);
 
+  // Área logada usa tamanho-base menor (13px em vez de 16px). Como o Tailwind usa rem,
+  // fontes, paddings e larguras escalam juntos. Restaura ao sair do sistema.
+  useEffect(() => {
+    const html = document.documentElement;
+    const anterior = html.style.fontSize;
+    html.style.fontSize = "13px";
+    return () => {
+      html.style.fontSize = anterior;
+    };
+  }, []);
+
   useEffect(() => {
     if (mounted && usuario == null) {
       router.push("/login");
@@ -56,8 +67,11 @@ export default function SistemaLayout({
       <div className="flex flex-col flex-1 overflow-y-auto relative min-w-0">
         <Header onOpenMobileMenu={() => setMobileOpen(true)} />
 
-        <main className="flex-1 flex flex-col justify-center py-8 px-6 md:px-12">
-          <div className="w-full max-w-7xl mx-auto">{children}</div>
+        <main className="flex-1 flex flex-col justify-center py-5 px-6 md:px-10">
+          {/* zoom reduz o conteúdo de todas as telas do sistema de uma vez */}
+          <div className="w-full max-w-7xl mx-auto" style={{ zoom: 0.9 }}>
+            {children}
+          </div>
         </main>
 
         <Footer />
