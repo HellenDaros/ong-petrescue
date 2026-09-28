@@ -71,7 +71,7 @@ export default function SistemaLayout({
           {/* zoom reduz o conteúdo de todas as telas do sistema de uma vez.
               Conteúdo alinhado ao topo para o botão "Voltar" ficar sempre na mesma posição. */}
           <div
-            className="w-full max-w-7xl mx-auto flex-1 flex flex-col"
+            className="sistema-conteudo w-full max-w-7xl mx-auto flex-1 flex flex-col"
             style={{ zoom: 0.9 }}
           >
             {children}
