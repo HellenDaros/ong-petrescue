@@ -13,6 +13,10 @@ import { RootState } from "@/app/redux/store";
 import { criarSolicitacaoAdocao } from "@/app/services/adocaoService";
 import { buscarAdotanteLogado } from "@/app/services/adotanteService";
 import AssinaturaModal from "@/app/components/AssinaturaModal";
+import { CONFIRMACAO_LABEL } from "@/app/(sistema)/animais/constants/animal-constants";
+
+const rotuloConfirmacao = (valor: string) =>
+  CONFIRMACAO_LABEL[valor as keyof typeof CONFIRMACAO_LABEL] ?? valor;
 
 export default function DetalhesAnimalPage() {
   const params = useParams();
@@ -127,11 +131,12 @@ export default function DetalhesAnimalPage() {
   const isDisponivel = animal.statusAnimal === "DISPONIVEL";
 
   return (
-    <main className="font-[family-name:var(--font-poppins)]">
+    <main className="font-[family-name:var(--font-poppins)] flex flex-col flex-1">
       <BotaoVoltar href="/galeria">Voltar para a Galeria</BotaoVoltar>
 
+      <div className="flex-1 flex items-center justify-center">
       <div
-        className={`mx-auto mt-3 transition-all ${mostrarFormulario ? "max-w-5xl" : "max-w-3xl"}`}
+        className={`w-full mx-auto mt-3 transition-all ${mostrarFormulario ? "max-w-5xl" : "max-w-3xl"}`}
       >
         <div className="bg-white rounded-3xl shadow-xl shadow-stone-200/50 border border-stone-50 overflow-hidden flex flex-col md:flex-row">
           <div
@@ -194,6 +199,30 @@ export default function DetalhesAnimalPage() {
               </div>
 
               <div className="h-px bg-stone-100 w-full mb-5" />
+
+              <div className="grid grid-cols-2 gap-2 mb-5">
+                {[
+                  { label: "Idade", value: animal.idade },
+                  { label: "Vacinado", value: rotuloConfirmacao(animal.vacinado) },
+                  { label: "Castrado", value: rotuloConfirmacao(animal.castrado) },
+                  {
+                    label: "Vermifugado",
+                    value: rotuloConfirmacao(animal.vermifugado),
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="bg-stone-50 border border-stone-100 rounded-xl px-3 py-2"
+                  >
+                    <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest">
+                      {item.label}
+                    </p>
+                    <p className="text-xs font-black text-slate-700">
+                      {item.value}
+                    </p>
+                  </div>
+                ))}
+              </div>
 
               <div className="space-y-2">
                 <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">
@@ -335,6 +364,7 @@ export default function DetalhesAnimalPage() {
             )}
           </div>
         </div>
+      </div>
       </div>
 
       {modalAssinaturaAberto && (
