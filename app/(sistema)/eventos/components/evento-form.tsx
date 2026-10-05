@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Calendar, CheckSquare, Square, Search } from "lucide-react";
 import { Evento, EventoFormProps, EventoRequest } from "@/app/types/evento";
 import { Animal } from "@/app/types/animal";
 import { buscarListaAnimais } from "@/app/services/animalService";
-import { salvarEvento } from "@/app/services/eventoService";
+import { salvarEvento, uploadCapaEvento } from "@/app/services/eventoService";
 import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
 
 const EVENTO_VAZIO: Evento = {
@@ -47,6 +47,19 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
   const [buscaAnimal, setBuscaAnimal] = useState("");
   const [carregandoAnimais, setCarregandoAnimais] = useState(true);
   const [salvando, setSalvando] = useState(false);
+
+  const [capaFile, setCapaFile] = useState<File | null>(null);
+  const [capaPreview, setCapaPreview] = useState<string>(
+    eventoExistente?.urlCapa || "",
+  );
+
+  const handleCapaChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setCapaFile(file);
+    setCapaPreview(URL.createObjectURL(file));
+  };
 
   useEffect(() => {
     carregarAnimais();
@@ -157,6 +170,12 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
 
     try {
       setSalvando(true);
+
+      let urlCapa = evento.urlCapa;
+      if (capaFile) {
+        urlCapa = await uploadCapaEvento(capaFile);
+      }
+
       const payload: EventoRequest = {
         nome: evento.nome,
         descricao: evento.descricao,
@@ -166,7 +185,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
         nomeLocal: evento.nomeLocal || undefined,
         cep: evento.cep,
         complemento: evento.complemento || undefined,
-        urlCapa: evento.urlCapa || undefined,
+        urlCapa: urlCapa || undefined,
         status: evento.status,
         animaisIds: evento.animais
           .map((a) => a.id)
@@ -412,15 +431,24 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
 
             <div className="md:col-span-2">
               <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                URL da Imagem de Capa (Opcional)
+                Imagem de Capa (Opcional)
               </label>
-              <input
-                type="url"
-                value={evento.urlCapa}
-                onChange={(e) => handleChange("urlCapa", e.target.value)}
-                placeholder="https://exemplo.com/imagem-do-evento.jpg"
-                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
-              />
+              <div className="flex items-center gap-3">
+                {capaPreview && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={capaPreview}
+                    alt="Pré-visualização"
+                    className="w-14 h-14 rounded-xl object-cover border border-stone-200 shrink-0"
+                  />
+                )}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={handleCapaChange}
+                  className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-100 file:text-teal-700 file:font-bold"
+                />
+              </div>
             </div>
           </div>
         </div>

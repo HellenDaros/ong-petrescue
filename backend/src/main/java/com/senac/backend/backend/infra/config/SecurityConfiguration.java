@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                                         "/animais/publicos",
                                         "/eventos/publicos/**",
                                         "/api/enderecos/**",
+                                        "/uploads/**",
                                         "/swagger-ui/**",
                                         "/webjars/**",
                                         "/swagger-resources/**",

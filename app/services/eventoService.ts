@@ -22,6 +22,23 @@ export const buscarEventoPorId = async (id: number): Promise<Evento> => {
   return response.data;
 };
 
+export const uploadCapaEvento = async (file: File): Promise<string> => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post<string>("/eventos/upload-capa", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw new Error(error.response.data);
+    }
+    throw new Error("Erro ao enviar a capa do evento. Tente novamente.");
+  }
+};
+
 export const cadastrarEvento = async (evento: EventoRequest): Promise<number> => {
   try {
     const response = await api.post<number>("/eventos", evento);

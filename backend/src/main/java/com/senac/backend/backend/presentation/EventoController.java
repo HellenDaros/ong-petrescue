@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
@@ -48,6 +50,18 @@ public class EventoController {
     @Operation(summary = "Cadastrar evento", description = "Adiciona um novo evento para a ONG")
     public ResponseEntity<Long> salvar(@RequestBody EventoRequest request) {
         return ResponseEntity.ok(eventoService.salvarEvento(request));
+    }
+
+    @PostMapping("/upload-capa")
+    @Operation(summary = "Enviar capa do evento", description = "Faz upload da imagem de capa do evento e retorna a URL para acesso")
+    public ResponseEntity<String> uploadCapa(@RequestParam("file") MultipartFile file) {
+        String caminhoRelativo = eventoService.salvarCapa(file);
+
+        String urlAbsoluta = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(caminhoRelativo)
+                .toUriString();
+
+        return ResponseEntity.ok(urlAbsoluta);
     }
 
     @PutMapping("/{id}")

@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,6 +22,9 @@ public class AnimalService {
 
     @Autowired
     private AnimalRepository animalRepository;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
     public List<AnimalResponse> ListarTodos() {
 
@@ -117,6 +121,10 @@ public class AnimalService {
         }
 
         return false;
+    }
+
+    public String salvarFoto(MultipartFile file) {
+        return fileStorageService.salvar(file, "animais");
     }
 
     public boolean AlterarStatus(Long id, AlterarStatusAnimalRequest statusRequest) {

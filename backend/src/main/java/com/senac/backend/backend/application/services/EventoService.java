@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,13 @@ public class EventoService {
 
     @Autowired
     private EnderecoService enderecoService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
+
+    public String salvarCapa(MultipartFile file) {
+        return fileStorageService.salvar(file, "eventos");
+    }
 
     @Transactional(readOnly = true)
     public List<EventoResponse> listarTodosPorOng() {

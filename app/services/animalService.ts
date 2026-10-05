@@ -1,3 +1,4 @@
+import axios from "axios";
 import api from "./api";
 import { Animal } from "../types/animal";
 
@@ -57,6 +58,24 @@ export async function alterarStatusAnimal(animal: Animal): Promise<boolean> {
   } catch (error) {
     console.error("Erro na requisição de alteração de status:", error);
     return false;
+  }
+}
+
+export async function uploadFotoAnimal(file: File): Promise<string> {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post<string>("/animais/upload-foto", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      throw new Error(error.response.data);
+    }
+    throw new Error("Erro ao enviar a foto do pet. Tente novamente.");
   }
 }
 

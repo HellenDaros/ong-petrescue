@@ -30,6 +30,7 @@ public class JWTFilter extends OncePerRequestFilter {
         //liberação de metodos para não travar o token jwt
         if (path.equals("/auth/login") || path.startsWith("/swagger-ui")
                 || path.startsWith("/animais/publicos")
+                || path.startsWith("/uploads/")
                 || (path.equals("/adotantes") && method.equalsIgnoreCase("POST"))
                 || path.startsWith("/webjars")
                 || path.startsWith("/api/enderecos")

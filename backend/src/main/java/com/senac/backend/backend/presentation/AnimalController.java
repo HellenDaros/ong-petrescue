@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 
@@ -45,6 +47,18 @@ public class AnimalController {
     @Operation(summary = "Cadastrar novo pet", description = "Adiciona um novo animal ao sistema")
     public  ResponseEntity<Long> salvar(@RequestBody AnimalRequest animal){
         return  ResponseEntity.ok(animalService.SalvarAnimal(animal));
+    }
+
+    @PostMapping("/upload-foto")
+    @Operation(summary = "Enviar foto do pet", description = "Faz upload da imagem do animal e retorna a URL para acesso")
+    public ResponseEntity<String> uploadFoto(@RequestParam("file") MultipartFile file) {
+        String caminhoRelativo = animalService.salvarFoto(file);
+
+        String urlAbsoluta = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(caminhoRelativo)
+                .toUriString();
+
+        return ResponseEntity.ok(urlAbsoluta);
     }
 
     @PutMapping("/{id}")

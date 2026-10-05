@@ -1,9 +1,9 @@
 "use client";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Animal, AnimalFormProps } from "@/app/types/animal";
-import { salvarAnimal } from "@/app/services/animalService";
+import { salvarAnimal, uploadFotoAnimal } from "@/app/services/animalService";
 import {
   CONFIRMACAO_LABEL,
   ESPECIE_LABEL,
@@ -62,7 +62,19 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
       ),
   );
 
-  const isEdicao = !!animalExistente;
+  const [fotoFile, setFotoFile] = useState<File | null>(null);
+  const [fotoPreview, setFotoPreview] = useState<string>(
+    animalExistente?.urlFoto || "",
+  );
+  const [enviandoFoto, setEnviandoFoto] = useState(false);
+
+  const handleFotoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setFotoFile(file);
+    setFotoPreview(URL.createObjectURL(file));
+  };
 
   const handleChange = (campo: keyof Animal, valor: string) => {
     setAnimal((prev) => {
@@ -98,8 +110,27 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
   };
 
   const handleSalvar = async () => {
+    let urlFoto = animal.urlFoto;
+
+    if (fotoFile) {
+      setEnviandoFoto(true);
+      try {
+        urlFoto = await uploadFotoAnimal(fotoFile);
+      } catch (error) {
+        alert(
+          error instanceof Error
+            ? error.message
+            : "Erro ao enviar a foto do pet.",
+        );
+        return;
+      } finally {
+        setEnviandoFoto(false);
+      }
+    }
+
     const payload = {
       ...animal,
+      urlFoto,
       telefoneDoador: onlyDigits(animal.telefoneDoador),
     };
     const sucesso = await salvarAnimal(payload, !!animalExistente);
@@ -320,16 +351,27 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                URL da Foto
+                Foto do Pet{" "}
+                <span className="normal-case font-medium text-stone-300">
+                  (opcional)
+                </span>
               </label>
-              <input
-                type="text"
-                required
-                onChange={(e) => handleChange("urlFoto", e.target.value)}
-                value={animal.urlFoto}
-                placeholder="http://..."
-                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-              />
+              <div className="flex items-center gap-3">
+                {fotoPreview && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={fotoPreview}
+                    alt="Pré-visualização"
+                    className="w-12 h-12 rounded-xl object-cover border border-stone-200 shrink-0"
+                  />
+                )}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={handleFotoChange}
+                  className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-100 file:text-teal-700 file:font-bold"
+                />
+              </div>
             </div>
 
             <div className="space-y-1">
@@ -420,9 +462,10 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
 
             <button
               type="submit"
-              className="flex-1 bg-[#008080] hover:bg-teal-700 text-white py-2.5 text-sm rounded-xl font-black transition-all shadow-lg shadow-teal-100 active:scale-95"
+              disabled={enviandoFoto}
+              className="flex-1 bg-[#008080] hover:bg-teal-700 text-white py-2.5 text-sm rounded-xl font-black transition-all shadow-lg shadow-teal-100 active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Salvar Pet
+              {enviandoFoto ? "Enviando foto..." : "Salvar Pet"}
             </button>
           </div>
         </form>
