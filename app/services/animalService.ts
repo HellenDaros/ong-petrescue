@@ -24,6 +24,16 @@ export async function buscarListaAnimaisPaginado(
   return response.data;
 }
 
+export async function buscarListaAnimaisPublicoPaginado(
+  pagina: number = 0,
+  tamanho: number = 20,
+): Promise<AnimaisPaginados> {
+  const response = await api.get<AnimaisPaginados>("/animais/publicos/paginado", {
+    params: { pagina, tamanho },
+  });
+  return response.data;
+}
+
 export async function buscarListaAnimaisPublico(): Promise<Animal[]> {
   try {
     const response = await api.get<Animal[]>("/animais/publicos");

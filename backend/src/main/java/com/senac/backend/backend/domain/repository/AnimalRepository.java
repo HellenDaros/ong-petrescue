@@ -22,5 +22,7 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
 
     List<Animal> findByStatusAnimal(EnumStatusAnimal statusAnimal);
 
+    Page<Animal> findByStatusAnimal(EnumStatusAnimal statusAnimal, Pageable pageable);
+
     Optional<Animal> findByIdAndStatusAnimal(Long id, EnumStatusAnimal statusAnimal);
 }

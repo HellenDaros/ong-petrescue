@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                                         "/auth/login",
                                         "/usuarios/adm",
                                         "/animais/publicos",
+                                        "/animais/publicos/**",
                                         "/eventos/publicos/**",
                                         "/api/enderecos/**",
                                         "/uploads/**",

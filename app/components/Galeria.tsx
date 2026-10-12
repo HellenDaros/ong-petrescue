@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Heart, MapPin, Calendar, ArrowRight, Plus } from "lucide-react";
 import { Animal } from "@/app/types/animal";
-import { buscarListaAnimaisPublico } from "@/app/services/animalService";
+import { buscarListaAnimaisPublicoPaginado } from "@/app/services/animalService";
 import { useFavoritos } from "@/app/redux/useFavoritos";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
@@ -12,6 +12,8 @@ import { useRouter } from "next/navigation";
 
 export default function GaleriaPublica() {
   const [listaAnimais, setListaAnimais] = useState<Animal[]>([]);
+  const [pagina, setPagina] = useState(0);
+  const [totalPaginas, setTotalPaginas] = useState(0);
   const { addFavorito, removeFavorito, isFavorito } = useFavoritos();
   const usuario = useSelector((state: RootState) => state.auth.usuario);
   const router = useRouter();
@@ -28,8 +30,9 @@ export default function GaleriaPublica() {
 
   const carregarDados = async () => {
     try {
-      const data = await buscarListaAnimaisPublico();
-      setListaAnimais(data);
+      const data = await buscarListaAnimaisPublicoPaginado(pagina, 20);
+      setListaAnimais(data.content);
+      setTotalPaginas(data.totalPages);
     } catch (error) {
       console.error("Erro ao carregar galeria:", error);
     }
@@ -37,7 +40,7 @@ export default function GaleriaPublica() {
 
   useEffect(() => {
     carregarDados();
-  }, []);
+  }, [pagina]);
 
   const handleToggleFavorito = (e: React.MouseEvent, animal: Animal) => {
     e.preventDefault();
@@ -152,6 +155,40 @@ export default function GaleriaPublica() {
           </div>
         )}
       </div>
+
+      {totalPaginas > 1 && (
+        <div className="flex items-center justify-center gap-2 mt-8">
+          <button
+            onClick={() => setPagina((p) => p - 1)}
+            disabled={pagina === 0}
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed"
+            title="Anterior"
+          >
+            ‹
+          </button>
+          {Array.from({ length: totalPaginas }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setPagina(i)}
+              className={`w-8 h-8 rounded-lg text-xs font-black transition-all ${
+                i === pagina
+                  ? "bg-teal-600 text-white shadow-md shadow-teal-100"
+                  : "text-slate-500 hover:bg-stone-100"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => setPagina((p) => p + 1)}
+            disabled={pagina + 1 >= totalPaginas}
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed"
+            title="Próxima"
+          >
+            ›
+          </button>
+        </div>
+      )}
     </section>
   );
 }

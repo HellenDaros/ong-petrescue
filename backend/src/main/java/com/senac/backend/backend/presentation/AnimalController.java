@@ -40,6 +40,14 @@ public class AnimalController {
         return ResponseEntity.ok(animalService.ListarPaginado(pagina, tamanho));
     }
 
+    @GetMapping("/publicos/paginado")
+    @Operation(summary = "Listar os pets disponíveis público paginado", description = "Retorna a lista paginada de animais disponíveis em rota pública")
+    public ResponseEntity<Page<AnimalResponse>> listarPublicosPaginado(
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "20") int tamanho) {
+        return ResponseEntity.ok(animalService.listarPublicosPaginado(pagina, tamanho));
+    }
+
     @GetMapping("/publicos")
     @Operation(summary = "Listar os pets disoníveis público", description = "Retorna a lista de animais disponiveis em rota pública")
     public ResponseEntity<List<AnimalResponse>> listarPublicos() {

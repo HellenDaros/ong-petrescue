@@ -62,6 +62,12 @@ public class AnimalService {
     }
 
     @Transactional(readOnly = true)
+    public Page<AnimalResponse> listarPublicosPaginado(int pagina, int tamanho) {
+        return animalRepository.findByStatusAnimal(EnumStatusAnimal.DISPONIVEL, PageRequest.of(pagina, tamanho, Sort.by("id")))
+                .map(AnimalResponse::new);
+    }
+
+    @Transactional(readOnly = true)
     public List<AnimalResponse> listarPublicos() {
         return animalRepository.findByStatusAnimal(EnumStatusAnimal.DISPONIVEL)
                 .stream()
