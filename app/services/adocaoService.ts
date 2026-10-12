@@ -1,6 +1,7 @@
 import {
   SolicitacaoAdocaoRequest,
   SolicitacaoAdocaoResponse,
+  SolicitacoesPaginadas,
 } from "../types/solicitacaoAdocao";
 import api from "./api";
 
@@ -31,16 +32,14 @@ export async function buscarMinhasAdocoes(): Promise<
   return [];
 }
 
-export async function buscarAdocoesOng(): Promise<SolicitacaoAdocaoResponse[]> {
-  try {
-    const response = await api.get<SolicitacaoAdocaoResponse[]>("/adocoes/ong");
-    if (response.status === 200) {
-      return response.data;
-    }
-  } catch (error) {
-    console.error("Erro ao buscar solicitações da ONG:", error);
-  }
-  return [];
+export async function buscarAdocoesOng(
+  pagina: number = 0,
+  tamanho: number = 10,
+): Promise<SolicitacoesPaginadas> {
+  const response = await api.get<SolicitacoesPaginadas>("/adocoes/ong", {
+    params: { pagina, tamanho },
+  });
+  return response.data;
 }
 
 export async function responderSolicitacaoAdocao(

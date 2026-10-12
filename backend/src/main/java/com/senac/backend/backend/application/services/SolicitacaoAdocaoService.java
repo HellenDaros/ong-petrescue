@@ -12,6 +12,9 @@ import com.senac.backend.backend.domain.repository.AdotanteRepository;
 import com.senac.backend.backend.domain.repository.AnimalRepository;
 import com.senac.backend.backend.domain.repository.SolicitacaoAdocaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,15 +72,13 @@ public class SolicitacaoAdocaoService {
                 .collect(Collectors.toList());
     }
 
-    public List<SolicitacaoAdocaoResponse> listarSolicitacoesOng() {
+    public Page<SolicitacaoAdocaoResponse> listarSolicitacoesOng(int pagina, int tamanho) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (usuarioLogado.getEmpresa() == null) {
             throw new RuntimeException("Usuário não está associado a nenhuma ONG.");
         }
-        return solicitacaoAdocaoRepository.findByAnimalEmpresaId(usuarioLogado.getEmpresa().getId())
-                .stream()
-                .map(SolicitacaoAdocaoResponse::new)
-                .collect(Collectors.toList());
+        return solicitacaoAdocaoRepository.findByAnimalEmpresaId(usuarioLogado.getEmpresa().getId(), PageRequest.of(pagina, tamanho, Sort.by("id")))
+                .map(SolicitacaoAdocaoResponse::new);
     }
 
     @Transactional

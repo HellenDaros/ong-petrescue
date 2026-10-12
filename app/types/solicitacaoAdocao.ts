@@ -4,6 +4,13 @@ export interface SolicitacaoAdocaoRequest {
   assinaturaBase64: string;
 }
 
+export interface SolicitacoesPaginadas {
+  content: SolicitacaoAdocaoResponse[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+}
+
 export interface SolicitacaoAdocaoResponse {
   id: number;
   adotante: {

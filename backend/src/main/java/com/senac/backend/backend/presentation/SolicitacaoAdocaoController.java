@@ -7,6 +7,7 @@ import com.senac.backend.backend.domain.enuns.EnumStatusAdocao;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,8 +35,10 @@ public class SolicitacaoAdocaoController {
 
     @GetMapping("/ong")
     @Operation(summary = "Listar solicitações recebidas pela ONG", description = "Retorna a lista de solicitações de adoção direcionadas à ONG logada")
-    public ResponseEntity<List<SolicitacaoAdocaoResponse>> listarOng() {
-        return ResponseEntity.ok(solicitacaoAdocaoService.listarSolicitacoesOng());
+    public ResponseEntity<Page<SolicitacaoAdocaoResponse>> listarOng(
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "10") int tamanho) {
+        return ResponseEntity.ok(solicitacaoAdocaoService.listarSolicitacoesOng(pagina, tamanho));
     }
 
     @PutMapping("/{id}/status")
