@@ -21,6 +21,13 @@ export interface Evento {
   animais: Animal[];
 }
 
+export interface EventosPaginados {
+  content: Evento[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+}
+
 export interface EventoRequest {
   nome: string;
   descricao: string;
@@ -41,6 +48,16 @@ export interface AlterarStatusEventoRequest {
 
 export interface EventoFormProps {
   eventoExistente?: Evento;
+}
+
+export function eventoJaPassou(evento: Evento): boolean {
+  const hoje = new Date();
+  const hojeISO = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
+  return evento.data < hojeISO;
+}
+
+export function eventoSomenteLeitura(evento: Evento): boolean {
+  return evento.status === "ENCERRADO" || eventoJaPassou(evento);
 }
 
 export function formatarLocalEvento(evento: Evento): string {

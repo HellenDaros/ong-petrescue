@@ -4,7 +4,12 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Calendar, CheckSquare, Square, Search } from "lucide-react";
-import { Evento, EventoFormProps, EventoRequest } from "@/app/types/evento";
+import {
+  Evento,
+  EventoFormProps,
+  EventoRequest,
+  eventoSomenteLeitura,
+} from "@/app/types/evento";
 import { Animal } from "@/app/types/animal";
 import { buscarListaAnimais } from "@/app/services/animalService";
 import { salvarEvento, uploadCapaEvento } from "@/app/services/eventoService";
@@ -43,6 +48,8 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
         }
       : EVENTO_VAZIO,
   );
+  const somenteLeitura = !!eventoExistente && eventoSomenteLeitura(eventoExistente);
+
   const [animaisOng, setAnimaisOng] = useState<Animal[]>([]);
   const [buscaAnimal, setBuscaAnimal] = useState("");
   const [carregandoAnimais, setCarregandoAnimais] = useState(true);
@@ -62,6 +69,10 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
   };
 
   useEffect(() => {
+    if (somenteLeitura) {
+      setCarregandoAnimais(false);
+      return;
+    }
     carregarAnimais();
   }, []);
 
@@ -134,7 +145,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
   };
 
   const toggleAnimal = (animal: Animal) => {
-    if (animal.id === null) return;
+    if (somenteLeitura || animal.id === null) return;
 
     setEvento((prev) => {
       const jaSelecionado = prev.animais.some((a) => a.id === animal.id);
@@ -208,7 +219,10 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
     }
   };
 
-  const animaisFiltrados = animaisOng.filter(
+  // Evento já realizado: mostra os animais que participaram, mesmo inativos.
+  const listaAnimais = somenteLeitura ? evento.animais : animaisOng;
+
+  const animaisFiltrados = listaAnimais.filter(
     (animal) =>
       animal.nameAnimal.toLowerCase().includes(buscaAnimal.toLowerCase()) ||
       animal.raca.toLowerCase().includes(buscaAnimal.toLowerCase()) ||
@@ -219,10 +233,16 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
     <div className="w-full max-w-5xl mx-auto animate-in fade-in duration-500 p-6">
       <div className="mb-6">
         <h1 className="text-3xl font-black text-slate-800 tracking-tight">
-          {isEdicao ? "Editar Evento" : "Cadastrar Novo Evento"}
+          {somenteLeitura
+            ? "Visualizar Evento"
+            : isEdicao
+              ? "Editar Evento"
+              : "Cadastrar Novo Evento"}
         </h1>
         <p className="text-slate-500 text-sm font-medium">
-          {isEdicao
+          {somenteLeitura
+            ? "Este evento está encerrado ou já aconteceu e não pode mais ser editado."
+            : isEdicao
             ? "Altere os detalhes do evento e atualize quais animais estarão presentes."
             : "Preencha as informações do evento e escolha os animais da ONG que estarão presentes."}
         </p>
@@ -235,6 +255,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
         }}
         className="space-y-5"
       >
+        <fieldset disabled={somenteLeitura} className="space-y-5 min-w-0">
         {/* Event details card */}
         <div className="bg-white rounded-3xl border border-stone-100 shadow-md p-5 space-y-4">
           <h2 className="text-xl font-black text-slate-800 border-b border-stone-100 pb-3 flex items-center gap-2">
@@ -463,12 +484,15 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                   : "Selecione os Animais Participantes"}
               </h2>
               <p className="text-slate-500 text-xs font-medium mt-1">
-                {isEdicao
+                {somenteLeitura
+                  ? "Animais que estiveram presentes neste evento, independentemente do status atual."
+                  : isEdicao
                   ? "Marque ou desmarque os animais que estarão na feira de adoção."
                   : "Apenas os animais selecionados abaixo serão exibidos na página pública gerada pelo QR Code deste evento."}
               </p>
             </div>
 
+            {!somenteLeitura && (
             <div className="flex items-center gap-2">
               <button
                 type="button"
@@ -485,6 +509,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                 Desmarcar Todos
               </button>
             </div>
+            )}
           </div>
 
           <div className="flex justify-between items-center bg-stone-50 px-4 py-3 rounded-2xl">
@@ -503,7 +528,9 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
             </div>
 
             <span className="text-xs font-bold text-teal-700 bg-teal-100/80 px-3 py-1.5 rounded-full ml-4">
-              {evento.animais.length} de {animaisOng.length} selecionados
+              {somenteLeitura
+                ? `${evento.animais.length} animais no evento`
+                : `${evento.animais.length} de ${animaisOng.length} selecionados`}
             </span>
           </div>
 
@@ -572,14 +599,17 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
           )}
         </div>
 
+        </fieldset>
+
         <div className="flex justify-end gap-4">
           <Link
             href="/eventos"
             className="px-5 py-2.5 rounded-xl border border-stone-300 text-slate-600 font-bold text-sm hover:bg-stone-100 transition-all"
           >
-            Cancelar
+            {somenteLeitura ? "Voltar" : "Cancelar"}
           </Link>
 
+          {!somenteLeitura && (
           <button
             type="submit"
             disabled={salvando}
@@ -593,6 +623,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                 ? "Salvar Alterações"
                 : "Cadastrar Evento"}
           </button>
+          )}
         </div>
       </form>
     </div>

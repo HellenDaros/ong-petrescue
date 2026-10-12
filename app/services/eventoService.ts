@@ -1,9 +1,14 @@
 import api from "./api";
-import { Evento, EventoRequest, AlterarStatusEventoRequest } from "../types/evento";
+import { Evento, EventoRequest, EventosPaginados, AlterarStatusEventoRequest } from "../types/evento";
 import axios from "axios";
 
-export const listarEventosOng = async (): Promise<Evento[]> => {
-  const response = await api.get<Evento[]>("/eventos");
+export const listarEventosOng = async (
+  pagina: number = 0,
+  tamanho: number = 9,
+): Promise<EventosPaginados> => {
+  const response = await api.get<EventosPaginados>("/eventos", {
+    params: { pagina, tamanho },
+  });
   return response.data;
 };
 

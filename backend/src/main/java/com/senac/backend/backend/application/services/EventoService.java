@@ -12,11 +12,15 @@ import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.AnimalRepository;
 import com.senac.backend.backend.domain.repository.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,17 +46,15 @@ public class EventoService {
     }
 
     @Transactional(readOnly = true)
-    public List<EventoResponse> listarTodosPorOng() {
+    public Page<EventoResponse> listarTodosPorOng(int pagina, int tamanho) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (usuarioLogado.getEmpresa() == null) {
-            return List.of();
+            return Page.empty();
         }
 
-        return eventoRepository.findByEmpresa_Id(usuarioLogado.getEmpresa().getId())
-                .stream()
-                .map(EventoResponse::new)
-                .collect(Collectors.toList());
+        return eventoRepository.findByEmpresa_Id(usuarioLogado.getEmpresa().getId(), PageRequest.of(pagina, tamanho, Sort.by("id")))
+                .map(EventoResponse::new);
     }
 
     @Transactional(readOnly = true)
@@ -123,6 +125,8 @@ public class EventoService {
         Evento eventoBanco = eventoRepository.findByIdAndEmpresa_Id(id, usuarioLogado.getEmpresa().getId())
                 .orElseThrow(() -> new BusinessException("Evento não encontrado."));
 
+        validarEventoEditavel(eventoBanco);
+
         Endereco endereco = enderecoService.buscarOuCriarEndereco(request.cep());
 
         eventoBanco.setNome(request.nome());
@@ -158,8 +162,16 @@ public class EventoService {
         Evento eventoBanco = eventoRepository.findByIdAndEmpresa_Id(id, usuarioLogado.getEmpresa().getId())
                 .orElseThrow(() -> new BusinessException("Evento não encontrado."));
 
+        validarEventoEditavel(eventoBanco);
+
         eventoBanco.setStatus(request.status());
         eventoRepository.save(eventoBanco);
         return true;
+    }
+
+    private void validarEventoEditavel(Evento evento) {
+        if (evento.getStatus() == EnumStatusEvento.ENCERRADO || evento.getData().isBefore(LocalDate.now())) {
+            throw new BusinessException("Evento encerrado ou que já aconteceu não pode ser alterado.");
+        }
     }
 }

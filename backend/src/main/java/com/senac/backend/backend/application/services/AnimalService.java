@@ -38,7 +38,7 @@ public class AnimalService {
                 return List.of();
             }
 
-            return animalRepository.findByEmpresa_Id(usuarioLogado.getEmpresa().getId())
+            return animalRepository.findByEmpresa_IdAndStatusAnimal(usuarioLogado.getEmpresa().getId(), EnumStatusAnimal.DISPONIVEL)
                     .stream()
                     .map(AnimalResponse::new)
                     .collect(Collectors.toList());

@@ -7,6 +7,7 @@ import com.senac.backend.backend.application.services.EventoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,9 +36,11 @@ public class EventoController {
     }
 
     @GetMapping
-    @Operation(summary = "Listar eventos da ONG", description = "Retorna os eventos da ONG do usuário autenticado")
-    public ResponseEntity<List<EventoResponse>> listarTodosPorOng() {
-        return ResponseEntity.ok(eventoService.listarTodosPorOng());
+    @Operation(summary = "Listar eventos da ONG", description = "Retorna os eventos da ONG do usuário autenticado, paginados")
+    public ResponseEntity<Page<EventoResponse>> listarTodosPorOng(
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "9") int tamanho) {
+        return ResponseEntity.ok(eventoService.listarTodosPorOng(pagina, tamanho));
     }
 
     @GetMapping("/{id}")

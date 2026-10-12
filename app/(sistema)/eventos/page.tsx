@@ -2,19 +2,22 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Evento, formatarLocalEvento } from "@/app/types/evento";
+import { Evento, eventoSomenteLeitura, formatarLocalEvento } from "@/app/types/evento";
 import { alterarStatusEvento, listarEventosOng } from "@/app/services/eventoService";
-import { Calendar, MapPin, Clock, Plus, ExternalLink, Edit3, QrCode, CheckCircle2, XCircle } from "lucide-react";
+import { Calendar, MapPin, Clock, Plus, ExternalLink, Edit3, Eye, QrCode, CheckCircle2, XCircle } from "lucide-react";
 
 export default function EventosPage() {
   const [eventos, setEventos] = useState<Evento[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const [pagina, setPagina] = useState(0);
+  const [totalPaginas, setTotalPaginas] = useState(0);
 
   const carregarEventos = async () => {
     try {
       setCarregando(true);
-      const dados = await listarEventosOng();
-      setEventos(dados);
+      const dados = await listarEventosOng(pagina, 9);
+      setEventos(dados.content);
+      setTotalPaginas(dados.totalPages);
     } catch (error) {
       console.error("Erro ao carregar eventos:", error);
     } finally {
@@ -24,12 +27,12 @@ export default function EventosPage() {
 
   useEffect(() => {
     carregarEventos();
-  }, []);
+  }, [pagina]);
 
   const handleToggleStatus = async (evento: Evento) => {
     const novoStatus = evento.status === "AGENDADO" ? "ENCERRADO" : "AGENDADO";
     const confirmacao = confirm(
-      `Deseja alterar o status do evento "${evento.nome}" para ${novoStatus}?`
+      `Deseja encerrar o evento "${evento.nome}"? Esta ação é permanente: depois de encerrado, o evento não poderá mais ser editado nem reaberto, apenas visualizado.`
     );
 
     if (!confirmacao) return;
@@ -91,9 +94,10 @@ export default function EventosPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {eventos.map((evento) => {
             const isAgendado = evento.status === "AGENDADO";
+            const somenteLeitura = eventoSomenteLeitura(evento);
 
             return (
               <div
@@ -101,7 +105,7 @@ export default function EventosPage() {
                 className="bg-white rounded-[2rem] border border-stone-100 shadow-md overflow-hidden flex flex-col justify-between hover:shadow-xl transition-all"
               >
                 <div>
-                  <div className="relative h-48 w-full bg-slate-100 overflow-hidden">
+                  <div className="relative h-40 w-full bg-slate-100 overflow-hidden">
                     {evento.urlCapa ? (
                       <img
                         src={evento.urlCapa}
@@ -137,15 +141,15 @@ export default function EventosPage() {
                     </div>
                   </div>
 
-                  <div className="p-6">
-                    <h2 className="text-xl font-black text-slate-800 mb-2 leading-snug">
+                  <div className="p-4">
+                    <h2 className="text-xl font-black text-slate-800 mb-1 leading-snug">
                       {evento.nome}
                     </h2>
-                    <p className="text-slate-500 text-xs font-medium line-clamp-2 mb-4">
+                    <p className="text-slate-500 text-xs font-medium line-clamp-2 mb-3">
                       {evento.descricao}
                     </p>
 
-                    <div className="space-y-2 pt-2 border-t border-stone-100 text-xs text-slate-600 font-semibold">
+                    <div className="space-y-1.5 pt-2 border-t border-stone-100 text-xs text-slate-600 font-semibold">
                       <div className="flex items-center gap-2 text-slate-600">
                         <Calendar size={14} className="text-teal-600 shrink-0" />
                         <span>Data: {evento.data}</span>
@@ -162,7 +166,7 @@ export default function EventosPage() {
                       </div>
                     </div>
 
-                    <div className="mt-4 bg-teal-50/70 border border-teal-100 rounded-xl p-3 flex justify-between items-center text-xs">
+                    <div className="mt-3 bg-teal-50/70 border border-teal-100 rounded-xl p-2.5 flex justify-between items-center text-xs">
                       <span className="text-teal-800 font-bold">Animais no Evento:</span>
                       <span className="bg-teal-600 text-white font-black px-2.5 py-0.5 rounded-full text-xs">
                         {evento.animais?.length || 0} pets
@@ -171,7 +175,7 @@ export default function EventosPage() {
                   </div>
                 </div>
 
-                <div className="p-6 pt-0 space-y-2">
+                <div className="p-4 pt-0 space-y-2">
                   <div className="grid grid-cols-2 gap-2">
                     <Link
                       href={`/eventos-publicos/${evento.id}`}
@@ -191,6 +195,7 @@ export default function EventosPage() {
                   </div>
 
                   <div className="flex items-center justify-between gap-2 pt-2 border-t border-stone-100">
+                    {!somenteLeitura ? (
                     <button
                       onClick={() => handleToggleStatus(evento)}
                       className={`text-[11px] font-extrabold uppercase px-3 py-1.5 rounded-lg border transition-all ${
@@ -201,19 +206,60 @@ export default function EventosPage() {
                     >
                       {isAgendado ? "Encerrar Evento" : "Reabrir Evento"}
                     </button>
+                    ) : (
+                      <span />
+                    )}
 
                     <Link
                       href={`/eventos/${evento.id}/editar`}
                       className="inline-flex items-center gap-1 text-slate-500 hover:text-teal-600 text-xs font-bold transition-all p-1"
                     >
-                      <Edit3 size={14} />
-                      Editar
+                      {eventoSomenteLeitura(evento) ? (
+                        <Eye size={14} />
+                      ) : (
+                        <Edit3 size={14} />
+                      )}
+                      {eventoSomenteLeitura(evento) ? "Visualizar" : "Editar"}
                     </Link>
                   </div>
                 </div>
               </div>
             );
           })}
+        </div>
+      )}
+
+      {totalPaginas > 0 && (
+        <div className="flex items-center justify-center gap-2 mt-6">
+          <button
+            onClick={() => setPagina((p) => p - 1)}
+            disabled={pagina === 0}
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed"
+            title="Anterior"
+          >
+            ‹
+          </button>
+          {Array.from({ length: totalPaginas }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setPagina(i)}
+              className={`w-8 h-8 rounded-lg text-xs font-black transition-all ${
+                i === pagina
+                  ? "bg-teal-600 text-white shadow-md shadow-teal-100"
+                  : "text-slate-500 hover:bg-stone-100"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => setPagina((p) => p + 1)}
+            disabled={pagina + 1 >= totalPaginas}
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed"
+            title="Próxima"
+          >
+            ›
+          </button>
         </div>
       )}
     </div>

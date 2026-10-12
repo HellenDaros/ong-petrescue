@@ -14,6 +14,8 @@ import java.util.Optional;
 public interface AnimalRepository extends JpaRepository<Animal, Long> {
     List<Animal> findByEmpresa_Id(Long empresaId);
 
+    List<Animal> findByEmpresa_IdAndStatusAnimal(Long empresaId, EnumStatusAnimal statusAnimal);
+
     Page<Animal> findByEmpresa_Id(Long empresaId, Pageable pageable);
 
     Optional<Animal> findByIdAndEmpresa_Id(Long id, Long empresaId);
