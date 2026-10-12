@@ -1,6 +1,6 @@
 import axios from "axios";
 import api from "./api";
-import { Animal } from "../types/animal";
+import { Animal, AnimaisPaginados } from "../types/animal";
 
 export async function buscarListaAnimais(): Promise<Animal[]> {
   try {
@@ -12,6 +12,16 @@ export async function buscarListaAnimais(): Promise<Animal[]> {
     console.error("Erro ao buscar lista de animais:", error);
   }
   return [];
+}
+
+export async function buscarListaAnimaisPaginado(
+  pagina: number = 0,
+  tamanho: number = 10,
+): Promise<AnimaisPaginados> {
+  const response = await api.get<AnimaisPaginados>("/animais/paginado", {
+    params: { pagina, tamanho },
+  });
+  return response.data;
 }
 
 export async function buscarListaAnimaisPublico(): Promise<Animal[]> {

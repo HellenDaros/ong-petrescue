@@ -8,6 +8,7 @@ import com.senac.backend.backend.application.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
@@ -24,10 +25,12 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    @Operation(summary = "Listar todos", description = "Retorna a lista completa de usuários cadastrados")
-    public ResponseEntity<List<UsuarioResponse>> listarTodos(){
+    @Operation(summary = "Listar todos", description = "Retorna a lista paginada de usuários cadastrados")
+    public ResponseEntity<Page<UsuarioResponse>> listarTodos(
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "10") int tamanho){
 
-        var usuarios = usuarioService.ListarTodos();
+        var usuarios = usuarioService.ListarTodos(pagina, tamanho);
         return ResponseEntity.ok(usuarios);
     }
 

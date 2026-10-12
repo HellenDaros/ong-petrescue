@@ -7,6 +7,7 @@ import com.senac.backend.backend.application.services.AnimalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +30,14 @@ public class AnimalController {
 
         var animais = animalService.ListarTodos();
         return ResponseEntity.ok(animais);
+    }
+
+    @GetMapping("/paginado")
+    @Operation(summary = "Listar os pets por ONG paginado", description = "Retorna a lista paginada de animais cadastrados por ONG")
+    public ResponseEntity<Page<AnimalResponse>> listarPaginado(
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "10") int tamanho){
+        return ResponseEntity.ok(animalService.ListarPaginado(pagina, tamanho));
     }
 
     @GetMapping("/publicos")

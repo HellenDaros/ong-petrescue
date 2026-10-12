@@ -8,6 +8,9 @@ import com.senac.backend.backend.domain.repository.UsuarioRepository;
 import com.senac.backend.backend.domain.valueobjects.CPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -51,15 +54,13 @@ public class UsuarioService {
 
     }
 
-    public List<UsuarioResponse> ListarTodos() {
+    public Page<UsuarioResponse> ListarTodos(int pagina, int tamanho) {
         try{
             Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             var empresa = usuarioLogado.getEmpresa();
-            return usuarioRepository.getUsuariosByEmpresa_Id(empresa.getId())
-                    .stream()
-                    .map(UsuarioResponse::new)
-                    .collect(Collectors.toList());
+            return usuarioRepository.findByEmpresa_Id(empresa.getId(), PageRequest.of(pagina, tamanho, Sort.by("id")))
+                    .map(UsuarioResponse::new);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

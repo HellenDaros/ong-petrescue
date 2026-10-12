@@ -1,13 +1,15 @@
 import api from "./api";
-import { Usuario } from "../types/usuarios";
+import { Usuario, UsuariosPaginados } from "../types/usuarios";
 import axios from "axios";
 
-export async function buscarListaUsuarios(): Promise<Usuario[]> {
-  const dados = await api.get<Usuario[]>("/usuarios");
-  if (dados.status == 200) {
-    return dados.data;
-  }
-  return [];
+export async function buscarListaUsuarios(
+  pagina: number = 0,
+  tamanho: number = 10,
+): Promise<UsuariosPaginados> {
+  const dados = await api.get<UsuariosPaginados>("/usuarios", {
+    params: { pagina, tamanho },
+  });
+  return dados.data;
 }
 
 export async function alterarStatusUsuario(usuario: Usuario): Promise<void> {

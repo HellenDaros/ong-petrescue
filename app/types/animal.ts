@@ -19,6 +19,13 @@ export class Animal {
   ) {}
 }
 
+export interface AnimaisPaginados {
+  content: Animal[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+}
+
 export interface AnimalContextType {
   favoritos: Animal[];
   adicionarFavorito: (animal: Animal) => void;

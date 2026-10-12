@@ -9,6 +9,9 @@ import com.senac.backend.backend.domain.enuns.EnumStatusAnimal;
 import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.AnimalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +48,17 @@ public class AnimalService {
             throw new RuntimeException(e);
 
         }
+    }
+
+    public Page<AnimalResponse> ListarPaginado(int pagina, int tamanho) {
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (usuarioLogado.getEmpresa() == null) {
+            return Page.empty();
+        }
+
+        return animalRepository.findByEmpresa_Id(usuarioLogado.getEmpresa().getId(), PageRequest.of(pagina, tamanho, Sort.by("id")))
+                .map(AnimalResponse::new);
     }
 
     @Transactional(readOnly = true)

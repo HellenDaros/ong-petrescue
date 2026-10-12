@@ -9,15 +9,18 @@ import { useEffect, useState } from "react";
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [pagina, setPagina] = useState(0);
+  const [totalPaginas, setTotalPaginas] = useState(0);
 
   useEffect(() => {
     carregarDados();
-  }, []);
+  }, [pagina]);
 
   const carregarDados = async () => {
     try {
-      const dados = await buscarListaUsuarios();
-      setUsuarios(dados);
+      const dados = await buscarListaUsuarios(pagina, 10);
+      setUsuarios(dados.content);
+      setTotalPaginas(dados.totalPages);
     } catch (error) {
       alert("Erro ao carregar dados do usuário");
       console.error(error);
@@ -188,6 +191,40 @@ export default function Usuarios() {
             </tbody>
           </table>
         </div>
+
+        {totalPaginas > 0 && (
+          <div className="flex items-center justify-center gap-2 px-6 py-4 border-t border-stone-100">
+            <button
+              onClick={() => setPagina((p) => p - 1)}
+              disabled={pagina === 0}
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed"
+              title="Anterior"
+            >
+              ‹
+            </button>
+            {Array.from({ length: totalPaginas }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setPagina(i)}
+                className={`w-8 h-8 rounded-lg text-xs font-black transition-all ${
+                  i === pagina
+                    ? "bg-teal-600 text-white shadow-md shadow-teal-100"
+                    : "text-slate-500 hover:bg-stone-100"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => setPagina((p) => p + 1)}
+              disabled={pagina + 1 >= totalPaginas}
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:bg-stone-100 disabled:opacity-30 disabled:cursor-not-allowed"
+              title="Próxima"
+            >
+              ›
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

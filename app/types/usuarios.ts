@@ -10,6 +10,13 @@ export class Usuario {
   ) {}
 }
 
+export interface UsuariosPaginados {
+  content: Usuario[];
+  totalPages: number;
+  totalElements: number;
+  number: number;
+}
+
 export interface AuthContextType {
   usuario: Usuario | null;
   token: string | null;
