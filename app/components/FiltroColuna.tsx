@@ -1,19 +1,42 @@
 "use client";
+import CampoData from "@/app/components/CampoData";
 import { Filter } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-interface FiltroColunaProps {
-  titulo: string;
-  tipo: "texto" | "numero" | "select";
+type TipoCampo = "texto" | "numero" | "select" | "data";
+
+interface OpcaoFiltro {
+  valor: string;
+  rotulo: string;
+}
+
+interface CampoAdicional {
+  rotulo: string;
+  tipo: TipoCampo;
   valor: string;
   onFiltrar: (valor: string) => void;
-  opcoes?: { valor: string; rotulo: string }[];
+  opcoes?: OpcaoFiltro[];
+}
+
+interface FiltroColunaProps {
+  titulo: string;
+  tipo: TipoCampo;
+  valor: string;
+  onFiltrar: (valor: string) => void;
+  rotuloPesquisa?: string;
+  opcoes?: OpcaoFiltro[];
+  adicionais?: CampoAdicional[];
   ordenavel?: boolean;
   ordenacaoAtiva?: "asc" | "desc" | null;
   onOrdenar?: (direcao: "asc" | "desc") => void;
   textoCrescente?: string;
   textoDecrescente?: string;
 }
+
+const classeCampo =
+  "w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400";
+const classeRotulo =
+  "text-[10px] font-black uppercase tracking-widest text-slate-400";
 
 const LARGURA_POPOVER = 224;
 
@@ -22,7 +45,9 @@ export default function FiltroColuna({
   tipo,
   valor,
   onFiltrar,
+  rotuloPesquisa = "Pesquisar",
   opcoes = [],
+  adicionais = [],
   ordenavel = false,
   ordenacaoAtiva = null,
   onOrdenar,
@@ -31,11 +56,17 @@ export default function FiltroColuna({
 }: FiltroColunaProps) {
   const [aberto, setAberto] = useState(false);
   const [rascunho, setRascunho] = useState(valor);
+  const [rascunhoAdicionais, setRascunhoAdicionais] = useState<string[]>(
+    adicionais.map((a) => a.valor),
+  );
   const [posicao, setPosicao] = useState({ top: 0, left: 0 });
   const botaoRef = useRef<HTMLButtonElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
-  const ativo = valor !== "" || ordenacaoAtiva !== null;
+  const ativo =
+    valor !== "" ||
+    adicionais.some((a) => a.valor !== "") ||
+    ordenacaoAtiva !== null;
 
   useEffect(() => {
     if (!aberto) return;
@@ -68,18 +99,77 @@ export default function FiltroColuna({
 
   const buscar = () => {
     onFiltrar(rascunho.trim());
+    adicionais.forEach((a, i) =>
+      a.onFiltrar((rascunhoAdicionais[i] ?? "").trim()),
+    );
     setAberto(false);
   };
 
   const limpar = () => {
     setRascunho("");
+    setRascunhoAdicionais(adicionais.map(() => ""));
     onFiltrar("");
+    adicionais.forEach((a) => a.onFiltrar(""));
     setAberto(false);
+  };
+
+  const alterarAdicional = (indice: number, novo: string) =>
+    setRascunhoAdicionais((r) => r.map((v, i) => (i === indice ? novo : v)));
+
+  const renderCampo = (
+    campo: { rotulo: string; tipo: TipoCampo; opcoes?: OpcaoFiltro[] },
+    valorCampo: string,
+    alterar: (novo: string) => void,
+    limites: { min?: string; max?: string } = {},
+    focar = false,
+  ) => {
+    if (campo.tipo === "select") {
+      return (
+        <select
+          value={valorCampo}
+          onChange={(e) => alterar(e.target.value)}
+          className={classeCampo}
+        >
+          <option value="">Todos</option>
+          {(campo.opcoes ?? []).map((o) => (
+            <option key={o.valor} value={o.valor}>
+              {o.rotulo}
+            </option>
+          ))}
+        </select>
+      );
+    }
+
+    if (campo.tipo === "data") {
+      return (
+        <CampoData
+          value={valorCampo}
+          onChange={alterar}
+          min={limites.min}
+          max={limites.max}
+          className={classeCampo}
+        />
+      );
+    }
+
+    return (
+      <input
+        autoFocus={focar}
+        type={campo.tipo === "numero" ? "number" : "text"}
+        min={campo.tipo === "numero" ? 1 : undefined}
+        value={valorCampo}
+        onChange={(e) => alterar(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && buscar()}
+        placeholder={`Buscar por ${campo.rotulo.toLowerCase()}`}
+        className={classeCampo}
+      />
+    );
   };
 
   const alternar = () => {
     if (!aberto && botaoRef.current) {
       setRascunho(valor);
+      setRascunhoAdicionais(adicionais.map((a) => a.valor));
       const rect = botaoRef.current.getBoundingClientRect();
       const left = Math.min(
         rect.left,
@@ -149,35 +239,37 @@ export default function FiltroColuna({
           )}
 
           <div className="space-y-2">
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-              Pesquisar
-            </p>
-            {tipo === "select" ? (
-              <select
-                value={rascunho}
-                onChange={(e) => setRascunho(e.target.value)}
-                className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
-              >
-                <option value="">Todos</option>
-                {opcoes.map((o) => (
-                  <option key={o.valor} value={o.valor}>
-                    {o.rotulo}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <input
-                autoFocus
-                type={tipo === "numero" ? "number" : "text"}
-                min={tipo === "numero" ? 1 : undefined}
-                value={rascunho}
-                onChange={(e) => setRascunho(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && buscar()}
-                placeholder={`Buscar por ${titulo.toLowerCase()}`}
-                className="w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
-              />
+            <p className={classeRotulo}>{rotuloPesquisa}</p>
+            {renderCampo(
+              {
+                rotulo:
+                  rotuloPesquisa === "Pesquisar" ? titulo : rotuloPesquisa,
+                tipo,
+                opcoes,
+              },
+              rascunho,
+              setRascunho,
+              {
+                max:
+                  tipo === "data" && adicionais[0]?.tipo === "data"
+                    ? rascunhoAdicionais[0]
+                    : undefined,
+              },
+              true,
             )}
           </div>
+
+          {adicionais.map((adicional, i) => (
+            <div key={adicional.rotulo} className="space-y-2">
+              <p className={classeRotulo}>{adicional.rotulo}</p>
+              {renderCampo(
+                adicional,
+                rascunhoAdicionais[i] ?? "",
+                (novo) => alterarAdicional(i, novo),
+                { min: i === 0 && tipo === "data" ? rascunho : undefined },
+              )}
+            </div>
+          ))}
 
           <div className="flex gap-2">
             <button

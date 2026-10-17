@@ -4,6 +4,20 @@ export interface SolicitacaoAdocaoRequest {
   assinaturaBase64: string;
 }
 
+export interface FiltrosAdocoes {
+  codigo?: string;
+  pet?: string;
+  especie?: string;
+  adotante?: string;
+  cidade?: string;
+  bairro?: string;
+  status?: string;
+  dataInicio?: string; // YYYY-MM-DD
+  dataFim?: string; // YYYY-MM-DD
+  ordenarPor?: "codigo" | "pet" | "adotante";
+  direcao?: "asc" | "desc";
+}
+
 export interface SolicitacoesPaginadas {
   content: SolicitacaoAdocaoResponse[];
   totalPages: number;

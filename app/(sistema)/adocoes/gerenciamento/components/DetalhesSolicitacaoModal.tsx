@@ -170,7 +170,7 @@ export default function DetalhesSolicitacaoModal({
                 icon={MapPin}
               />
               <Campo
-                label="Data da Solicitação"
+                label="Solicitado em"
                 valor={formatarData(solicitacao.dataSolicitacao)}
                 icon={CalendarDays}
               />

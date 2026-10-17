@@ -106,7 +106,7 @@ export default function Animais() {
               <tr className="bg-stone-50/50 border-b border-stone-100">
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">
                   <FiltroColuna
-                    titulo="Código"
+                    titulo="Cód."
                     tipo="numero"
                     valor={filtros.codigo}
                     onFiltrar={(v) => alterarFiltro("codigo", v)}

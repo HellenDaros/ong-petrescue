@@ -5,13 +5,8 @@ import {
   buscarAdocoesOng,
   responderSolicitacaoAdocao,
 } from "@/app/services/adocaoService";
-import {
-  Phone,
-  ClipboardList,
-  ClipboardCheck,
-  CalendarDays,
-  Eye,
-} from "lucide-react";
+import { Phone, ClipboardCheck, CalendarDays, Eye } from "lucide-react";
+import FiltroColuna from "@/app/components/FiltroColuna";
 import { SolicitacaoAdocaoResponse } from "@/app/types/solicitacaoAdocao";
 import { getStatusBadge } from "../utils/status-badge";
 import DetalhesSolicitacaoModal from "./components/DetalhesSolicitacaoModal";
@@ -24,6 +19,21 @@ export default function GerenciamentoAdocoesPage() {
   const [carregando, setCarregando] = useState(true);
   const [pagina, setPagina] = useState(0);
   const [totalPaginas, setTotalPaginas] = useState(0);
+  const [ordenarPor, setOrdenarPor] = useState<"codigo" | "pet" | "adotante">(
+    "codigo",
+  );
+  const [direcao, setDirecao] = useState<"asc" | "desc">("asc");
+  const [filtros, setFiltros] = useState({
+    codigo: "",
+    pet: "",
+    especie: "",
+    adotante: "",
+    cidade: "",
+    bairro: "",
+    status: "PENDENTE",
+    dataInicio: "",
+    dataFim: "",
+  });
   const [processandoId, setProcessandoId] = useState<number | null>(null);
   const [solicitacaoDetalhe, setSolicitacaoDetalhe] =
     useState<SolicitacaoAdocaoResponse | null>(null);
@@ -32,7 +42,11 @@ export default function GerenciamentoAdocoesPage() {
 
   const carregarSolicitacoes = async () => {
     try {
-      const data = await buscarAdocoesOng(pagina, 10);
+      const data = await buscarAdocoesOng(pagina, 10, {
+        ...filtros,
+        ordenarPor,
+        direcao,
+      });
       setSolicitacoes(data.content);
       setTotalPaginas(data.totalPages);
     } catch (error) {
@@ -44,7 +58,24 @@ export default function GerenciamentoAdocoesPage() {
 
   useEffect(() => {
     carregarSolicitacoes();
-  }, [pagina]);
+  }, [pagina, ordenarPor, direcao, filtros]);
+
+  const alterarFiltro = (campo: keyof typeof filtros, valor: string) => {
+    setFiltros((f) => ({ ...f, [campo]: valor }));
+    setPagina(0);
+  };
+
+  const definirOrdenacao = (
+    campo: "codigo" | "pet" | "adotante",
+    dir: "asc" | "desc",
+  ) => {
+    setOrdenarPor(campo);
+    setDirecao(dir);
+    setPagina(0);
+  };
+
+  const ordenacaoDaColuna = (campo: "codigo" | "pet" | "adotante") =>
+    ordenarPor === campo ? direcao : null;
 
   const handleResponder = async (
     id: number,
@@ -57,12 +88,8 @@ export default function GerenciamentoAdocoesPage() {
         alert(
           `Solicitação de adoção ${novoStatus === "APROVADO" ? "aprovada" : "rejeitada"} com sucesso!`,
         );
-        setSolicitacoes((prev) =>
-          prev.map((sol) =>
-            sol.id === id ? { ...sol, statusAdocao: novoStatus } : sol,
-          ),
-        );
         setSolicitacaoResponder(null);
+        await carregarSolicitacoes();
       } else {
         alert("Erro ao responder solicitação de adoção. Tente novamente.");
       }
@@ -72,6 +99,13 @@ export default function GerenciamentoAdocoesPage() {
     } finally {
       setProcessandoId(null);
     }
+  };
+
+  const dividirTelefone = (telefone?: string) => {
+    const partes = telefone?.match(/^(\(\d{2}\))\s*(.+)$/);
+    return partes
+      ? { ddd: partes[1], numero: partes[2] }
+      : { ddd: "", numero: telefone || "N/A" };
   };
 
   const formatarData = (dataString?: string) => {
@@ -102,35 +136,112 @@ export default function GerenciamentoAdocoesPage() {
         </div>
       </div>
 
-      {solicitacoes.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-[2.5rem] border border-stone-100 shadow-sm p-8">
-          <div className="bg-stone-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
-            <ClipboardList className="text-stone-300" size={32} />
-          </div>
-          <h3 className="text-lg font-black text-slate-700">
-            Nenhuma solicitação recebida
-          </h3>
-          <p className="text-slate-500 text-sm font-medium mt-2 max-w-sm mx-auto">
-            Não há solicitações de adoção pendentes ou processadas para seus
-            animais no momento.
-          </p>
-        </div>
-      ) : (
+      {
         <div className="bg-white rounded-[2.5rem] border border-stone-100 shadow-md overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[820px]">
+            <table className="w-full text-left border-collapse min-w-[1000px]">
               <thead>
                 <tr className="bg-stone-50 border-b border-stone-100 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                  <th className="px-6 py-5 whitespace-nowrap">Pet</th>
-                  <th className="px-6 py-5 whitespace-nowrap">Adotante</th>
+                  <th className="px-6 py-5 whitespace-nowrap">
+                    <FiltroColuna
+                      titulo="Cód."
+                      tipo="numero"
+                      valor={filtros.codigo}
+                      onFiltrar={(v) => alterarFiltro("codigo", v)}
+                      ordenavel
+                      ordenacaoAtiva={ordenacaoDaColuna("codigo")}
+                      onOrdenar={(d) => definirOrdenacao("codigo", d)}
+                      textoCrescente="Mais antigos"
+                      textoDecrescente="Mais recentes"
+                    />
+                  </th>
+                  <th className="px-6 py-5 whitespace-nowrap">
+                    <FiltroColuna
+                      titulo="Pet"
+                      tipo="texto"
+                      valor={filtros.pet}
+                      onFiltrar={(v) => alterarFiltro("pet", v)}
+                      rotuloPesquisa="Nome"
+                      adicionais={[
+                        {
+                          rotulo: "Espécie",
+                          tipo: "select",
+                          valor: filtros.especie,
+                          onFiltrar: (v) => alterarFiltro("especie", v),
+                          opcoes: [
+                            { valor: "CACHORRO", rotulo: "Cachorro" },
+                            { valor: "GATO", rotulo: "Gato" },
+                          ],
+                        },
+                      ]}
+                      ordenavel
+                      ordenacaoAtiva={ordenacaoDaColuna("pet")}
+                      onOrdenar={(d) => definirOrdenacao("pet", d)}
+                      textoCrescente="A → Z"
+                      textoDecrescente="Z → A"
+                    />
+                  </th>
+                  <th className="px-6 py-5 whitespace-nowrap">
+                    <FiltroColuna
+                      titulo="Adotante"
+                      tipo="texto"
+                      valor={filtros.adotante}
+                      onFiltrar={(v) => alterarFiltro("adotante", v)}
+                      ordenavel
+                      ordenacaoAtiva={ordenacaoDaColuna("adotante")}
+                      onOrdenar={(d) => definirOrdenacao("adotante", d)}
+                      textoCrescente="A → Z"
+                      textoDecrescente="Z → A"
+                    />
+                  </th>
                   <th className="px-6 py-5 whitespace-nowrap">Contato</th>
                   <th className="px-6 py-5 whitespace-nowrap">
-                    Endereço do Animal
+                    <FiltroColuna
+                      titulo="Lar de Destino"
+                      tipo="texto"
+                      rotuloPesquisa="Cidade"
+                      valor={filtros.cidade}
+                      onFiltrar={(v) => alterarFiltro("cidade", v)}
+                      adicionais={[
+                        {
+                          rotulo: "Bairro",
+                          tipo: "texto",
+                          valor: filtros.bairro,
+                          onFiltrar: (v) => alterarFiltro("bairro", v),
+                        },
+                      ]}
+                    />
                   </th>
                   <th className="px-6 py-5 whitespace-nowrap">
-                    Data da Solicitação
+                    <FiltroColuna
+                      titulo="Solicitado em"
+                      tipo="data"
+                      rotuloPesquisa="De"
+                      valor={filtros.dataInicio}
+                      onFiltrar={(v) => alterarFiltro("dataInicio", v)}
+                      adicionais={[
+                        {
+                          rotulo: "Até",
+                          tipo: "data",
+                          valor: filtros.dataFim,
+                          onFiltrar: (v) => alterarFiltro("dataFim", v),
+                        },
+                      ]}
+                    />
                   </th>
-                  <th className="px-6 py-5 whitespace-nowrap">Status</th>
+                  <th className="px-6 py-5 whitespace-nowrap">
+                    <FiltroColuna
+                      titulo="Status"
+                      tipo="select"
+                      valor={filtros.status}
+                      onFiltrar={(v) => alterarFiltro("status", v)}
+                      opcoes={[
+                        { valor: "PENDENTE", rotulo: "Pendente" },
+                        { valor: "APROVADO", rotulo: "Aprovado" },
+                        { valor: "REJEITADO", rotulo: "Rejeitado" },
+                      ]}
+                    />
+                  </th>
                   <th className="px-6 py-5 text-center whitespace-nowrap">
                     Ações
                   </th>
@@ -142,6 +253,9 @@ export default function GerenciamentoAdocoesPage() {
                     key={sol.id}
                     className="hover:bg-stone-50/50 transition-colors group"
                   >
+                    <td className="px-6 py-4 text-sm font-bold text-slate-400">
+                      #{sol.id}
+                    </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0 shadow-sm border border-stone-200">
@@ -172,9 +286,21 @@ export default function GerenciamentoAdocoesPage() {
                     </td>
 
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600">
-                        <Phone size={12} className="text-stone-400" />
-                        {sol.adotante.telefoneMovel || "N/A"}
+                      <div className="flex items-start gap-1.5 text-xs font-medium text-slate-600">
+                        <Phone
+                          size={12}
+                          className="text-stone-400 mt-0.5 shrink-0"
+                        />
+                        <div className="flex flex-col leading-snug">
+                          {dividirTelefone(sol.adotante.telefoneMovel).ddd && (
+                            <span>
+                              {dividirTelefone(sol.adotante.telefoneMovel).ddd}
+                            </span>
+                          )}
+                          <span className="whitespace-nowrap">
+                            {dividirTelefone(sol.adotante.telefoneMovel).numero}
+                          </span>
+                        </div>
                       </div>
                     </td>
 
@@ -219,6 +345,17 @@ export default function GerenciamentoAdocoesPage() {
                     </td>
                   </tr>
                 ))}
+
+                {solicitacoes.length === 0 && (
+                  <tr>
+                    <td
+                      colSpan={8}
+                      className="px-6 py-20 text-center text-slate-400 font-medium"
+                    >
+                      Nenhuma solicitação encontrada com esses filtros.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -257,7 +394,7 @@ export default function GerenciamentoAdocoesPage() {
             </div>
           )}
         </div>
-      )}
+      }
 
       {solicitacaoDetalhe && (
         <DetalhesSolicitacaoModal
@@ -271,7 +408,9 @@ export default function GerenciamentoAdocoesPage() {
           solicitacao={solicitacaoResponder}
           processando={processandoId !== null}
           onFechar={() => setSolicitacaoResponder(null)}
-          onResponder={(status) => handleResponder(solicitacaoResponder.id, status)}
+          onResponder={(status) =>
+            handleResponder(solicitacaoResponder.id, status)
+          }
         />
       )}
     </div>

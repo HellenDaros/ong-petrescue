@@ -6,6 +6,7 @@ import com.senac.backend.backend.domain.entities.Adotante;
 import com.senac.backend.backend.domain.entities.Animal;
 import com.senac.backend.backend.domain.entities.SolicitacaoAdocao;
 import com.senac.backend.backend.domain.entities.Usuario;
+import com.senac.backend.backend.domain.enuns.EnumEspecieAnimal;
 import com.senac.backend.backend.domain.enuns.EnumStatusAdocao;
 import com.senac.backend.backend.domain.enuns.EnumStatusAnimal;
 import com.senac.backend.backend.domain.repository.AdotanteRepository;
@@ -15,11 +16,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.criteria.Predicate;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,12 +77,67 @@ public class SolicitacaoAdocaoService {
                 .collect(Collectors.toList());
     }
 
-    public Page<SolicitacaoAdocaoResponse> listarSolicitacoesOng(int pagina, int tamanho) {
+    public Page<SolicitacaoAdocaoResponse> listarSolicitacoesOng(int pagina, int tamanho, Long codigo, String pet,
+                                                                 String especie,
+                                                                 String adotante, String cidade, String bairro,
+                                                                 String status, LocalDate dataInicio, LocalDate dataFim,
+                                                                 String ordenarPor, String direcao) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (usuarioLogado.getEmpresa() == null) {
             throw new RuntimeException("Usuário não está associado a nenhuma ONG.");
         }
-        return solicitacaoAdocaoRepository.findByAnimalEmpresaId(usuarioLogado.getEmpresa().getId(), PageRequest.of(pagina, tamanho, Sort.by("id")))
+        Long empresaId = usuarioLogado.getEmpresa().getId();
+
+        Specification<SolicitacaoAdocao> filtros = (root, query, cb) -> {
+            List<Predicate> predicados = new ArrayList<>();
+            predicados.add(cb.equal(root.get("animal").get("empresa").get("id"), empresaId));
+
+            if (codigo != null) {
+                predicados.add(cb.equal(root.get("id"), codigo));
+            }
+            if (pet != null && !pet.isBlank()) {
+                predicados.add(cb.like(cb.lower(root.get("animal").get("nameAnimal")), "%" + pet.trim().toLowerCase() + "%"));
+            }
+            if (especie != null && !especie.isBlank()) {
+                try {
+                    predicados.add(cb.equal(root.get("animal").get("especie"), EnumEspecieAnimal.valueOf(especie.trim().toUpperCase())));
+                } catch (IllegalArgumentException e) {
+                }
+            }
+            if (adotante != null && !adotante.isBlank()) {
+                predicados.add(cb.like(cb.lower(root.get("adotante").get("usuario").get("name")), "%" + adotante.trim().toLowerCase() + "%"));
+            }
+            if (cidade != null && !cidade.isBlank()) {
+                predicados.add(cb.like(cb.lower(root.get("enderecoAnimal")), "%" + cidade.trim().toLowerCase() + "%"));
+            }
+            if (bairro != null && !bairro.isBlank()) {
+                predicados.add(cb.like(cb.lower(root.get("enderecoAnimal")), "%" + bairro.trim().toLowerCase() + "%"));
+            }
+            if (status != null && !status.isBlank()) {
+                try {
+                    predicados.add(cb.equal(root.get("statusAdocao"), EnumStatusAdocao.valueOf(status.trim().toUpperCase())));
+                } catch (IllegalArgumentException e) {
+                }
+            }
+            if (dataInicio != null) {
+                predicados.add(cb.greaterThanOrEqualTo(root.get("dataSolicitacao"), dataInicio.atStartOfDay()));
+            }
+            if (dataFim != null) {
+                predicados.add(cb.lessThan(root.get("dataSolicitacao"), dataFim.plusDays(1).atStartOfDay()));
+            }
+            return cb.and(predicados.toArray(new Predicate[0]));
+        };
+
+        String campoOrdenacao = switch (ordenarPor == null ? "" : ordenarPor.toLowerCase()) {
+            case "pet" -> "animal.nameAnimal";
+            case "adotante" -> "adotante.usuario.name";
+            default -> "id";
+        };
+        Sort ordenacao = "desc".equalsIgnoreCase(direcao)
+                ? Sort.by(campoOrdenacao).descending()
+                : Sort.by(campoOrdenacao).ascending();
+
+        return solicitacaoAdocaoRepository.findAll(filtros, PageRequest.of(pagina, tamanho, ordenacao))
                 .map(SolicitacaoAdocaoResponse::new);
     }
 

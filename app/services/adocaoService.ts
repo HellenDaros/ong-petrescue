@@ -1,4 +1,5 @@
 import {
+  FiltrosAdocoes,
   SolicitacaoAdocaoRequest,
   SolicitacaoAdocaoResponse,
   SolicitacoesPaginadas,
@@ -35,9 +36,10 @@ export async function buscarMinhasAdocoes(): Promise<
 export async function buscarAdocoesOng(
   pagina: number = 0,
   tamanho: number = 10,
+  filtros: FiltrosAdocoes = {},
 ): Promise<SolicitacoesPaginadas> {
   const response = await api.get<SolicitacoesPaginadas>("/adocoes/ong", {
-    params: { pagina, tamanho },
+    params: { pagina, tamanho, ...filtros },
   });
   return response.data;
 }

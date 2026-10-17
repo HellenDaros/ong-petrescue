@@ -8,9 +8,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -37,8 +39,20 @@ public class SolicitacaoAdocaoController {
     @Operation(summary = "Listar solicitações recebidas pela ONG", description = "Retorna a lista de solicitações de adoção direcionadas à ONG logada")
     public ResponseEntity<Page<SolicitacaoAdocaoResponse>> listarOng(
             @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "10") int tamanho) {
-        return ResponseEntity.ok(solicitacaoAdocaoService.listarSolicitacoesOng(pagina, tamanho));
+            @RequestParam(defaultValue = "10") int tamanho,
+            @RequestParam(required = false) Long codigo,
+            @RequestParam(required = false) String pet,
+            @RequestParam(required = false) String especie,
+            @RequestParam(required = false) String adotante,
+            @RequestParam(required = false) String cidade,
+            @RequestParam(required = false) String bairro,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim,
+            @RequestParam(defaultValue = "codigo") String ordenarPor,
+            @RequestParam(defaultValue = "asc") String direcao) {
+        return ResponseEntity.ok(solicitacaoAdocaoService.listarSolicitacoesOng(
+                pagina, tamanho, codigo, pet, especie, adotante, cidade, bairro, status, dataInicio, dataFim, ordenarPor, direcao));
     }
 
     @PutMapping("/{id}/status")
