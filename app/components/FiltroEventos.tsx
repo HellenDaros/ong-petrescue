@@ -1,4 +1,5 @@
 "use client";
+import CampoData from "@/app/components/CampoData";
 import { FiltrosEventos } from "@/app/types/evento";
 import { Filter } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -10,8 +11,8 @@ interface FiltroEventosProps {
 }
 
 const campo =
-  "w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400";
-const rotulo = "text-[10px] font-black uppercase tracking-widest text-slate-400";
+  "w-full min-w-0 px-3 py-3.5 sm:py-2 rounded-xl border border-stone-200 bg-white text-lg sm:text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400";
+const rotulo = "text-sm sm:text-[10px] font-black uppercase tracking-widest text-slate-400";
 
 export default function FiltroEventos({
   filtros,
@@ -76,7 +77,7 @@ export default function FiltroEventos({
   };
 
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className="sm:relative">
       <button
         type="button"
         onClick={alternar}
@@ -91,7 +92,7 @@ export default function FiltroEventos({
       </button>
 
       {aberto && (
-        <div className="absolute right-0 top-full mt-2 z-50 w-80 p-4 bg-white rounded-2xl border border-stone-100 shadow-xl shadow-stone-200/60 space-y-3">
+        <div className="absolute top-full mt-2 z-50 left-0 right-0 sm:left-auto sm:w-80 p-5 sm:p-4 bg-white rounded-2xl border border-stone-100 shadow-xl shadow-stone-200/60 space-y-4 sm:space-y-3">
           <div className="space-y-2">
             <p className={rotulo}>Ordenar</p>
             <select
@@ -147,24 +148,28 @@ export default function FiltroEventos({
 
           <div className="space-y-2">
             <p className={rotulo}>Período do evento</p>
-            <div className="flex items-center gap-2">
-              <input
-                type="date"
-                value={rascunho.dataInicio}
-                max={rascunho.dataFim || undefined}
-                onChange={(e) => alterar("dataInicio", e.target.value)}
-                title="De"
-                className={campo}
-              />
-              <span className="text-[11px] font-bold text-slate-400">até</span>
-              <input
-                type="date"
-                value={rascunho.dataFim}
-                min={rascunho.dataInicio || undefined}
-                onChange={(e) => alterar("dataFim", e.target.value)}
-                title="Até"
-                className={campo}
-              />
+            <div className="grid grid-cols-2 gap-2">
+              <label className="min-w-0 space-y-1">
+                <span className="text-sm sm:text-[10px] font-bold text-slate-400">De</span>
+                <CampoData
+                  value={rascunho.dataInicio}
+                  max={rascunho.dataFim}
+                  onChange={(v) => alterar("dataInicio", v)}
+                  className={campo}
+                  expandirNoMobile
+                />
+              </label>
+              <label className="min-w-0 space-y-1">
+                <span className="text-sm sm:text-[10px] font-bold text-slate-400">Até</span>
+                <CampoData
+                  value={rascunho.dataFim}
+                  min={rascunho.dataInicio}
+                  onChange={(v) => alterar("dataFim", v)}
+                  className={campo}
+                  alinhar="direita"
+                  expandirNoMobile
+                />
+              </label>
             </div>
           </div>
 
@@ -172,14 +177,14 @@ export default function FiltroEventos({
             <button
               type="button"
               onClick={buscar}
-              className="flex-1 px-3 py-2 rounded-xl text-xs font-bold bg-teal-600 text-white hover:bg-teal-700 shadow-md shadow-teal-100 transition-all"
+              className="flex-1 px-3 py-3.5 sm:py-2 rounded-xl text-base sm:text-xs font-bold bg-teal-600 text-white hover:bg-teal-700 shadow-md shadow-teal-100 transition-all"
             >
               Buscar
             </button>
             <button
               type="button"
               onClick={limpar}
-              className="flex-1 px-3 py-2 rounded-xl text-xs font-bold text-red-500 hover:bg-red-50 transition-all"
+              className="flex-1 px-3 py-3.5 sm:py-2 rounded-xl text-base sm:text-xs font-bold text-red-500 hover:bg-red-50 transition-all"
             >
               Limpar
             </button>

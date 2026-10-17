@@ -9,7 +9,7 @@ import { Animal } from "@/app/types/animal";
 import { useFavoritos } from "@/app/redux/useFavoritos";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { Calendar, Clock, MapPin, Heart, AlertTriangle, PawPrint, Sparkles } from "lucide-react";
+import { Calendar, Clock, MapPin, Heart, AlertTriangle, PawPrint, Sparkles, Search } from "lucide-react";
 import BotaoVoltar from "@/app/components/BotaoVoltar";
 
 export default function EventoPublicoPage({ params }: { params: Promise<{ id: string }> }) {
@@ -19,6 +19,8 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
 
   const [evento, setEvento] = useState<Evento | null>(null);
   const [carregando, setCarregando] = useState(true);
+  const [filtroNome, setFiltroNome] = useState("");
+  const [filtroEspecie, setFiltroEspecie] = useState("");
 
   const { addFavorito, removeFavorito, isFavorito } = useFavoritos();
   const usuario = useSelector((state: RootState) => state.auth.usuario);
@@ -38,6 +40,12 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
       setCarregando(false);
     }
   };
+
+  const animaisFiltrados = (evento?.animais ?? []).filter(
+    (animal) =>
+      animal.nameAnimal.toLowerCase().includes(filtroNome.trim().toLowerCase()) &&
+      (filtroEspecie === "" || animal.especie === filtroEspecie),
+  );
 
   const handleCardClick = (animalId: number | null) => {
     if (animalId === null) return;
@@ -189,9 +197,36 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
           </p>
         </div>
 
+        {evento.animais && evento.animais.length > 0 && (
+          <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto mb-5">
+            <div className="relative flex-1">
+              <Search
+                size={14}
+                className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+              />
+              <input
+                type="text"
+                value={filtroNome}
+                onChange={(e) => setFiltroNome(e.target.value)}
+                placeholder="Buscar pelo nome do animal"
+                className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 bg-white text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
+              />
+            </div>
+            <select
+              value={filtroEspecie}
+              onChange={(e) => setFiltroEspecie(e.target.value)}
+              className="sm:w-40 px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400"
+            >
+              <option value="">Todas as espécies</option>
+              <option value="CACHORRO">Cachorro</option>
+              <option value="GATO">Gato</option>
+            </select>
+          </div>
+        )}
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {evento.animais &&
-            evento.animais.map((animal) => {
+            animaisFiltrados.map((animal) => {
               const favoritado = animal.id !== null && isFavorito(animal.id);
 
               return (
@@ -257,6 +292,14 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
                 </div>
               );
             })}
+
+          {evento.animais && evento.animais.length > 0 && animaisFiltrados.length === 0 && (
+            <div className="col-span-full py-8 text-center bg-white rounded-2xl border border-dashed border-stone-200 p-4">
+              <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">
+                Nenhum animal encontrado com esses filtros.
+              </p>
+            </div>
+          )}
 
           {(!evento.animais || evento.animais.length === 0) && (
             <div className="col-span-full py-8 text-center bg-white rounded-2xl border border-dashed border-stone-200 p-4">

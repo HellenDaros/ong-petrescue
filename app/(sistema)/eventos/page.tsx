@@ -82,7 +82,7 @@ export default function EventosPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="relative sm:static flex items-center gap-3 w-full sm:w-auto">
           <FiltroEventos
             filtros={filtros}
             cidades={cidades}

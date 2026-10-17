@@ -10,6 +10,7 @@ import {
   EventoRequest,
   eventoSomenteLeitura,
 } from "@/app/types/evento";
+import CampoData from "@/app/components/CampoData";
 import { Animal } from "@/app/types/animal";
 import { buscarListaAnimais } from "@/app/services/animalService";
 import { salvarEvento, uploadCapaEvento } from "@/app/services/eventoService";
@@ -48,7 +49,8 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
         }
       : EVENTO_VAZIO,
   );
-  const somenteLeitura = !!eventoExistente && eventoSomenteLeitura(eventoExistente);
+  const somenteLeitura =
+    !!eventoExistente && eventoSomenteLeitura(eventoExistente);
 
   const [animaisOng, setAnimaisOng] = useState<Animal[]>([]);
   const [buscaAnimal, setBuscaAnimal] = useState("");
@@ -168,10 +170,6 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
   };
 
   const handleSalvar = async () => {
-    // nome, descricao, data, horarioInicio e horarioTermino já são
-    // garantidos pelo `required` dos próprios inputs. O endereço não é
-    // validado aqui: quem confirma se o CEP é válido é o backend, que
-    // devolve uma mensagem específica sobre o motivo da falha.
     if (!isEdicao && evento.animais.length === 0) {
       const confirmaSemAnimais = confirm(
         "Nenhum animal foi selecionado para este evento. Deseja cadastrar o evento assim mesmo?",
@@ -243,8 +241,8 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
           {somenteLeitura
             ? "Este evento está encerrado ou já aconteceu e não pode mais ser editado."
             : isEdicao
-            ? "Altere os detalhes do evento e atualize quais animais estarão presentes."
-            : "Preencha as informações do evento e escolha os animais da ONG que estarão presentes."}
+              ? "Altere os detalhes do evento e atualize quais animais estarão presentes."
+              : "Preencha as informações do evento e escolha os animais da ONG que estarão presentes."}
         </p>
       </div>
 
@@ -256,349 +254,347 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
         className="space-y-5"
       >
         <fieldset disabled={somenteLeitura} className="space-y-5 min-w-0">
-        {/* Event details card */}
-        <div className="bg-white rounded-3xl border border-stone-100 shadow-md p-5 space-y-4">
-          <h2 className="text-xl font-black text-slate-800 border-b border-stone-100 pb-3 flex items-center gap-2">
-            <Calendar className="text-teal-600" size={20} />
-            {isEdicao ? "Informações Gerais" : "Informações do Evento"}
-          </h2>
+          {/* Event details card */}
+          <div className="bg-white rounded-3xl border border-stone-100 shadow-md p-5 space-y-4">
+            <h2 className="text-xl font-black text-slate-800 border-b border-stone-100 pb-3 flex items-center gap-2">
+              <Calendar className="text-teal-600" size={20} />
+              {isEdicao ? "Informações Gerais" : "Informações do Evento"}
+            </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="md:col-span-2">
-              <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                Nome do Evento *
-              </label>
-              <input
-                type="text"
-                value={evento.nome}
-                onChange={(e) => handleChange("nome", e.target.value)}
-                placeholder="Ex: Feira de Adoção - Praça Central 15/09"
-                required
-                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
-              />
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                Descrição do Evento *
-              </label>
-              <textarea
-                rows={3}
-                value={evento.descricao}
-                onChange={(e) => handleChange("descricao", e.target.value)}
-                placeholder="Descreva a proposta do evento, avisos para visitantes e detalhes..."
-                required
-                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                Data *
-              </label>
-              <input
-                type="date"
-                value={evento.data}
-                onChange={(e) => handleChange("data", e.target.value)}
-                required
-                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="md:col-span-2">
                 <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                  Início *
+                  Nome do Evento *
                 </label>
                 <input
-                  type="time"
-                  value={evento.horarioInicio}
-                  onChange={(e) =>
-                    handleChange("horarioInicio", e.target.value)
-                  }
+                  type="text"
+                  value={evento.nome}
+                  onChange={(e) => handleChange("nome", e.target.value)}
+                  placeholder="Ex: Feira de Adoção - Praça Central 15/09"
                   required
                   className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
                 />
               </div>
-              <div>
+
+              <div className="md:col-span-2">
                 <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                  Término *
+                  Descrição do Evento *
                 </label>
-                <input
-                  type="time"
-                  value={evento.horarioTermino}
-                  onChange={(e) =>
-                    handleChange("horarioTermino", e.target.value)
-                  }
+                <textarea
+                  rows={3}
+                  value={evento.descricao}
+                  onChange={(e) => handleChange("descricao", e.target.value)}
+                  placeholder="Descreva a proposta do evento, avisos para visitantes e detalhes..."
                   required
                   className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
                 />
               </div>
-            </div>
 
-            <div className="md:col-span-2">
-              <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                Nome do Local (Opcional)
-              </label>
-              <input
-                type="text"
-                value={evento.nomeLocal}
-                onChange={(e) => handleChange("nomeLocal", e.target.value)}
-                placeholder="Ex: Prefeitura, Parque Ibirapuera - Portão 3"
-                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
-              />
-            </div>
+              <div>
+                <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                  Data *
+                </label>
+                <CampoData
+                  value={evento.data}
+                  onChange={(valor) => handleChange("data", valor)}
+                  required
+                  className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                />
+              </div>
 
-            <div>
-              <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                CEP *
-              </label>
-              <input
-                type="text"
-                value={evento.cep}
-                onChange={(e) => handleCepChange(e.target.value)}
-                placeholder="00000-000"
-                required
-                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                Complemento (Opcional)
-              </label>
-              <input
-                type="text"
-                value={evento.complemento}
-                onChange={(e) => handleChange("complemento", e.target.value)}
-                placeholder="Ex: Portão 3"
-                className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
-              />
-            </div>
-
-            {evento.endereco && (
-              <>
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                    Endereço
-                  </label>
-                  <input
-                    type="text"
-                    value={evento.endereco}
-                    readOnly
-                    className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
-                  />
-                </div>
-
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                    Bairro
+                    Início *
                   </label>
                   <input
-                    type="text"
-                    value={evento.bairro}
-                    readOnly
-                    className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                    type="time"
+                    value={evento.horarioInicio}
+                    onChange={(e) =>
+                      handleChange("horarioInicio", e.target.value)
+                    }
+                    required
+                    className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
                   />
                 </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                      Cidade
-                    </label>
-                    <input
-                      type="text"
-                      value={evento.cidade}
-                      readOnly
-                      className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                      UF
-                    </label>
-                    <input
-                      type="text"
-                      value={evento.uf}
-                      readOnly
-                      className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                    Término *
+                  </label>
+                  <input
+                    type="time"
+                    value={evento.horarioTermino}
+                    onChange={(e) =>
+                      handleChange("horarioTermino", e.target.value)
+                    }
+                    required
+                    className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                  />
                 </div>
-              </>
-            )}
-
-            {isEdicao && (
-              <div>
-                <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                  Status *
-                </label>
-                <select
-                  value={evento.status}
-                  onChange={(e) =>
-                    setEvento((prev) => ({
-                      ...prev,
-                      status: e.target.value as "AGENDADO" | "ENCERRADO",
-                    }))
-                  }
-                  className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
-                >
-                  <option value="AGENDADO">Agendado</option>
-                  <option value="ENCERRADO">Encerrado</option>
-                </select>
               </div>
-            )}
 
-            <div className="md:col-span-2">
-              <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                Imagem de Capa (Opcional)
-              </label>
-              <div className="flex items-center gap-3">
-                {capaPreview && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={capaPreview}
-                    alt="Pré-visualização"
-                    className="w-14 h-14 rounded-xl object-cover border border-stone-200 shrink-0"
-                  />
-                )}
+              <div className="md:col-span-2">
+                <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                  Nome do Local (Opcional)
+                </label>
                 <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/webp"
-                  onChange={handleCapaChange}
-                  className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-100 file:text-teal-700 file:font-bold"
+                  type="text"
+                  value={evento.nomeLocal}
+                  onChange={(e) => handleChange("nomeLocal", e.target.value)}
+                  placeholder="Ex: Prefeitura, Parque Ibirapuera - Portão 3"
+                  className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
                 />
               </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Animal selection card */}
-        <div className="bg-white rounded-3xl border border-stone-100 shadow-md p-5 space-y-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-stone-100 pb-4">
-            <div>
-              <h2 className="text-xl font-black text-slate-800">
-                {isEdicao
-                  ? "Animais Participantes do Evento"
-                  : "Selecione os Animais Participantes"}
-              </h2>
-              <p className="text-slate-500 text-xs font-medium mt-1">
-                {somenteLeitura
-                  ? "Animais que estiveram presentes neste evento, independentemente do status atual."
-                  : isEdicao
-                  ? "Marque ou desmarque os animais que estarão na feira de adoção."
-                  : "Apenas os animais selecionados abaixo serão exibidos na página pública gerada pelo QR Code deste evento."}
-              </p>
-            </div>
+              <div>
+                <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                  CEP *
+                </label>
+                <input
+                  type="text"
+                  value={evento.cep}
+                  onChange={(e) => handleCepChange(e.target.value)}
+                  placeholder="00000-000"
+                  required
+                  className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                />
+              </div>
 
-            {!somenteLeitura && (
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={selecionarTodos}
-                className="text-xs font-bold text-teal-600 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-xl transition-all"
-              >
-                Selecionar Todos
-              </button>
-              <button
-                type="button"
-                onClick={desmarcarTodos}
-                className="text-xs font-bold text-slate-500 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-xl transition-all"
-              >
-                Desmarcar Todos
-              </button>
-            </div>
-            )}
-          </div>
+              <div>
+                <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                  Complemento (Opcional)
+                </label>
+                <input
+                  type="text"
+                  value={evento.complemento}
+                  onChange={(e) => handleChange("complemento", e.target.value)}
+                  placeholder="Ex: Portão 3"
+                  className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                />
+              </div>
 
-          <div className="flex justify-between items-center bg-stone-50 px-4 py-3 rounded-2xl">
-            <div className="relative flex-1 max-w-sm">
-              <Search
-                className="absolute left-3 top-3 text-slate-400"
-                size={16}
-              />
-              <input
-                type="text"
-                placeholder="Buscar por nome, raça ou espécie..."
-                value={buscaAnimal}
-                onChange={(e) => setBuscaAnimal(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
-              />
-            </div>
+              {evento.endereco && (
+                <>
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                      Endereço
+                    </label>
+                    <input
+                      type="text"
+                      value={evento.endereco}
+                      readOnly
+                      className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                    />
+                  </div>
 
-            <span className="text-xs font-bold text-teal-700 bg-teal-100/80 px-3 py-1.5 rounded-full ml-4">
-              {somenteLeitura
-                ? `${evento.animais.length} animais no evento`
-                : `${evento.animais.length} de ${animaisOng.length} selecionados`}
-            </span>
-          </div>
+                  <div>
+                    <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                      Bairro
+                    </label>
+                    <input
+                      type="text"
+                      value={evento.bairro}
+                      readOnly
+                      className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                    />
+                  </div>
 
-          {carregandoAnimais ? (
-            <div className="py-12 text-center text-slate-400 font-bold text-sm">
-              Carregando catálogo de animais da ONG...
-            </div>
-          ) : animaisFiltrados.length === 0 ? (
-            <div className="py-12 text-center text-slate-400 font-medium text-sm">
-              Nenhum animal encontrado para os critérios informados.
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto pr-2">
-              {animaisFiltrados.map((animal) => {
-                const selecionado = evento.animais.some(
-                  (a) => a.id === animal.id,
-                );
-
-                return (
-                  <div
-                    key={animal.id}
-                    onClick={() => toggleAnimal(animal)}
-                    className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center gap-3 ${
-                      selecionado
-                        ? "border-teal-500 bg-teal-50/50 shadow-sm"
-                        : "border-stone-200 bg-white hover:border-stone-300"
-                    }`}
-                  >
-                    <div className="shrink-0 text-teal-600">
-                      {selecionado ? (
-                        <CheckSquare
-                          size={22}
-                          className="text-teal-600 fill-teal-50"
-                        />
-                      ) : (
-                        <Square size={22} className="text-stone-300" />
-                      )}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                        Cidade
+                      </label>
+                      <input
+                        type="text"
+                        value={evento.cidade}
+                        readOnly
+                        className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                      />
                     </div>
-
-                    <div className="w-12 h-12 rounded-xl bg-stone-100 overflow-hidden shrink-0">
-                      {animal.urlFoto ? (
-                        <img
-                          src={animal.urlFoto}
-                          alt={animal.nameAnimal}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-stone-300 font-black text-xs">
-                          PET
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="overflow-hidden">
-                      <h4 className="font-black text-slate-800 text-sm truncate">
-                        {animal.nameAnimal}
-                      </h4>
-                      <p className="text-slate-400 text-xs font-semibold truncate">
-                        {animal.especie} • {animal.raca}
-                      </p>
+                    <div>
+                      <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                        UF
+                      </label>
+                      <input
+                        type="text"
+                        value={evento.uf}
+                        readOnly
+                        className="w-full px-3 py-2.5 rounded-xl bg-stone-100 border border-stone-200 text-sm font-medium text-slate-500"
+                      />
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                </>
+              )}
 
+              {isEdicao && (
+                <div>
+                  <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                    Status *
+                  </label>
+                  <select
+                    value={evento.status}
+                    onChange={(e) =>
+                      setEvento((prev) => ({
+                        ...prev,
+                        status: e.target.value as "AGENDADO" | "ENCERRADO",
+                      }))
+                    }
+                    className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
+                  >
+                    <option value="AGENDADO">Agendado</option>
+                    <option value="ENCERRADO">Encerrado</option>
+                  </select>
+                </div>
+              )}
+
+              <div className="md:col-span-2">
+                <label className="block text-xs font-black uppercase text-slate-700 mb-2">
+                  Imagem de Capa (Opcional)
+                </label>
+                <div className="flex items-center gap-3">
+                  {capaPreview && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={capaPreview}
+                      alt="Pré-visualização"
+                      className="w-14 h-14 rounded-xl object-cover border border-stone-200 shrink-0"
+                    />
+                  )}
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    onChange={handleCapaChange}
+                    className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-100 file:text-teal-700 file:font-bold"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Animal selection card */}
+          <div className="bg-white rounded-3xl border border-stone-100 shadow-md p-5 space-y-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-stone-100 pb-4">
+              <div>
+                <h2 className="text-xl font-black text-slate-800">
+                  {isEdicao
+                    ? "Animais Participantes do Evento"
+                    : "Selecione os Animais Participantes"}
+                </h2>
+                <p className="text-slate-500 text-xs font-medium mt-1">
+                  {somenteLeitura
+                    ? "Animais que estiveram presentes neste evento, independentemente do status atual."
+                    : isEdicao
+                      ? "Marque ou desmarque os animais que estarão na feira de adoção."
+                      : "Apenas os animais selecionados abaixo serão exibidos na página pública gerada pelo QR Code deste evento."}
+                </p>
+              </div>
+
+              {!somenteLeitura && (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={selecionarTodos}
+                    className="text-xs font-bold text-teal-600 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-xl transition-all"
+                  >
+                    Selecionar Todos
+                  </button>
+                  <button
+                    type="button"
+                    onClick={desmarcarTodos}
+                    className="text-xs font-bold text-slate-500 bg-stone-100 hover:bg-stone-200 px-3 py-1.5 rounded-xl transition-all"
+                  >
+                    Desmarcar Todos
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="flex justify-between items-center bg-stone-50 px-4 py-3 rounded-2xl">
+              <div className="relative flex-1 max-w-sm">
+                <Search
+                  className="absolute left-3 top-3 text-slate-400"
+                  size={16}
+                />
+                <input
+                  type="text"
+                  placeholder="Buscar por nome, raça ou espécie..."
+                  value={buscaAnimal}
+                  onChange={(e) => setBuscaAnimal(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                />
+              </div>
+
+              <span className="text-xs font-bold text-teal-700 bg-teal-100/80 px-3 py-1.5 rounded-full ml-4">
+                {somenteLeitura
+                  ? `${evento.animais.length} animais no evento`
+                  : `${evento.animais.length} de ${animaisOng.length} selecionados`}
+              </span>
+            </div>
+
+            {carregandoAnimais ? (
+              <div className="py-12 text-center text-slate-400 font-bold text-sm">
+                Carregando catálogo de animais da ONG...
+              </div>
+            ) : animaisFiltrados.length === 0 ? (
+              <div className="py-12 text-center text-slate-400 font-medium text-sm">
+                Nenhum animal encontrado para os critérios informados.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[500px] overflow-y-auto pr-2">
+                {animaisFiltrados.map((animal) => {
+                  const selecionado = evento.animais.some(
+                    (a) => a.id === animal.id,
+                  );
+
+                  return (
+                    <div
+                      key={animal.id}
+                      onClick={() => toggleAnimal(animal)}
+                      className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center gap-3 ${
+                        selecionado
+                          ? "border-teal-500 bg-teal-50/50 shadow-sm"
+                          : "border-stone-200 bg-white hover:border-stone-300"
+                      }`}
+                    >
+                      <div className="shrink-0 text-teal-600">
+                        {selecionado ? (
+                          <CheckSquare
+                            size={22}
+                            className="text-teal-600 fill-teal-50"
+                          />
+                        ) : (
+                          <Square size={22} className="text-stone-300" />
+                        )}
+                      </div>
+
+                      <div className="w-12 h-12 rounded-xl bg-stone-100 overflow-hidden shrink-0">
+                        {animal.urlFoto ? (
+                          <img
+                            src={animal.urlFoto}
+                            alt={animal.nameAnimal}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-stone-300 font-black text-xs">
+                            PET
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="overflow-hidden">
+                        <h4 className="font-black text-slate-800 text-sm truncate">
+                          {animal.nameAnimal}
+                        </h4>
+                        <p className="text-slate-400 text-xs font-semibold truncate">
+                          {animal.especie} • {animal.raca}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </fieldset>
 
         <div className="flex justify-end gap-4">
@@ -610,19 +606,19 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
           </Link>
 
           {!somenteLeitura && (
-          <button
-            type="submit"
-            disabled={salvando}
-            className="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-black text-sm shadow-lg shadow-teal-100 transition-all disabled:opacity-50"
-          >
-            {salvando
-              ? isEdicao
-                ? "Salvando..."
-                : "Cadastrando..."
-              : isEdicao
-                ? "Salvar Alterações"
-                : "Cadastrar Evento"}
-          </button>
+            <button
+              type="submit"
+              disabled={salvando}
+              className="px-6 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-black text-sm shadow-lg shadow-teal-100 transition-all disabled:opacity-50"
+            >
+              {salvando
+                ? isEdicao
+                  ? "Salvando..."
+                  : "Cadastrando..."
+                : isEdicao
+                  ? "Salvar Alterações"
+                  : "Cadastrar Evento"}
+            </button>
           )}
         </div>
       </form>
