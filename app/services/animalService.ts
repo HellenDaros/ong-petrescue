@@ -1,6 +1,11 @@
 import axios from "axios";
 import api from "./api";
-import { Animal, AnimaisPaginados, FiltrosAnimais } from "../types/animal";
+import {
+  Animal,
+  AnimaisPaginados,
+  FiltrosAnimais,
+  FiltrosGaleria,
+} from "../types/animal";
 
 export async function buscarListaAnimais(): Promise<Animal[]> {
   try {
@@ -28,9 +33,10 @@ export async function buscarListaAnimaisPaginado(
 export async function buscarListaAnimaisPublicoPaginado(
   pagina: number = 0,
   tamanho: number = 20,
+  filtros: Partial<FiltrosGaleria> = {},
 ): Promise<AnimaisPaginados> {
   const response = await api.get<AnimaisPaginados>("/animais/publicos/paginado", {
-    params: { pagina, tamanho },
+    params: { pagina, tamanho, ...filtros },
   });
   return response.data;
 }

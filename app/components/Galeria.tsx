@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Heart, MapPin, Calendar, ArrowRight, Plus } from "lucide-react";
-import { Animal } from "@/app/types/animal";
+import FiltroGaleria from "@/app/components/FiltroGaleria";
+import { Animal, FiltrosGaleria } from "@/app/types/animal";
 import { buscarListaAnimaisPublicoPaginado } from "@/app/services/animalService";
 import { useFavoritos } from "@/app/redux/useFavoritos";
 import { useSelector } from "react-redux";
@@ -14,6 +15,11 @@ export default function GaleriaPublica() {
   const [listaAnimais, setListaAnimais] = useState<Animal[]>([]);
   const [pagina, setPagina] = useState(0);
   const [totalPaginas, setTotalPaginas] = useState(0);
+  const [filtros, setFiltros] = useState<FiltrosGaleria>({
+    nome: "",
+    especie: "",
+    direcao: "desc",
+  });
   const { addFavorito, removeFavorito, isFavorito } = useFavoritos();
   const usuario = useSelector((state: RootState) => state.auth.usuario);
   const router = useRouter();
@@ -30,7 +36,7 @@ export default function GaleriaPublica() {
 
   const carregarDados = async () => {
     try {
-      const data = await buscarListaAnimaisPublicoPaginado(pagina, 20);
+      const data = await buscarListaAnimaisPublicoPaginado(pagina, 20, filtros);
       setListaAnimais(data.content);
       setTotalPaginas(data.totalPages);
     } catch (error) {
@@ -40,7 +46,12 @@ export default function GaleriaPublica() {
 
   useEffect(() => {
     carregarDados();
-  }, [pagina]);
+  }, [pagina, filtros]);
+
+  const aplicarFiltros = (novos: FiltrosGaleria) => {
+    setFiltros(novos);
+    setPagina(0);
+  };
 
   const handleToggleFavorito = (e: React.MouseEvent, animal: Animal) => {
     e.preventDefault();
@@ -74,6 +85,10 @@ export default function GaleriaPublica() {
           Encontre seu novo melhor amigo. Salve seus favoritos para não
           perdê-los de vista.
         </p>
+      </div>
+
+      <div className="flex justify-end mb-4">
+        <FiltroGaleria filtros={filtros} onAplicar={aplicarFiltros} />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -150,7 +165,7 @@ export default function GaleriaPublica() {
               <Plus className="text-stone-300" size={32} />
             </div>
             <p className="text-slate-400 font-bold uppercase text-xs tracking-widest">
-              Nenhum pet cadastrado no momento.
+              Nenhum pet encontrado.
             </p>
           </div>
         )}

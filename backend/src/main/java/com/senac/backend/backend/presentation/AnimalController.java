@@ -50,8 +50,11 @@ public class AnimalController {
     @Operation(summary = "Listar os pets disponíveis público paginado", description = "Retorna a lista paginada de animais disponíveis em rota pública")
     public ResponseEntity<Page<AnimalResponse>> listarPublicosPaginado(
             @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "20") int tamanho) {
-        return ResponseEntity.ok(animalService.listarPublicosPaginado(pagina, tamanho));
+            @RequestParam(defaultValue = "20") int tamanho,
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String especie,
+            @RequestParam(defaultValue = "desc") String direcao) {
+        return ResponseEntity.ok(animalService.listarPublicosPaginado(pagina, tamanho, nome, especie, direcao));
     }
 
     @GetMapping("/publicos")

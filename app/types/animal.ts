@@ -35,6 +35,12 @@ export interface FiltrosAnimais {
   direcao?: "asc" | "desc";
 }
 
+export interface FiltrosGaleria {
+  nome: string;
+  especie: string;
+  direcao: "asc" | "desc";
+}
+
 export interface AnimalContextType {
   favoritos: Animal[];
   adicionarFavorito: (animal: Animal) => void;

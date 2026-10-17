@@ -100,8 +100,26 @@ public class AnimalService {
     }
 
     @Transactional(readOnly = true)
-    public Page<AnimalResponse> listarPublicosPaginado(int pagina, int tamanho) {
-        return animalRepository.findByStatusAnimal(EnumStatusAnimal.DISPONIVEL, PageRequest.of(pagina, tamanho, Sort.by("id")))
+    public Page<AnimalResponse> listarPublicosPaginado(int pagina, int tamanho, String nome, String especie, String direcao) {
+        Specification<Animal> filtros = (root, query, cb) -> {
+            List<Predicate> predicados = new ArrayList<>();
+            predicados.add(cb.equal(root.get("statusAnimal"), EnumStatusAnimal.DISPONIVEL));
+
+            if (nome != null && !nome.isBlank()) {
+                predicados.add(cb.like(cb.lower(root.get("nameAnimal")), "%" + nome.trim().toLowerCase() + "%"));
+            }
+            if (especie != null && !especie.isBlank()) {
+                try {
+                    predicados.add(cb.equal(root.get("especie"), EnumEspecieAnimal.valueOf(especie.trim().toUpperCase())));
+                } catch (IllegalArgumentException e) {
+                }
+            }
+            return cb.and(predicados.toArray(new Predicate[0]));
+        };
+
+        Sort ordenacao = "asc".equalsIgnoreCase(direcao) ? Sort.by("id").ascending() : Sort.by("id").descending();
+
+        return animalRepository.findAll(filtros, PageRequest.of(pagina, tamanho, ordenacao))
                 .map(AnimalResponse::new);
     }
 
