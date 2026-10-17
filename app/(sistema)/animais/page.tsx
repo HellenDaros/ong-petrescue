@@ -4,6 +4,7 @@ import {
   alterarStatusAnimal,
   buscarListaAnimaisPaginado,
 } from "@/app/services/animalService";
+import FiltroColuna from "@/app/components/FiltroColuna";
 import { Animal } from "@/app/types/animal";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -13,14 +14,40 @@ export default function Animais() {
 
   const [pagina, setPagina] = useState(0);
   const [totalPaginas, setTotalPaginas] = useState(0);
+  const [ordenarPor, setOrdenarPor] = useState<"codigo" | "nome">("codigo");
+  const [direcao, setDirecao] = useState<"asc" | "desc">("desc");
+  const [filtros, setFiltros] = useState({
+    codigo: "",
+    nome: "",
+    especie: "",
+    status: "",
+  });
 
   useEffect(() => {
     carregarDados();
-  }, [pagina]);
+  }, [pagina, ordenarPor, direcao, filtros]);
+
+  const alterarFiltro = (campo: keyof typeof filtros, valor: string) => {
+    setFiltros((f) => ({ ...f, [campo]: valor }));
+    setPagina(0);
+  };
+
+  const definirOrdenacao = (campo: "codigo" | "nome", dir: "asc" | "desc") => {
+    setOrdenarPor(campo);
+    setDirecao(dir);
+    setPagina(0);
+  };
+
+  const ordenacaoDaColuna = (campo: "codigo" | "nome") =>
+    ordenarPor === campo ? direcao : null;
 
   const carregarDados = async () => {
     try {
-      const dados = await buscarListaAnimaisPaginado(pagina, 10);
+      const dados = await buscarListaAnimaisPaginado(pagina, 10, {
+        ...filtros,
+        ordenarPor,
+        direcao,
+      });
       setAnimais(dados.content);
       setTotalPaginas(dados.totalPages);
     } catch (error) {
@@ -78,16 +105,57 @@ export default function Animais() {
             <thead>
               <tr className="bg-stone-50/50 border-b border-stone-100">
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                  <FiltroColuna
+                    titulo="Código"
+                    tipo="numero"
+                    valor={filtros.codigo}
+                    onFiltrar={(v) => alterarFiltro("codigo", v)}
+                    ordenavel
+                    ordenacaoAtiva={ordenacaoDaColuna("codigo")}
+                    onOrdenar={(d) => definirOrdenacao("codigo", d)}
+                    textoCrescente="Mais antigos"
+                    textoDecrescente="Mais recentes"
+                  />
+                </th>
+                <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">
                   Foto
                 </th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Nome
+                  <FiltroColuna
+                    titulo="Nome"
+                    tipo="texto"
+                    valor={filtros.nome}
+                    onFiltrar={(v) => alterarFiltro("nome", v)}
+                    ordenavel
+                    ordenacaoAtiva={ordenacaoDaColuna("nome")}
+                    onOrdenar={(d) => definirOrdenacao("nome", d)}
+                    textoCrescente="A → Z"
+                    textoDecrescente="Z → A"
+                  />
                 </th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Espécie / Raça
+                  <FiltroColuna
+                    titulo="Espécie / Raça"
+                    tipo="select"
+                    valor={filtros.especie}
+                    onFiltrar={(v) => alterarFiltro("especie", v)}
+                    opcoes={[
+                      { valor: "CACHORRO", rotulo: "Cachorro" },
+                      { valor: "GATO", rotulo: "Gato" },
+                    ]}
+                  />
                 </th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Status
+                  <FiltroColuna
+                    titulo="Status"
+                    tipo="select"
+                    valor={filtros.status}
+                    onFiltrar={(v) => alterarFiltro("status", v)}
+                    opcoes={[
+                      { valor: "DISPONIVEL", rotulo: "Disponível" },
+                      { valor: "INATIVO", rotulo: "Inativo" },
+                    ]}
+                  />
                 </th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">
                   Ações
@@ -100,6 +168,9 @@ export default function Animais() {
                   key={animal.id}
                   className="hover:bg-stone-50/40 transition-colors group"
                 >
+                  <td className="px-6 py-4 text-sm font-bold text-slate-400">
+                    #{animal.id}
+                  </td>
                   <td className="px-6 py-4">
                     <div className="w-12 h-12 rounded-xl overflow-hidden border-2 border-stone-100">
                       <img
@@ -117,9 +188,6 @@ export default function Animais() {
                     <span className="text-sm font-black text-slate-700">
                       {animal.nameAnimal}
                     </span>
-                    <p className="text-[10px] text-slate-400 font-bold">
-                      ID: #{animal.id}
-                    </p>
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-slate-500">
                     <div className="flex flex-col">
@@ -196,7 +264,7 @@ export default function Animais() {
               {animais.length === 0 && (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={6}
                     className="px-6 py-20 text-center text-slate-400 font-medium"
                   >
                     Nenhum animal cadastrado no sistema.

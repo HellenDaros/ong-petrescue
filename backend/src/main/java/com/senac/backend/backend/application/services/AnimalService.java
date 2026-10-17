@@ -5,6 +5,7 @@ import com.senac.backend.backend.application.DTO.AnimalRequest;
 import com.senac.backend.backend.application.DTO.AnimalResponse;
 import com.senac.backend.backend.domain.entities.Animal;
 import com.senac.backend.backend.domain.entities.Usuario;
+import com.senac.backend.backend.domain.enuns.EnumEspecieAnimal;
 import com.senac.backend.backend.domain.enuns.EnumStatusAnimal;
 import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.AnimalRepository;
@@ -12,8 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import jakarta.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,14 +54,48 @@ public class AnimalService {
         }
     }
 
-    public Page<AnimalResponse> ListarPaginado(int pagina, int tamanho) {
+    public Page<AnimalResponse> ListarPaginado(int pagina, int tamanho, Long codigo, String nome, String especie,
+                                               String status, String ordenarPor, String direcao) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (usuarioLogado.getEmpresa() == null) {
             return Page.empty();
         }
 
-        return animalRepository.findByEmpresa_Id(usuarioLogado.getEmpresa().getId(), PageRequest.of(pagina, tamanho, Sort.by("id")))
+        Long empresaId = usuarioLogado.getEmpresa().getId();
+
+        Specification<Animal> filtros = (root, query, cb) -> {
+            List<Predicate> predicados = new ArrayList<>();
+            predicados.add(cb.equal(root.get("empresa").get("id"), empresaId));
+
+            if (codigo != null) {
+                predicados.add(cb.equal(root.get("id"), codigo));
+            }
+            if (nome != null && !nome.isBlank()) {
+                predicados.add(cb.like(cb.lower(root.get("nameAnimal")), "%" + nome.trim().toLowerCase() + "%"));
+            }
+            if (especie != null && !especie.isBlank()) {
+                try {
+                    predicados.add(cb.equal(root.get("especie"), EnumEspecieAnimal.valueOf(especie.trim().toUpperCase())));
+                } catch (IllegalArgumentException e) {
+                }
+            }
+            if (status != null && !status.isBlank()) {
+                try {
+                    predicados.add(cb.equal(root.get("statusAnimal"), EnumStatusAnimal.valueOf(status.trim().toUpperCase())));
+                } catch (IllegalArgumentException e) {
+
+                }
+            }
+            return cb.and(predicados.toArray(new Predicate[0]));
+        };
+
+        String campoOrdenacao = "nome".equalsIgnoreCase(ordenarPor) ? "nameAnimal" : "id";
+        Sort ordenacao = "asc".equalsIgnoreCase(direcao)
+                ? Sort.by(campoOrdenacao).ascending()
+                : Sort.by(campoOrdenacao).descending();
+
+        return animalRepository.findAll(filtros, PageRequest.of(pagina, tamanho, ordenacao))
                 .map(AnimalResponse::new);
     }
 

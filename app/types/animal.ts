@@ -26,6 +26,15 @@ export interface AnimaisPaginados {
   number: number;
 }
 
+export interface FiltrosAnimais {
+  codigo?: string;
+  nome?: string;
+  especie?: string;
+  status?: string;
+  ordenarPor?: "codigo" | "nome";
+  direcao?: "asc" | "desc";
+}
+
 export interface AnimalContextType {
   favoritos: Animal[];
   adicionarFavorito: (animal: Animal) => void;

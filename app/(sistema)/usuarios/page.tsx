@@ -6,7 +6,7 @@ import {
 import { Usuario } from "@/app/types/usuarios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import FiltroColuna from "./components/FiltroColuna";
+import FiltroColuna from "@/app/components/FiltroColuna";
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
