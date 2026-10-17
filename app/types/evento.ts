@@ -28,6 +28,15 @@ export interface EventosPaginados {
   number: number;
 }
 
+export interface FiltrosEventos {
+  nome: string;
+  cidade: string;
+  status: string;
+  dataInicio: string;
+  dataFim: string;
+  direcao: "asc" | "desc";
+}
+
 export interface EventoRequest {
   nome: string;
   descricao: string;
@@ -50,6 +59,11 @@ export interface EventoFormProps {
   eventoExistente?: Evento;
 }
 
+export function formatarDataBR(data: string): string {
+  const [ano, mes, dia] = data.split("-");
+  return ano && mes && dia ? `${dia}/${mes}/${ano}` : data;
+}
+
 export function eventoJaPassou(evento: Evento): boolean {
   const hoje = new Date();
   const hojeISO = `${hoje.getFullYear()}-${String(hoje.getMonth() + 1).padStart(2, "0")}-${String(hoje.getDate()).padStart(2, "0")}`;
@@ -64,7 +78,9 @@ export function formatarLocalEvento(evento: Evento): string {
   const enderecoCompleto = [
     evento.endereco,
     evento.bairro,
-    evento.cidade && evento.uf ? `${evento.cidade}/${evento.uf}` : evento.cidade,
+    evento.cidade && evento.uf
+      ? `${evento.cidade}/${evento.uf}`
+      : evento.cidade,
   ]
     .filter(Boolean)
     .join(", ");

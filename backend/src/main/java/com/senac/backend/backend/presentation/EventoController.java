@@ -8,11 +8,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -39,8 +41,20 @@ public class EventoController {
     @Operation(summary = "Listar eventos da ONG", description = "Retorna os eventos da ONG do usuário autenticado, paginados")
     public ResponseEntity<Page<EventoResponse>> listarTodosPorOng(
             @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "9") int tamanho) {
-        return ResponseEntity.ok(eventoService.listarTodosPorOng(pagina, tamanho));
+            @RequestParam(defaultValue = "9") int tamanho,
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String cidade,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim,
+            @RequestParam(defaultValue = "desc") String direcao) {
+        return ResponseEntity.ok(eventoService.listarTodosPorOng(pagina, tamanho, nome, cidade, status, dataInicio, dataFim, direcao));
+    }
+
+    @GetMapping("/cidades")
+    @Operation(summary = "Listar cidades dos eventos", description = "Retorna as cidades onde a ONG possui eventos, para uso em filtros")
+    public ResponseEntity<List<String>> listarCidades() {
+        return ResponseEntity.ok(eventoService.listarCidades());
     }
 
     @GetMapping("/{id}")

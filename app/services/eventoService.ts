@@ -1,14 +1,20 @@
 import api from "./api";
-import { Evento, EventoRequest, EventosPaginados, AlterarStatusEventoRequest } from "../types/evento";
+import { Evento, EventoRequest, EventosPaginados, AlterarStatusEventoRequest, FiltrosEventos } from "../types/evento";
 import axios from "axios";
 
 export const listarEventosOng = async (
   pagina: number = 0,
   tamanho: number = 9,
+  filtros: Partial<FiltrosEventos> = {},
 ): Promise<EventosPaginados> => {
   const response = await api.get<EventosPaginados>("/eventos", {
-    params: { pagina, tamanho },
+    params: { pagina, tamanho, ...filtros },
   });
+  return response.data;
+};
+
+export const listarCidadesEventos = async (): Promise<string[]> => {
+  const response = await api.get<string[]>("/eventos/cidades");
   return response.data;
 };
 

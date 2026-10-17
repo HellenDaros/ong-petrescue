@@ -15,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,15 +48,57 @@ public class EventoService {
     }
 
     @Transactional(readOnly = true)
-    public Page<EventoResponse> listarTodosPorOng(int pagina, int tamanho) {
+    public Page<EventoResponse> listarTodosPorOng(int pagina, int tamanho, String nome, String cidade,
+                                                  String status, LocalDate dataInicio, LocalDate dataFim, String direcao) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (usuarioLogado.getEmpresa() == null) {
             return Page.empty();
         }
 
-        return eventoRepository.findByEmpresa_Id(usuarioLogado.getEmpresa().getId(), PageRequest.of(pagina, tamanho, Sort.by("id")))
+        Long empresaId = usuarioLogado.getEmpresa().getId();
+
+        Specification<Evento> filtros = (root, query, cb) -> {
+            List<Predicate> predicados = new ArrayList<>();
+            predicados.add(cb.equal(root.get("empresa").get("id"), empresaId));
+
+            if (nome != null && !nome.isBlank()) {
+                predicados.add(cb.like(cb.lower(root.get("nome")), "%" + nome.trim().toLowerCase() + "%"));
+            }
+            if (cidade != null && !cidade.isBlank()) {
+                predicados.add(cb.equal(root.get("endereco").get("cidade"), cidade));
+            }
+            if (status != null && !status.isBlank()) {
+                try {
+                    predicados.add(cb.equal(root.get("status"), EnumStatusEvento.valueOf(status.trim().toUpperCase())));
+                } catch (IllegalArgumentException e) {
+
+                }
+            }
+            if (dataInicio != null) {
+                predicados.add(cb.greaterThanOrEqualTo(root.get("data"), dataInicio));
+            }
+            if (dataFim != null) {
+                predicados.add(cb.lessThanOrEqualTo(root.get("data"), dataFim));
+            }
+            return cb.and(predicados.toArray(new Predicate[0]));
+        };
+
+        Sort ordenacao = "asc".equalsIgnoreCase(direcao) ? Sort.by("id").ascending() : Sort.by("id").descending();
+
+        return eventoRepository.findAll(filtros, PageRequest.of(pagina, tamanho, ordenacao))
                 .map(EventoResponse::new);
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> listarCidades() {
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (usuarioLogado.getEmpresa() == null) {
+            return List.of();
+        }
+
+        return eventoRepository.buscarCidadesPorEmpresa(usuarioLogado.getEmpresa().getId());
     }
 
     @Transactional(readOnly = true)

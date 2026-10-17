@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Evento, eventoSomenteLeitura, formatarLocalEvento } from "@/app/types/evento";
-import { alterarStatusEvento, listarEventosOng } from "@/app/services/eventoService";
+import FiltroEventos from "@/app/components/FiltroEventos";
+import { Evento, FiltrosEventos, eventoSomenteLeitura, formatarDataBR, formatarLocalEvento } from "@/app/types/evento";
+import { alterarStatusEvento, listarCidadesEventos, listarEventosOng } from "@/app/services/eventoService";
 import { Calendar, MapPin, Clock, Plus, ExternalLink, Edit3, Eye, QrCode, CheckCircle2, XCircle } from "lucide-react";
 
 export default function EventosPage() {
@@ -11,11 +12,20 @@ export default function EventosPage() {
   const [carregando, setCarregando] = useState(true);
   const [pagina, setPagina] = useState(0);
   const [totalPaginas, setTotalPaginas] = useState(0);
+  const [cidades, setCidades] = useState<string[]>([]);
+  const [filtros, setFiltros] = useState<FiltrosEventos>({
+    nome: "",
+    cidade: "",
+    status: "",
+    dataInicio: "",
+    dataFim: "",
+    direcao: "desc",
+  });
 
   const carregarEventos = async () => {
     try {
       setCarregando(true);
-      const dados = await listarEventosOng(pagina, 9);
+      const dados = await listarEventosOng(pagina, 9, filtros);
       setEventos(dados.content);
       setTotalPaginas(dados.totalPages);
     } catch (error) {
@@ -27,7 +37,16 @@ export default function EventosPage() {
 
   useEffect(() => {
     carregarEventos();
-  }, [pagina]);
+  }, [pagina, filtros]);
+
+  useEffect(() => {
+    listarCidadesEventos().then(setCidades).catch(console.error);
+  }, []);
+
+  const aplicarFiltros = (novos: FiltrosEventos) => {
+    setFiltros(novos);
+    setPagina(0);
+  };
 
   const handleToggleStatus = async (evento: Evento) => {
     const novoStatus = evento.status === "AGENDADO" ? "ENCERRADO" : "AGENDADO";
@@ -63,13 +82,20 @@ export default function EventosPage() {
           </p>
         </div>
 
-        <Link
-          href="/eventos/novo"
-          className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-2xl font-black transition-all shadow-lg shadow-teal-100 active:scale-95 text-sm"
-        >
-          <Plus size={18} strokeWidth={2.5} />
-          Cadastrar Evento
-        </Link>
+        <div className="flex items-center gap-3">
+          <FiltroEventos
+            filtros={filtros}
+            cidades={cidades}
+            onAplicar={aplicarFiltros}
+          />
+          <Link
+            href="/eventos/novo"
+            className="flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-2xl font-black transition-all shadow-lg shadow-teal-100 active:scale-95 text-sm"
+          >
+            <Plus size={18} strokeWidth={2.5} />
+            Cadastrar Evento
+          </Link>
+        </div>
       </div>
 
       {carregando ? (
@@ -152,7 +178,7 @@ export default function EventosPage() {
                     <div className="space-y-1.5 pt-2 border-t border-stone-100 text-xs text-slate-600 font-semibold">
                       <div className="flex items-center gap-2 text-slate-600">
                         <Calendar size={14} className="text-teal-600 shrink-0" />
-                        <span>Data: {evento.data}</span>
+                        <span>Data: {formatarDataBR(evento.data)}</span>
                       </div>
                       <div className="flex items-center gap-2 text-slate-600">
                         <Clock size={14} className="text-teal-600 shrink-0" />

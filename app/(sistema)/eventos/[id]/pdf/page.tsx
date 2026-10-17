@@ -3,7 +3,7 @@
 import { useEffect, useState, use } from "react";
 import BotaoVoltar from "@/app/components/BotaoVoltar";
 import { buscarEventoPorId } from "@/app/services/eventoService";
-import { Evento, formatarLocalEvento } from "@/app/types/evento";
+import { Evento, formatarDataBR, formatarLocalEvento } from "@/app/types/evento";
 import { QRCodeSVG } from "qrcode.react";
 import {
   Printer,
@@ -119,7 +119,7 @@ export default function EventoPdfPage({
               Data
             </span>
             <span className="text-slate-800 font-extrabold text-xs">
-              {evento.data}
+              {formatarDataBR(evento.data)}
             </span>
           </div>
 

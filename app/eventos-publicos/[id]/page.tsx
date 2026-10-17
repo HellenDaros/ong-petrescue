@@ -4,7 +4,7 @@ import { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { buscarEventoPublicoPorId } from "@/app/services/eventoService";
-import { Evento, formatarLocalEvento } from "@/app/types/evento";
+import { Evento, formatarDataBR, formatarLocalEvento } from "@/app/types/evento";
 import { Animal } from "@/app/types/animal";
 import { useFavoritos } from "@/app/redux/useFavoritos";
 import { useSelector } from "react-redux";
@@ -141,7 +141,7 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
           <div className="inline-flex flex-wrap justify-center gap-2 bg-white/10 backdrop-blur-md rounded-xl p-2.5 border border-white/10 text-xs font-bold">
             <div className="flex items-center gap-2 px-3 py-1">
               <Calendar className="text-orange-400" size={16} />
-              <span>{evento.data}</span>
+              <span>{formatarDataBR(evento.data)}</span>
             </div>
 
             <div className="flex items-center gap-2 px-3 py-1 border-x border-white/10">
