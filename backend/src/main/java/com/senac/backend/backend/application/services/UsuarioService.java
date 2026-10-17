@@ -11,9 +11,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import jakarta.persistence.criteria.Predicate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,12 +57,41 @@ public class UsuarioService {
 
     }
 
-    public Page<UsuarioResponse> ListarTodos(int pagina, int tamanho) {
+    public Page<UsuarioResponse> ListarTodos(int pagina, int tamanho, Long codigo, String nome, String email,
+                                             String status, String ordenarPor, String direcao) {
         try{
             Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
             var empresa = usuarioLogado.getEmpresa();
-            return usuarioRepository.findByEmpresa_Id(empresa.getId(), PageRequest.of(pagina, tamanho, Sort.by("id")))
+
+            Specification<Usuario> filtros = (root, query, cb) -> {
+                List<Predicate> predicados = new ArrayList<>();
+                predicados.add(cb.equal(root.get("empresa").get("id"), empresa.getId()));
+
+                if (codigo != null) {
+                    predicados.add(cb.equal(root.get("id"), codigo));
+                }
+                if (nome != null && !nome.isBlank()) {
+                    predicados.add(cb.like(cb.lower(root.get("name")), "%" + nome.trim().toLowerCase() + "%"));
+                }
+                if (email != null && !email.isBlank()) {
+                    predicados.add(cb.like(cb.lower(root.get("email")), "%" + email.trim().toLowerCase() + "%"));
+                }
+                if (status != null && !status.isBlank()) {
+                    try {
+                        predicados.add(cb.equal(root.get("status"), EnumStatusUsuario.valueOf(status.trim().toUpperCase())));
+                    } catch (IllegalArgumentException e) {
+                    }
+                }
+                return cb.and(predicados.toArray(new Predicate[0]));
+            };
+
+            String campoOrdenacao = "nome".equalsIgnoreCase(ordenarPor) ? "name" : "id";
+            Sort ordenacao = "asc".equalsIgnoreCase(direcao)
+                    ? Sort.by(campoOrdenacao).ascending()
+                    : Sort.by(campoOrdenacao).descending();
+
+            return usuarioRepository.findAll(filtros, PageRequest.of(pagina, tamanho, ordenacao))
                     .map(UsuarioResponse::new);
         } catch (Exception e) {
             throw new RuntimeException(e);

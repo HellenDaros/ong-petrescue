@@ -17,6 +17,15 @@ export interface UsuariosPaginados {
   number: number;
 }
 
+export interface FiltrosUsuarios {
+  codigo?: string;
+  nome?: string;
+  email?: string;
+  status?: string;
+  ordenarPor?: "codigo" | "nome";
+  direcao?: "asc" | "desc";
+}
+
 export interface AuthContextType {
   usuario: Usuario | null;
   token: string | null;

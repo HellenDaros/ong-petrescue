@@ -28,9 +28,15 @@ public class UsuarioController {
     @Operation(summary = "Listar todos", description = "Retorna a lista paginada de usuários cadastrados")
     public ResponseEntity<Page<UsuarioResponse>> listarTodos(
             @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "10") int tamanho){
+            @RequestParam(defaultValue = "10") int tamanho,
+            @RequestParam(required = false) Long codigo,
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String status,
+            @RequestParam(defaultValue = "codigo") String ordenarPor,
+            @RequestParam(defaultValue = "desc") String direcao){
 
-        var usuarios = usuarioService.ListarTodos(pagina, tamanho);
+        var usuarios = usuarioService.ListarTodos(pagina, tamanho, codigo, nome, email, status, ordenarPor, direcao);
         return ResponseEntity.ok(usuarios);
     }
 

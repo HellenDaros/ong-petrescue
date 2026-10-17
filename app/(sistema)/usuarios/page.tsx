@@ -6,19 +6,46 @@ import {
 import { Usuario } from "@/app/types/usuarios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import FiltroColuna from "./components/FiltroColuna";
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [pagina, setPagina] = useState(0);
   const [totalPaginas, setTotalPaginas] = useState(0);
+  const [ordenarPor, setOrdenarPor] = useState<"codigo" | "nome">("codigo");
+  const [direcao, setDirecao] = useState<"asc" | "desc">("desc");
+  const [filtros, setFiltros] = useState({
+    codigo: "",
+    nome: "",
+    email: "",
+    status: "",
+  });
 
   useEffect(() => {
     carregarDados();
-  }, [pagina]);
+  }, [pagina, ordenarPor, direcao, filtros]);
+
+  const alterarFiltro = (campo: keyof typeof filtros, valor: string) => {
+    setFiltros((f) => ({ ...f, [campo]: valor }));
+    setPagina(0);
+  };
+
+  const definirOrdenacao = (campo: "codigo" | "nome", dir: "asc" | "desc") => {
+    setOrdenarPor(campo);
+    setDirecao(dir);
+    setPagina(0);
+  };
+
+  const ordenacaoDaColuna = (campo: "codigo" | "nome") =>
+    ordenarPor === campo ? direcao : null;
 
   const carregarDados = async () => {
     try {
-      const dados = await buscarListaUsuarios(pagina, 10);
+      const dados = await buscarListaUsuarios(pagina, 10, {
+        ...filtros,
+        ordenarPor,
+        direcao,
+      });
       setUsuarios(dados.content);
       setTotalPaginas(dados.totalPages);
     } catch (error) {
@@ -77,16 +104,50 @@ export default function Usuarios() {
             <thead>
               <tr className="bg-stone-50/50 border-b border-stone-100">
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Código
+                  <FiltroColuna
+                    titulo="Código"
+                    tipo="numero"
+                    valor={filtros.codigo}
+                    onFiltrar={(v) => alterarFiltro("codigo", v)}
+                    ordenavel
+                    ordenacaoAtiva={ordenacaoDaColuna("codigo")}
+                    onOrdenar={(d) => definirOrdenacao("codigo", d)}
+                    textoCrescente="Mais antigos"
+                    textoDecrescente="Mais recentes"
+                  />
                 </th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Nome
+                  <FiltroColuna
+                    titulo="Nome"
+                    tipo="texto"
+                    valor={filtros.nome}
+                    onFiltrar={(v) => alterarFiltro("nome", v)}
+                    ordenavel
+                    ordenacaoAtiva={ordenacaoDaColuna("nome")}
+                    onOrdenar={(d) => definirOrdenacao("nome", d)}
+                    textoCrescente="A → Z"
+                    textoDecrescente="Z → A"
+                  />
                 </th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  E-mail
+                  <FiltroColuna
+                    titulo="E-mail"
+                    tipo="texto"
+                    valor={filtros.email}
+                    onFiltrar={(v) => alterarFiltro("email", v)}
+                  />
                 </th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Status
+                  <FiltroColuna
+                    titulo="Status"
+                    tipo="select"
+                    valor={filtros.status}
+                    onFiltrar={(v) => alterarFiltro("status", v)}
+                    opcoes={[
+                      { valor: "ATIVO", rotulo: "Ativo" },
+                      { valor: "INATIVO", rotulo: "Inativo" },
+                    ]}
+                  />
                 </th>
                 <th className="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-slate-400 text-center">
                   Ações

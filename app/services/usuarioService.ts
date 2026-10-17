@@ -1,13 +1,18 @@
 import api from "./api";
-import { Usuario, UsuariosPaginados } from "../types/usuarios";
+import {
+  FiltrosUsuarios,
+  Usuario,
+  UsuariosPaginados,
+} from "../types/usuarios";
 import axios from "axios";
 
 export async function buscarListaUsuarios(
   pagina: number = 0,
   tamanho: number = 10,
+  filtros: FiltrosUsuarios = {},
 ): Promise<UsuariosPaginados> {
   const dados = await api.get<UsuariosPaginados>("/usuarios", {
-    params: { pagina, tamanho },
+    params: { pagina, tamanho, ...filtros },
   });
   return dados.data;
 }
