@@ -6,15 +6,11 @@ export const listarEventosOng = async (
   pagina: number = 0,
   tamanho: number = 9,
   filtros: Partial<FiltrosEventos> = {},
+  paginado: boolean = true,
 ): Promise<EventosPaginados> => {
   const response = await api.get<EventosPaginados>("/eventos", {
-    params: { pagina, tamanho, ...filtros },
+    params: { pagina, tamanho, ...filtros, paginado },
   });
-  return response.data;
-};
-
-export const listarCidadesEventos = async (): Promise<string[]> => {
-  const response = await api.get<string[]>("/eventos/cidades");
   return response.data;
 };
 

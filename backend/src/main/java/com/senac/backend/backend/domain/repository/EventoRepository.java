@@ -6,8 +6,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +18,4 @@ public interface EventoRepository extends JpaRepository<Evento, Long>, JpaSpecif
     Optional<Evento> findByIdAndEmpresa_Id(Long id, Long empresaId);
     List<Evento> findByStatus(EnumStatusEvento status);
 
-    @Query("SELECT DISTINCT e.endereco.cidade FROM Evento e WHERE e.empresa.id = :empresaId AND e.endereco.cidade IS NOT NULL ORDER BY e.endereco.cidade")
-    List<String> buscarCidadesPorEmpresa(@Param("empresaId") Long empresaId);
 }

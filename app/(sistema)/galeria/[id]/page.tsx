@@ -12,6 +12,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { criarSolicitacaoAdocao } from "@/app/services/adocaoService";
 import { buscarAdotanteLogado } from "@/app/services/adotanteService";
+import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
+import { maskCEP, onlyDigits } from "@/app/utils/masks";
 import AssinaturaModal from "@/app/components/AssinaturaModal";
 import { CONFIRMACAO_LABEL } from "@/app/(sistema)/animais/constants/animal-constants";
 
@@ -28,7 +30,12 @@ export default function DetalhesAnimalPage() {
 
   const usuario = useSelector((state: RootState) => state.auth.usuario);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
-  const [enderecoAnimal, setEnderecoAnimal] = useState("");
+  const [cepAnimal, setCepAnimal] = useState("");
+  const [logradouroAnimal, setLogradouroAnimal] = useState("");
+  const [bairroAnimal, setBairroAnimal] = useState("");
+  const [cidadeAnimal, setCidadeAnimal] = useState("");
+  const [ufAnimal, setUfAnimal] = useState("");
+  const [complementoAnimal, setComplementoAnimal] = useState("");
   const [concordaTermos, setConcordaTermos] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [assinatura, setAssinatura] = useState<string | null>(null);
@@ -39,8 +46,12 @@ export default function DetalhesAnimalPage() {
       try {
         const profile = await buscarAdotanteLogado();
         if (profile && profile.endereco) {
-          const fullAddress = `${profile.endereco}, ${profile.bairro}, ${profile.cidade} - ${profile.uf}`;
-          setEnderecoAnimal(fullAddress);
+          setCepAnimal(maskCEP(profile.cep ?? ""));
+          setLogradouroAnimal(profile.endereco);
+          setBairroAnimal(profile.bairro);
+          setCidadeAnimal(profile.cidade);
+          setUfAnimal(profile.uf);
+          setComplementoAnimal(profile.complemento ?? "");
         }
       } catch (error) {
         console.error("Erro ao carregar dados do adotante:", error);
@@ -77,10 +88,32 @@ export default function DetalhesAnimalPage() {
     buscarDados();
   }, [params.id]);
 
+  const handleCepAnimalChange = async (valor: string) => {
+    setCepAnimal(maskCEP(valor));
+    setLogradouroAnimal("");
+    setBairroAnimal("");
+    setCidadeAnimal("");
+    setUfAnimal("");
+
+    if (onlyDigits(valor).length !== 8) return;
+
+    try {
+      const endereco = await buscarEnderecoPorCep(valor);
+      setLogradouroAnimal(endereco.logradouro);
+      setBairroAnimal(endereco.bairro);
+      setCidadeAnimal(endereco.cidade);
+      setUfAnimal(endereco.uf);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert(error.message);
+      }
+    }
+  };
+
   const handleEnviarSolicitacao = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!enderecoAnimal.trim()) {
-      alert("Por favor, preencha o endereço onde o animal ficará.");
+    if (!cidadeAnimal) {
+      alert("Por favor, informe o CEP do endereço onde o animal ficará.");
       return;
     }
     if (!concordaTermos) {
@@ -99,7 +132,8 @@ export default function DetalhesAnimalPage() {
     try {
       const sucesso = await criarSolicitacaoAdocao({
         animalId: animal.id,
-        enderecoAnimal: enderecoAnimal,
+        cep: cepAnimal,
+        complemento: complementoAnimal.trim(),
         assinaturaBase64: assinatura,
       });
 
@@ -251,11 +285,28 @@ export default function DetalhesAnimalPage() {
                   <input
                     type="text"
                     required
-                    value={enderecoAnimal}
-                    onChange={(e) => setEnderecoAnimal(e.target.value)}
-                    placeholder="Rua, Número, Bairro, Cidade - UF"
+                    value={cepAnimal}
+                    onChange={(e) => handleCepAnimalChange(e.target.value)}
+                    placeholder="CEP (00000-000)"
                     className="w-full bg-white border border-stone-200 focus:border-teal-500 outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
                   />
+                  {cidadeAnimal && (
+                    <>
+                      <input
+                        type="text"
+                        readOnly
+                        value={`${logradouroAnimal} - ${bairroAnimal}, ${cidadeAnimal}/${ufAnimal}`}
+                        className="w-full bg-stone-50 border border-stone-200 outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold"
+                      />
+                      <input
+                        type="text"
+                        value={complementoAnimal}
+                        onChange={(e) => setComplementoAnimal(e.target.value)}
+                        placeholder="Número e complemento (opcional)"
+                        className="w-full bg-white border border-stone-200 focus:border-teal-500 outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                      />
+                    </>
+                  )}
                 </div>
 
                 <div className="bg-white p-3 rounded-xl border border-stone-200 space-y-2">

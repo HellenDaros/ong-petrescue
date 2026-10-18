@@ -7,7 +7,11 @@ import {
 } from "@/app/services/adocaoService";
 import { Phone, ClipboardCheck, CalendarDays, Eye } from "lucide-react";
 import FiltroColuna from "@/app/components/FiltroColuna";
-import { SolicitacaoAdocaoResponse } from "@/app/types/solicitacaoAdocao";
+import { valoresUnicos } from "@/app/utils/listas";
+import {
+  SolicitacaoAdocaoResponse,
+  formatarEnderecoAdocao,
+} from "@/app/types/solicitacaoAdocao";
 import { getStatusBadge } from "../utils/status-badge";
 import DetalhesSolicitacaoModal from "./components/DetalhesSolicitacaoModal";
 import ResponderSolicitacaoModal from "./components/ResponderSolicitacaoModal";
@@ -19,6 +23,8 @@ export default function GerenciamentoAdocoesPage() {
   const [carregando, setCarregando] = useState(true);
   const [pagina, setPagina] = useState(0);
   const [totalPaginas, setTotalPaginas] = useState(0);
+  const [cidades, setCidades] = useState<string[]>([]);
+  const [bairros, setBairros] = useState<string[]>([]);
   const [ordenarPor, setOrdenarPor] = useState<"codigo" | "pet" | "adotante">(
     "codigo",
   );
@@ -59,6 +65,20 @@ export default function GerenciamentoAdocoesPage() {
   useEffect(() => {
     carregarSolicitacoes();
   }, [pagina, ordenarPor, direcao, filtros]);
+
+  const carregarLocalidades = async () => {
+    try {
+      const todas = await buscarAdocoesOng(0, 10, {}, false);
+      setCidades(valoresUnicos(todas.content.map((sol) => sol.cidade)));
+      setBairros(valoresUnicos(todas.content.map((sol) => sol.bairro)));
+    } catch (error) {
+      console.error("Erro ao buscar cidades e bairros:", error);
+    }
+  };
+
+  useEffect(() => {
+    carregarLocalidades();
+  }, []);
 
   const alterarFiltro = (campo: keyof typeof filtros, valor: string) => {
     setFiltros((f) => ({ ...f, [campo]: valor }));
@@ -198,14 +218,16 @@ export default function GerenciamentoAdocoesPage() {
                   <th className="px-6 py-5 whitespace-nowrap">
                     <FiltroColuna
                       titulo="Lar de Destino"
-                      tipo="texto"
+                      tipo="select"
                       rotuloPesquisa="Cidade"
+                      opcoes={cidades.map((c) => ({ valor: c, rotulo: c }))}
                       valor={filtros.cidade}
                       onFiltrar={(v) => alterarFiltro("cidade", v)}
                       adicionais={[
                         {
                           rotulo: "Bairro",
-                          tipo: "texto",
+                          tipo: "select",
+                          opcoes: bairros.map((b) => ({ valor: b, rotulo: b })),
                           valor: filtros.bairro,
                           onFiltrar: (v) => alterarFiltro("bairro", v),
                         },
@@ -306,7 +328,7 @@ export default function GerenciamentoAdocoesPage() {
 
                     <td className="px-6 py-4">
                       <p className="text-xs font-medium text-slate-600 leading-relaxed max-w-[220px]">
-                        {sol.enderecoAnimal}
+                        {formatarEnderecoAdocao(sol)}
                       </p>
                     </td>
 

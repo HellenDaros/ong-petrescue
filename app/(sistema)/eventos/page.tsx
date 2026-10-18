@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import FiltroEventos from "@/app/components/FiltroEventos";
+import { valoresUnicos } from "@/app/utils/listas";
 import { Evento, FiltrosEventos, eventoSomenteLeitura, formatarDataBR, formatarLocalEvento } from "@/app/types/evento";
-import { alterarStatusEvento, listarCidadesEventos, listarEventosOng } from "@/app/services/eventoService";
+import { alterarStatusEvento, listarEventosOng } from "@/app/services/eventoService";
 import { Calendar, MapPin, Clock, Plus, ExternalLink, Edit3, Eye, QrCode, CheckCircle2, XCircle } from "lucide-react";
 
 export default function EventosPage() {
@@ -39,8 +40,17 @@ export default function EventosPage() {
     carregarEventos();
   }, [pagina, filtros]);
 
+  const carregarCidades = async () => {
+    try {
+      const todos = await listarEventosOng(0, 9, {}, false);
+      setCidades(valoresUnicos(todos.content.map((evento) => evento.cidade)));
+    } catch (error) {
+      console.error("Erro ao carregar cidades:", error);
+    }
+  };
+
   useEffect(() => {
-    listarCidadesEventos().then(setCidades).catch(console.error);
+    carregarCidades();
   }, []);
 
   const aplicarFiltros = (novos: FiltrosEventos) => {

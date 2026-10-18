@@ -47,14 +47,9 @@ public class EventoController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim,
-            @RequestParam(defaultValue = "desc") String direcao) {
-        return ResponseEntity.ok(eventoService.listarTodosPorOng(pagina, tamanho, nome, cidade, status, dataInicio, dataFim, direcao));
-    }
-
-    @GetMapping("/cidades")
-    @Operation(summary = "Listar cidades dos eventos", description = "Retorna as cidades onde a ONG possui eventos, para uso em filtros")
-    public ResponseEntity<List<String>> listarCidades() {
-        return ResponseEntity.ok(eventoService.listarCidades());
+            @RequestParam(defaultValue = "desc") String direcao,
+            @RequestParam(defaultValue = "true") boolean paginado) {
+        return ResponseEntity.ok(eventoService.listarTodosPorOng(pagina, tamanho, nome, cidade, status, dataInicio, dataFim, direcao, paginado));
     }
 
     @GetMapping("/{id}")

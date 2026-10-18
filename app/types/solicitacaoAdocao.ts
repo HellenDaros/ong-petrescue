@@ -1,6 +1,7 @@
 export interface SolicitacaoAdocaoRequest {
   animalId: number;
-  enderecoAnimal: string;
+  cep: string;
+  complemento: string;
   assinaturaBase64: string;
 }
 
@@ -54,8 +55,26 @@ export interface SolicitacaoAdocaoResponse {
     vacinado: string;
     vacinadoDescricao: string | null;
   };
-  enderecoAnimal: string;
+  cep: string | null;
+  endereco: string | null;
+  bairro: string | null;
+  cidade: string | null;
+  uf: string | null;
+  complemento: string | null;
   statusAdocao: "PENDENTE" | "APROVADO" | "REJEITADO";
   assinaturaBase64: string | null;
   dataSolicitacao: string;
+}
+
+export function formatarEnderecoAdocao(adocao: SolicitacaoAdocaoResponse): string {
+  const endereco = [
+    adocao.endereco,
+    adocao.complemento,
+    adocao.bairro,
+    adocao.cidade && adocao.uf ? `${adocao.cidade} - ${adocao.uf}` : adocao.cidade,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  return endereco || "-";
 }

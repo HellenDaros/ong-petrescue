@@ -28,6 +28,11 @@ public record EventoResponse(
         List<AnimalResponse> animais
 ) {
     public EventoResponse(Evento evento) {
+        this(evento, true);
+    }
+
+    // comAnimais = false evita carregar os animais do evento (listas de apoio, ex.: filtros)
+    public EventoResponse(Evento evento, boolean comAnimais) {
         this(
                 evento.getId(),
                 evento.getNome(),
@@ -46,7 +51,7 @@ public record EventoResponse(
                 evento.getStatus() != null ? evento.getStatus().name() : null,
                 evento.getEmpresa() != null ? evento.getEmpresa().getId() : null,
                 evento.getEmpresa() != null ? evento.getEmpresa().getNameFantasia() : null,
-                evento.getAnimais() != null ? evento.getAnimais().stream().map(AnimalResponse::new).collect(Collectors.toList()) : List.of()
+                comAnimais && evento.getAnimais() != null ? evento.getAnimais().stream().map(AnimalResponse::new).collect(Collectors.toList()) : List.of()
         );
     }
 }

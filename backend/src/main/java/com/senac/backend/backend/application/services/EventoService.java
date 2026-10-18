@@ -14,6 +14,7 @@ import com.senac.backend.backend.domain.repository.EventoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,7 +50,8 @@ public class EventoService {
 
     @Transactional(readOnly = true)
     public Page<EventoResponse> listarTodosPorOng(int pagina, int tamanho, String nome, String cidade,
-                                                  String status, LocalDate dataInicio, LocalDate dataFim, String direcao) {
+                                                  String status, LocalDate dataInicio, LocalDate dataFim, String direcao,
+                                                  boolean paginado) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (usuarioLogado.getEmpresa() == null) {
@@ -86,19 +88,10 @@ public class EventoService {
 
         Sort ordenacao = "asc".equalsIgnoreCase(direcao) ? Sort.by("id").ascending() : Sort.by("id").descending();
 
-        return eventoRepository.findAll(filtros, PageRequest.of(pagina, tamanho, ordenacao))
-                .map(EventoResponse::new);
-    }
+        Pageable paginacao = paginado ? PageRequest.of(pagina, tamanho, ordenacao) : Pageable.unpaged(ordenacao);
 
-    @Transactional(readOnly = true)
-    public List<String> listarCidades() {
-        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (usuarioLogado.getEmpresa() == null) {
-            return List.of();
-        }
-
-        return eventoRepository.buscarCidadesPorEmpresa(usuarioLogado.getEmpresa().getId());
+        return eventoRepository.findAll(filtros, paginacao)
+                .map(evento -> new EventoResponse(evento, paginado));
     }
 
     @Transactional(readOnly = true)

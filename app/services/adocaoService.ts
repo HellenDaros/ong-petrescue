@@ -37,9 +37,10 @@ export async function buscarAdocoesOng(
   pagina: number = 0,
   tamanho: number = 10,
   filtros: FiltrosAdocoes = {},
+  paginado: boolean = true,
 ): Promise<SolicitacoesPaginadas> {
   const response = await api.get<SolicitacoesPaginadas>("/adocoes/ong", {
-    params: { pagina, tamanho, ...filtros },
+    params: { pagina, tamanho, ...filtros, paginado },
   });
   return response.data;
 }

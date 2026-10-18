@@ -50,9 +50,10 @@ public class SolicitacaoAdocaoController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicio,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim,
             @RequestParam(defaultValue = "codigo") String ordenarPor,
-            @RequestParam(defaultValue = "asc") String direcao) {
+            @RequestParam(defaultValue = "asc") String direcao,
+            @RequestParam(defaultValue = "true") boolean paginado) {
         return ResponseEntity.ok(solicitacaoAdocaoService.listarSolicitacoesOng(
-                pagina, tamanho, codigo, pet, especie, adotante, cidade, bairro, status, dataInicio, dataFim, ordenarPor, direcao));
+                pagina, tamanho, codigo, pet, especie, adotante, cidade, bairro, status, dataInicio, dataFim, ordenarPor, direcao, paginado));
     }
 
     @PutMapping("/{id}/status")

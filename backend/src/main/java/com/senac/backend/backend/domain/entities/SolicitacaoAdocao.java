@@ -27,7 +27,11 @@ public class SolicitacaoAdocao {
     @JoinColumn(name = "animal_id", nullable = false)
     private Animal animal;
 
-    private String enderecoAnimal;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "endereco_id", referencedColumnName = "id")
+    private Endereco endereco;
+
+    private String complemento;
 
     @Enumerated(EnumType.STRING)
     private EnumStatusAdocao statusAdocao = EnumStatusAdocao.PENDENTE;

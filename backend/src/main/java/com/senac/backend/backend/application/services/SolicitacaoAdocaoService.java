@@ -4,6 +4,7 @@ import com.senac.backend.backend.application.DTO.SolicitacaoAdocaoRequest;
 import com.senac.backend.backend.application.DTO.SolicitacaoAdocaoResponse;
 import com.senac.backend.backend.domain.entities.Adotante;
 import com.senac.backend.backend.domain.entities.Animal;
+import com.senac.backend.backend.domain.entities.Endereco;
 import com.senac.backend.backend.domain.entities.SolicitacaoAdocao;
 import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.enuns.EnumEspecieAnimal;
@@ -15,6 +16,7 @@ import com.senac.backend.backend.domain.repository.SolicitacaoAdocaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,6 +42,9 @@ public class SolicitacaoAdocaoService {
     @Autowired
     private AnimalRepository animalRepository;
 
+    @Autowired
+    private EnderecoService enderecoService;
+
     @Transactional
     public Long criarSolicitacao(SolicitacaoAdocaoRequest request) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -58,10 +63,16 @@ public class SolicitacaoAdocaoService {
             throw new RuntimeException("É necessário assinar o termo de adoção antes de enviar a solicitação.");
         }
 
+        if (request.cep() == null || request.cep().isBlank()) {
+            throw new RuntimeException("Informe o CEP do endereço onde o animal ficará.");
+        }
+
         SolicitacaoAdocao solicitacao = new SolicitacaoAdocao();
         solicitacao.setAdotante(adotante);
         solicitacao.setAnimal(animal);
-        solicitacao.setEnderecoAnimal(request.enderecoAnimal());
+        Endereco endereco = enderecoService.buscarOuCriarEndereco(request.cep());
+        solicitacao.setEndereco(endereco);
+        solicitacao.setComplemento(request.complemento());
         solicitacao.setStatusAdocao(EnumStatusAdocao.PENDENTE);
         solicitacao.setAssinaturaBase64(request.assinaturaBase64());
         solicitacao.setDataSolicitacao(LocalDateTime.now());
@@ -81,7 +92,8 @@ public class SolicitacaoAdocaoService {
                                                                  String especie,
                                                                  String adotante, String cidade, String bairro,
                                                                  String status, LocalDate dataInicio, LocalDate dataFim,
-                                                                 String ordenarPor, String direcao) {
+                                                                 String ordenarPor, String direcao,
+                                                                 boolean paginado) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (usuarioLogado.getEmpresa() == null) {
             throw new RuntimeException("Usuário não está associado a nenhuma ONG.");
@@ -108,10 +120,10 @@ public class SolicitacaoAdocaoService {
                 predicados.add(cb.like(cb.lower(root.get("adotante").get("usuario").get("name")), "%" + adotante.trim().toLowerCase() + "%"));
             }
             if (cidade != null && !cidade.isBlank()) {
-                predicados.add(cb.like(cb.lower(root.get("enderecoAnimal")), "%" + cidade.trim().toLowerCase() + "%"));
+                predicados.add(cb.equal(root.get("endereco").get("cidade"), cidade));
             }
             if (bairro != null && !bairro.isBlank()) {
-                predicados.add(cb.like(cb.lower(root.get("enderecoAnimal")), "%" + bairro.trim().toLowerCase() + "%"));
+                predicados.add(cb.equal(root.get("endereco").get("bairro"), bairro));
             }
             if (status != null && !status.isBlank()) {
                 try {
@@ -137,8 +149,14 @@ public class SolicitacaoAdocaoService {
                 ? Sort.by(campoOrdenacao).descending()
                 : Sort.by(campoOrdenacao).ascending();
 
-        return solicitacaoAdocaoRepository.findAll(filtros, PageRequest.of(pagina, tamanho, ordenacao))
-                .map(SolicitacaoAdocaoResponse::new);
+        Pageable paginacao = paginado ? PageRequest.of(pagina, tamanho, ordenacao) : Pageable.unpaged(ordenacao);
+
+        return solicitacaoAdocaoRepository.findAll(filtros, paginacao)
+                .map(solicitacao -> {
+                    var response = new SolicitacaoAdocaoResponse(solicitacao);
+                    // sem paginação a lista serve de apoio (ex.: filtros), então não leva a assinatura
+                    return paginado ? response : response.semAssinatura();
+                });
     }
 
     @Transactional

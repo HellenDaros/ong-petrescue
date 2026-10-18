@@ -14,4 +14,5 @@ public interface SolicitacaoAdocaoRepository extends JpaRepository<SolicitacaoAd
     List<SolicitacaoAdocao> findByAdotanteUsuarioId(Long usuarioId);
     List<SolicitacaoAdocao> findByAnimalEmpresaId(Long empresaId);
     Page<SolicitacaoAdocao> findByAnimalEmpresaId(Long empresaId, Pageable pageable);
+
 }

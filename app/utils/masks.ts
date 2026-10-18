@@ -27,3 +27,9 @@ export function maskCelular(value: string): string {
   if (d.length <= 7) return `(${d.slice(0, 2)}) ${d.slice(2)}`;
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 }
+
+export function maskCEP(value: string): string {
+  return onlyDigits(value)
+    .slice(0, 8)
+    .replace(/(\d{5})(\d)/, "$1-$2");
+}

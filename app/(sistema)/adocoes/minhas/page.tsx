@@ -4,7 +4,10 @@ import React, { useEffect, useState } from "react";
 import { buscarMinhasAdocoes } from "@/app/services/adocaoService";
 import { Calendar, MapPin, Heart } from "lucide-react";
 import Link from "next/link";
-import { SolicitacaoAdocaoResponse } from "@/app/types/solicitacaoAdocao";
+import {
+  SolicitacaoAdocaoResponse,
+  formatarEnderecoAdocao,
+} from "@/app/types/solicitacaoAdocao";
 import { getStatusBadge } from "../utils/status-badge";
 
 export default function MinhasAdocoesPage() {
@@ -112,7 +115,7 @@ export default function MinhasAdocoesPage() {
                         size={14}
                         className="text-stone-400 mt-0.5 flex-shrink-0"
                       />
-                      <span>Local planejado: {adocao.enderecoAnimal}</span>
+                      <span>Local planejado: {formatarEnderecoAdocao(adocao)}</span>
                     </div>
                   </div>
                 </div>

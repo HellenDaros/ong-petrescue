@@ -12,7 +12,10 @@ import {
   Phone,
   X,
 } from "lucide-react";
-import { SolicitacaoAdocaoResponse } from "@/app/types/solicitacaoAdocao";
+import {
+  SolicitacaoAdocaoResponse,
+  formatarEnderecoAdocao,
+} from "@/app/types/solicitacaoAdocao";
 import { CONFIRMACAO_LABEL } from "@/app/(sistema)/animais/constants/animal-constants";
 import { getStatusBadge } from "../../utils/status-badge";
 
@@ -166,7 +169,7 @@ export default function DetalhesSolicitacaoModal({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 bg-stone-50 rounded-2xl p-5">
               <Campo
                 label="Endereço onde o animal ficará"
-                valor={solicitacao.enderecoAnimal}
+                valor={formatarEnderecoAdocao(solicitacao)}
                 icon={MapPin}
               />
               <Campo
