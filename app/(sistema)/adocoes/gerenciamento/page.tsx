@@ -23,8 +23,9 @@ export default function GerenciamentoAdocoesPage() {
   const [carregando, setCarregando] = useState(true);
   const [pagina, setPagina] = useState(0);
   const [totalPaginas, setTotalPaginas] = useState(0);
-  const [cidades, setCidades] = useState<string[]>([]);
-  const [bairros, setBairros] = useState<string[]>([]);
+  const [localidades, setLocalidades] = useState<SolicitacaoAdocaoResponse[]>(
+    [],
+  );
   const [ordenarPor, setOrdenarPor] = useState<"codigo" | "pet" | "adotante">(
     "codigo",
   );
@@ -69,8 +70,7 @@ export default function GerenciamentoAdocoesPage() {
   const carregarLocalidades = async () => {
     try {
       const todas = await buscarAdocoesOng(0, 10, {}, false);
-      setCidades(valoresUnicos(todas.content.map((sol) => sol.cidade)));
-      setBairros(valoresUnicos(todas.content.map((sol) => sol.bairro)));
+      setLocalidades(todas.content);
     } catch (error) {
       console.error("Erro ao buscar cidades e bairros:", error);
     }
@@ -220,14 +220,23 @@ export default function GerenciamentoAdocoesPage() {
                       titulo="Lar de Destino"
                       tipo="select"
                       rotuloPesquisa="Cidade"
-                      opcoes={cidades.map((c) => ({ valor: c, rotulo: c }))}
+                      opcoes={valoresUnicos(
+                        localidades.map((sol) => sol.cidade),
+                      ).map((c) => ({ valor: c, rotulo: c }))}
                       valor={filtros.cidade}
                       onFiltrar={(v) => alterarFiltro("cidade", v)}
                       adicionais={[
                         {
                           rotulo: "Bairro",
                           tipo: "select",
-                          opcoes: bairros.map((b) => ({ valor: b, rotulo: b })),
+                          opcoes: (cidade) =>
+                            valoresUnicos(
+                              localidades
+                                .filter((sol) => sol.cidade === cidade)
+                                .map((sol) => sol.bairro),
+                            ).map((b) => ({ valor: b, rotulo: b })),
+                          dependeDoPrincipal: true,
+                          textoSemPrincipal: "Selecione a cidade primeiro",
                           valor: filtros.bairro,
                           onFiltrar: (v) => alterarFiltro("bairro", v),
                         },

@@ -15,7 +15,9 @@ interface CampoAdicional {
   tipo: TipoCampo;
   valor: string;
   onFiltrar: (valor: string) => void;
-  opcoes?: OpcaoFiltro[];
+  opcoes?: OpcaoFiltro[] | ((valorPrincipal: string) => OpcaoFiltro[]);
+  dependeDoPrincipal?: boolean;
+  textoSemPrincipal?: string;
 }
 
 interface FiltroColunaProps {
@@ -116,8 +118,21 @@ export default function FiltroColuna({
   const alterarAdicional = (indice: number, novo: string) =>
     setRascunhoAdicionais((r) => r.map((v, i) => (i === indice ? novo : v)));
 
+  const alterarPrincipal = (novo: string) => {
+    setRascunho(novo);
+    setRascunhoAdicionais((r) =>
+      r.map((v, i) => (adicionais[i]?.dependeDoPrincipal ? "" : v)),
+    );
+  };
+
   const renderCampo = (
-    campo: { rotulo: string; tipo: TipoCampo; opcoes?: OpcaoFiltro[] },
+    campo: {
+      rotulo: string;
+      tipo: TipoCampo;
+      opcoes?: OpcaoFiltro[];
+      desabilitado?: boolean;
+      textoVazio?: string;
+    },
     valorCampo: string,
     alterar: (novo: string) => void,
     limites: { min?: string; max?: string } = {},
@@ -128,9 +143,12 @@ export default function FiltroColuna({
         <select
           value={valorCampo}
           onChange={(e) => alterar(e.target.value)}
-          className={classeCampo}
+          disabled={campo.desabilitado}
+          className={`${classeCampo} disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-stone-50`}
         >
-          <option value="">Todos</option>
+          <option value="">
+            {campo.desabilitado ? (campo.textoVazio ?? "Todos") : "Todos"}
+          </option>
           {(campo.opcoes ?? []).map((o) => (
             <option key={o.valor} value={o.valor}>
               {o.rotulo}
@@ -248,7 +266,7 @@ export default function FiltroColuna({
                 opcoes,
               },
               rascunho,
-              setRascunho,
+              alterarPrincipal,
               {
                 max:
                   tipo === "data" && adicionais[0]?.tipo === "data"
@@ -263,7 +281,16 @@ export default function FiltroColuna({
             <div key={adicional.rotulo} className="space-y-2">
               <p className={classeRotulo}>{adicional.rotulo}</p>
               {renderCampo(
-                adicional,
+                {
+                  ...adicional,
+                  opcoes:
+                    typeof adicional.opcoes === "function"
+                      ? adicional.opcoes(rascunho)
+                      : adicional.opcoes,
+                  desabilitado:
+                    !!adicional.dependeDoPrincipal && rascunho === "",
+                  textoVazio: adicional.textoSemPrincipal,
+                },
                 rascunhoAdicionais[i] ?? "",
                 (novo) => alterarAdicional(i, novo),
                 { min: i === 0 && tipo === "data" ? rascunho : undefined },
