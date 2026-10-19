@@ -11,10 +11,12 @@ import {
   eventoSomenteLeitura,
 } from "@/app/types/evento";
 import CampoData from "@/app/components/CampoData";
+import { hojeISO } from "@/app/utils/datas";
+import { maskCEP } from "@/app/utils/masks";
 import { Animal } from "@/app/types/animal";
 import { buscarListaAnimais } from "@/app/services/animalService";
 import { salvarEvento, uploadCapaEvento } from "@/app/services/eventoService";
-import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
+import { consultarCep } from "@/app/utils/cep";
 
 const EVENTO_VAZIO: Evento = {
   id: 0,
@@ -105,35 +107,27 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
     setEvento((prev) => ({ ...prev, [campo]: valor }));
   };
 
-  const handleBuscarCep = async (cepConsultado: string) => {
-    const cepLimpo = cepConsultado.replace(/\D/g, "");
+  const handleBuscarCep = async (cep: string) => {
+    const endereco = await consultarCep(cep);
 
-    if (cepLimpo.length !== 8) {
+    if (!endereco) {
       return;
     }
 
-    try {
-      const enderecoEncontrado = await buscarEnderecoPorCep(cepLimpo);
-
-      setEvento((prev) => ({
-        ...prev,
-        cep: enderecoEncontrado.cep,
-        endereco: enderecoEncontrado.logradouro,
-        bairro: enderecoEncontrado.bairro,
-        cidade: enderecoEncontrado.cidade,
-        uf: enderecoEncontrado.uf,
-      }));
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      }
-    }
+    setEvento((prev) => ({
+      ...prev,
+      cep: endereco.cep,
+      endereco: endereco.logradouro,
+      bairro: endereco.bairro,
+      cidade: endereco.cidade,
+      uf: endereco.uf,
+    }));
   };
 
   const handleCepChange = (valor: string) => {
     setEvento((prev) => ({
       ...prev,
-      cep: valor,
+      cep: maskCEP(valor),
       endereco: "",
       bairro: "",
       cidade: "",
@@ -297,6 +291,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                 <CampoData
                   value={evento.data}
                   onChange={(valor) => handleChange("data", valor)}
+                  min={hojeISO()}
                   required
                   className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
                 />

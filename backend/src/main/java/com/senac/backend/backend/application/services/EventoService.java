@@ -127,6 +127,8 @@ public class EventoService {
             throw new BusinessException("Usuário não possui uma ONG associada.");
         }
 
+        validarDataEvento(request.data());
+
         Endereco endereco = enderecoService.buscarOuCriarEndereco(request.cep());
 
         Evento evento = new Evento();
@@ -163,6 +165,7 @@ public class EventoService {
                 .orElseThrow(() -> new BusinessException("Evento não encontrado."));
 
         validarEventoEditavel(eventoBanco);
+        validarDataEvento(request.data());
 
         Endereco endereco = enderecoService.buscarOuCriarEndereco(request.cep());
 
@@ -204,6 +207,12 @@ public class EventoService {
         eventoBanco.setStatus(request.status());
         eventoRepository.save(eventoBanco);
         return true;
+    }
+
+    private void validarDataEvento(LocalDate data) {
+        if (data == null || data.isBefore(LocalDate.now())) {
+            throw new BusinessException("A data do evento não pode ser anterior a hoje.");
+        }
     }
 
     private void validarEventoEditavel(Evento evento) {

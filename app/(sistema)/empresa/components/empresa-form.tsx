@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Empresa, EmpresaFormProps } from "@/app/types/empresa";
 import { salvarEmpresa } from "@/app/services/empresaService";
-import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
+import { consultarCep } from "@/app/utils/cep";
 import { Usuario } from "@/app/types/usuarios";
-import { maskCNPJ, maskCPF, onlyDigits } from "@/app/utils/masks";
+import { maskCEP, maskCNPJ, maskCPF, onlyDigits } from "@/app/utils/masks";
 
 export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
   const router = useRouter();
@@ -39,34 +39,26 @@ export default function EmpresaForm({ empresaExistente }: EmpresaFormProps) {
   };
 
   const handleBuscarCep = async (cep: string) => {
-    const cepLimpo = cep.replace(/\D/g, "");
+    const endereco = await consultarCep(cep);
 
-    if (cepLimpo.length !== 8) {
+    if (!endereco) {
       return;
     }
 
-    try {
-      const endereco = await buscarEnderecoPorCep(cep);
-
-      setEmpresa((prev) => ({
-        ...prev,
-        cep: endereco.cep,
-        endereco: endereco.logradouro,
-        bairro: endereco.bairro,
-        cidade: endereco.cidade,
-        uf: endereco.uf,
-      }));
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      }
-    }
+    setEmpresa((prev) => ({
+      ...prev,
+      cep: endereco.cep,
+      endereco: endereco.logradouro,
+      bairro: endereco.bairro,
+      cidade: endereco.cidade,
+      uf: endereco.uf,
+    }));
   };
 
   const handleCepChange = async (valor: string) => {
     setEmpresa((prev) => ({
       ...prev,
-      cep: valor,
+      cep: maskCEP(valor),
       endereco: "",
       bairro: "",
       cidade: "",

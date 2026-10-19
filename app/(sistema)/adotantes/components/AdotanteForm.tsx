@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { salvarAdotante } from "@/app/services/adotanteService";
 import { Adotante, AdotanteFormProps } from "@/app/types/adotante";
-import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
-import { maskCelular, maskCPF, onlyDigits } from "@/app/utils/masks";
+import { consultarCep } from "@/app/utils/cep";
+import { maskCelular, maskCEP, maskCPF, onlyDigits } from "@/app/utils/masks";
 import Link from "next/link";
 
 export default function AdotanteForm({
@@ -38,32 +38,24 @@ export default function AdotanteForm({
   );
 
   const handleBuscarCep = async (cep: string) => {
-    const cepLimpo = cep.replace(/\D/g, "");
+    const endereco = await consultarCep(cep);
 
-    if (cepLimpo.length !== 8) {
+    if (!endereco) {
       return;
     }
 
-    try {
-      const endereco = await buscarEnderecoPorCep(cep);
-
-      setAdotante((prev) => ({
-        ...prev,
-        cep: endereco.cep,
-        endereco: endereco.logradouro,
-        bairro: endereco.bairro,
-        cidade: endereco.cidade,
-        uf: endereco.uf,
-      }));
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      }
-    }
+    setAdotante((prev) => ({
+      ...prev,
+      cep: endereco.cep,
+      endereco: endereco.logradouro,
+      bairro: endereco.bairro,
+      cidade: endereco.cidade,
+      uf: endereco.uf,
+    }));
   };
 
   const handleCepChange = async (valor: string) => {
-    handleChange("cep", valor);
+    handleChange("cep", maskCEP(valor));
     handleChange("endereco", "");
     handleChange("bairro", "");
     handleChange("cidade", "");

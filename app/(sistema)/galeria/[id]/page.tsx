@@ -12,8 +12,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import { criarSolicitacaoAdocao } from "@/app/services/adocaoService";
 import { buscarAdotanteLogado } from "@/app/services/adotanteService";
-import { buscarEnderecoPorCep } from "@/app/services/enderecoService";
-import { maskCEP, onlyDigits } from "@/app/utils/masks";
+import { consultarCep } from "@/app/utils/cep";
+import { maskCEP } from "@/app/utils/masks";
 import AssinaturaModal from "@/app/components/AssinaturaModal";
 import { CONFIRMACAO_LABEL } from "@/app/(sistema)/animais/constants/animal-constants";
 
@@ -95,19 +95,14 @@ export default function DetalhesAnimalPage() {
     setCidadeAnimal("");
     setUfAnimal("");
 
-    if (onlyDigits(valor).length !== 8) return;
+    const endereco = await consultarCep(valor);
 
-    try {
-      const endereco = await buscarEnderecoPorCep(valor);
-      setLogradouroAnimal(endereco.logradouro);
-      setBairroAnimal(endereco.bairro);
-      setCidadeAnimal(endereco.cidade);
-      setUfAnimal(endereco.uf);
-    } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      }
-    }
+    if (!endereco) return;
+
+    setLogradouroAnimal(endereco.logradouro);
+    setBairroAnimal(endereco.bairro);
+    setCidadeAnimal(endereco.cidade);
+    setUfAnimal(endereco.uf);
   };
 
   const handleEnviarSolicitacao = async (e: React.FormEvent) => {

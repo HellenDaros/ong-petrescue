@@ -33,3 +33,10 @@ export function maskCEP(value: string): string {
     .slice(0, 8)
     .replace(/(\d{5})(\d)/, "$1-$2");
 }
+
+export function maskData(value: string): string {
+  return onlyDigits(value)
+    .slice(0, 8)
+    .replace(/(\d{2})(\d)/, "$1/$2")
+    .replace(/(\d{2})\/(\d{2})(\d)/, "$1/$2/$3");
+}
