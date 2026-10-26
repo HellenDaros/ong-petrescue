@@ -6,6 +6,7 @@ import com.senac.backend.backend.domain.entities.Adotante;
 import com.senac.backend.backend.domain.entities.Animal;
 import com.senac.backend.backend.domain.entities.Endereco;
 import com.senac.backend.backend.domain.entities.SolicitacaoAdocao;
+import com.senac.backend.backend.domain.entities.TermoUso;
 import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.enuns.EnumEspecieAnimal;
 import com.senac.backend.backend.domain.enuns.EnumStatusAdocao;
@@ -45,6 +46,9 @@ public class SolicitacaoAdocaoService {
     @Autowired
     private EnderecoService enderecoService;
 
+    @Autowired
+    private TermoUsoService termoUsoService;
+
     @Transactional
     public Long criarSolicitacao(SolicitacaoAdocaoRequest request) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -67,6 +71,8 @@ public class SolicitacaoAdocaoService {
             throw new RuntimeException("Informe o CEP do endereço onde o animal ficará.");
         }
 
+        List<TermoUso> termos = termoUsoService.validarTermosDaSolicitacao(animal, request.termoIds());
+
         SolicitacaoAdocao solicitacao = new SolicitacaoAdocao();
         solicitacao.setAdotante(adotante);
         solicitacao.setAnimal(animal);
@@ -75,6 +81,7 @@ public class SolicitacaoAdocaoService {
         solicitacao.setComplemento(request.complemento());
         solicitacao.setStatusAdocao(EnumStatusAdocao.PENDENTE);
         solicitacao.setAssinaturaBase64(request.assinaturaBase64());
+        solicitacao.setTermos(termos);
         solicitacao.setDataSolicitacao(LocalDateTime.now());
 
         return solicitacaoAdocaoRepository.save(solicitacao).getId();

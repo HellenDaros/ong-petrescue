@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Eraser, PenTool, X } from "lucide-react";
+import { X } from "lucide-react";
 
 interface AssinaturaModalProps {
   assinaturaAtual?: string | null;
@@ -9,11 +9,6 @@ interface AssinaturaModalProps {
   onSalvar: (assinaturaBase64: string) => void;
 }
 
-/**
- * Modal com um "editor" de assinatura em canvas. É desmontada pelo
- * componente pai (renderização condicional) para que cada abertura
- * comece com o traço em branco (ou pré-carregado, se já houver assinatura).
- */
 export default function AssinaturaModal({
   assinaturaAtual,
   onFechar,
@@ -44,7 +39,8 @@ export default function AssinaturaModal({
 
     if (assinaturaAtual) {
       const imagem = new Image();
-      imagem.onload = () => ctx.drawImage(imagem, 0, 0, rect.width, rect.height);
+      imagem.onload = () =>
+        ctx.drawImage(imagem, 0, 0, rect.width, rect.height);
       imagem.src = assinaturaAtual;
     }
   }, [assinaturaAtual]);
@@ -76,9 +72,6 @@ export default function AssinaturaModal({
     const ultimo = ultimoPontoRef.current;
     const meio = { x: (ultimo.x + atual.x) / 2, y: (ultimo.y + atual.y) / 2 };
 
-    // Curva suave ligando o meio anterior ao novo meio, usando o ponto
-    // capturado como controle — cada segmento continua exatamente de
-    // onde o anterior terminou, sem deixar vãos entre eles.
     ctx.beginPath();
     ctx.moveTo(ultimoMeioRef.current.x, ultimoMeioRef.current.y);
     ctx.quadraticCurveTo(ultimo.x, ultimo.y, meio.x, meio.y);
@@ -142,34 +135,29 @@ export default function AssinaturaModal({
           />
         </div>
 
-        <div className="flex items-center justify-between gap-3 p-8 pt-6">
+        <div className="grid grid-cols-3 gap-3 p-8 pt-6">
           <button
             type="button"
             onClick={handleLimpar}
-            className="inline-flex items-center gap-2 py-3 px-4 bg-white border border-stone-200 text-slate-500 hover:bg-stone-100 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all"
+            className="py-4 md:py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-orange-100 active:scale-95"
           >
-            <Eraser size={14} strokeWidth={3} />
             Limpar
           </button>
-
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={onFechar}
-              className="py-3 px-5 bg-white border border-stone-200 text-slate-500 hover:bg-stone-100 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all"
-            >
-              Cancelar
-            </button>
-            <button
-              type="button"
-              onClick={handleSalvar}
-              disabled={!temTraco}
-              className="inline-flex items-center gap-2 py-3 px-5 bg-orange-500 hover:bg-orange-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-orange-100 active:scale-95 disabled:bg-slate-300 disabled:shadow-none"
-            >
-              <PenTool size={14} strokeWidth={3} />
-              Salvar Assinatura
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={onFechar}
+            className="py-4 md:py-3 bg-white border border-stone-200 text-slate-500 hover:bg-stone-100 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all"
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            onClick={handleSalvar}
+            disabled={!temTraco}
+            className="py-4 md:py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-teal-100 active:scale-95 disabled:bg-slate-300 disabled:shadow-none"
+          >
+            Salvar
+          </button>
         </div>
       </div>
     </div>

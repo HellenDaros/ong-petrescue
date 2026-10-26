@@ -185,6 +185,11 @@ export default function DetalhesSolicitacaoModal({
               <FileSignature size={14} />
               Assinatura do Termo de Compromisso
             </h4>
+            {solicitacao.termosTitulos?.length > 0 && (
+              <p className="text-xs text-slate-500 font-bold">
+                Termos aceitos: {solicitacao.termosTitulos.join("; ")}
+              </p>
+            )}
             {solicitacao.assinaturaBase64 ? (
               <div className="bg-stone-50 rounded-2xl border border-stone-200 p-3 flex justify-center">
                 <img

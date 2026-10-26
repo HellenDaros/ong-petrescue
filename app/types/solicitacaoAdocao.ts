@@ -3,6 +3,7 @@ export interface SolicitacaoAdocaoRequest {
   cep: string;
   complemento: string;
   assinaturaBase64: string;
+  termoIds: number[];
 }
 
 export interface FiltrosAdocoes {
@@ -63,6 +64,7 @@ export interface SolicitacaoAdocaoResponse {
   complemento: string | null;
   statusAdocao: "PENDENTE" | "APROVADO" | "REJEITADO";
   assinaturaBase64: string | null;
+  termosTitulos: string[];
   dataSolicitacao: string;
 }
 

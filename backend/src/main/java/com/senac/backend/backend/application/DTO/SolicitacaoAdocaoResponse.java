@@ -1,7 +1,9 @@
 package com.senac.backend.backend.application.DTO;
 
 import com.senac.backend.backend.domain.entities.SolicitacaoAdocao;
+import com.senac.backend.backend.domain.entities.TermoUso;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record SolicitacaoAdocaoResponse(
         Long id,
@@ -15,6 +17,7 @@ public record SolicitacaoAdocaoResponse(
         String complemento,
         String statusAdocao,
         String assinaturaBase64,
+        List<String> termosTitulos,
         LocalDateTime dataSolicitacao
 ) {
     public SolicitacaoAdocaoResponse(SolicitacaoAdocao solicitacao) {
@@ -30,12 +33,13 @@ public record SolicitacaoAdocaoResponse(
                 solicitacao.getComplemento(),
                 solicitacao.getStatusAdocao().toString(),
                 solicitacao.getAssinaturaBase64(),
+                solicitacao.getTermos().stream().map(TermoUso::getTitulo).toList(),
                 solicitacao.getDataSolicitacao()
         );
     }
 
     public SolicitacaoAdocaoResponse semAssinatura() {
         return new SolicitacaoAdocaoResponse(id, adotante, animal, cep, endereco, bairro, cidade, uf,
-                complemento, statusAdocao, null, dataSolicitacao);
+                complemento, statusAdocao, null, termosTitulos, dataSolicitacao);
     }
 }

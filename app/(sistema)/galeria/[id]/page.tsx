@@ -15,6 +15,9 @@ import { buscarAdotanteLogado } from "@/app/services/adotanteService";
 import { consultarCep } from "@/app/utils/cep";
 import { maskCEP } from "@/app/utils/masks";
 import AssinaturaModal from "@/app/components/AssinaturaModal";
+import { Termo } from "@/app/types/termo";
+import { buscarTermosAtivosDoAnimal } from "@/app/services/termoService";
+import TermoModal from "@/app/components/TermoModal";
 import { CONFIRMACAO_LABEL } from "@/app/(sistema)/animais/constants/animal-constants";
 
 const rotuloConfirmacao = (valor: string) =>
@@ -37,6 +40,8 @@ export default function DetalhesAnimalPage() {
   const [ufAnimal, setUfAnimal] = useState("");
   const [complementoAnimal, setComplementoAnimal] = useState("");
   const [concordaTermos, setConcordaTermos] = useState(false);
+  const [termos, setTermos] = useState<Termo[]>([]);
+  const [termosAbertos, setTermosAbertos] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [assinatura, setAssinatura] = useState<string | null>(null);
   const [modalAssinaturaAberto, setModalAssinaturaAberto] = useState(false);
@@ -62,6 +67,18 @@ export default function DetalhesAnimalPage() {
       carregarAdotante();
     }
   }, [usuario]);
+
+  useEffect(() => {
+    const carregarTermos = async () => {
+      try {
+        setTermos(await buscarTermosAtivosDoAnimal(Number(params.id)));
+      } catch (error) {
+        console.error("Erro ao carregar termos da ONG:", error);
+      }
+    };
+
+    carregarTermos();
+  }, [params.id]);
 
   useEffect(() => {
     const buscarDados = async () => {
@@ -111,10 +128,8 @@ export default function DetalhesAnimalPage() {
       alert("Por favor, informe o CEP do endereço onde o animal ficará.");
       return;
     }
-    if (!concordaTermos) {
-      alert(
-        "Você deve concordar com os termos da Lei Federal 9.605/98 para continuar.",
-      );
+    if (termos.length > 0 && !concordaTermos) {
+      alert("Você deve concordar com os termos para continuar.");
       return;
     }
     if (!assinatura) {
@@ -130,6 +145,7 @@ export default function DetalhesAnimalPage() {
         cep: cepAnimal,
         complemento: complementoAnimal.trim(),
         assinaturaBase64: assinatura,
+        termoIds: termos.map((termo) => termo.id),
       });
 
       if (sucesso) {
@@ -165,11 +181,11 @@ export default function DetalhesAnimalPage() {
 
       <div className="flex-1 flex items-center justify-center">
       <div
-        className={`w-full mx-auto mt-3 transition-all ${mostrarFormulario ? "max-w-5xl" : "max-w-3xl"}`}
+        className={`w-full mx-auto mt-3 transition-all ${mostrarFormulario ? "max-w-5xl lg:max-w-6xl" : "max-w-3xl"}`}
       >
         <div className="bg-white rounded-3xl shadow-xl shadow-stone-200/50 border border-stone-50 overflow-hidden flex flex-col md:flex-row">
           <div
-            className={`w-full h-[260px] md:h-auto md:min-h-[320px] relative ${mostrarFormulario ? "md:w-[38%]" : "md:w-[45%]"}`}
+            className={`w-full h-[260px] md:h-auto md:min-h-[320px] relative ${mostrarFormulario ? "md:w-[38%] lg:w-[30%]" : "md:w-[45%]"}`}
           >
             <img
               src={animal.urlFoto}
@@ -206,58 +222,65 @@ export default function DetalhesAnimalPage() {
           </div>
 
           <div
-            className={`w-full p-6 flex flex-col justify-between ${mostrarFormulario ? "md:w-[62%] md:p-6" : "md:w-[55%] md:p-8"}`}
+            className={`w-full p-6 flex flex-col justify-between ${mostrarFormulario ? "md:w-[62%] md:p-6 lg:w-[70%]" : "md:w-[55%] md:p-8"}`}
           >
             <div>
-              <div className="flex flex-col gap-1 mb-4">
-                <div
-                  className={`w-fit px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest mb-2 ${
-                    isDisponivel
-                      ? "bg-teal-50 text-teal-600"
-                      : "bg-red-50 text-red-500"
-                  }`}
-                >
-                  {animal.statusAnimal}
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div className="flex flex-col gap-1">
+                  <div
+                    className={`w-fit px-3 py-1 rounded-lg text-[11px] md:text-[9px] font-black uppercase tracking-widest mb-2 ${
+                      isDisponivel
+                        ? "bg-teal-50 text-teal-600"
+                        : "bg-red-50 text-red-500"
+                    }`}
+                  >
+                    {animal.statusAnimal}
+                  </div>
+                  <h1 className="text-4xl md:text-3xl font-black text-slate-800 tracking-tighter leading-none">
+                    {animal.nameAnimal}
+                  </h1>
+                  <p className="text-[#008080] font-black text-sm md:text-xs uppercase tracking-widest mt-2">
+                    Raça: <span className="text-slate-400">{animal.raca}</span>
+                  </p>
                 </div>
-                <h1 className="text-3xl font-black text-slate-800 tracking-tighter leading-none">
-                  {animal.nameAnimal}
-                </h1>
-                <p className="text-[#008080] font-black text-xs uppercase tracking-widest mt-2">
-                  Raça: <span className="text-slate-400">{animal.raca}</span>
+
+                <dl className="shrink-0 space-y-1 text-right">
+                  {[
+                    { label: "Idade", value: animal.idade },
+                    { label: "Castrado", value: rotuloConfirmacao(animal.castrado) },
+                    {
+                      label: "Vermifugado",
+                      value: rotuloConfirmacao(animal.vermifugado),
+                    },
+                  ].map((item) => (
+                    <div key={item.label} className="text-sm md:text-xs leading-tight">
+                      <dt className="inline text-[11px] md:text-[9px] font-black text-slate-300 uppercase tracking-widest">
+                        {item.label}:{" "}
+                      </dt>
+                      <dd className="inline font-black text-slate-700">
+                        {item.value}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+
+              <div className="h-px bg-stone-100 w-full mb-3" />
+
+              <div className="bg-stone-50 border border-stone-100 rounded-lg px-2.5 py-1 mb-4">
+                <p className="text-[10px] md:text-[8px] font-black text-slate-300 uppercase tracking-widest leading-tight">
+                  Vacinado
+                </p>
+                <p className="text-[13px] md:text-[11px] font-black text-slate-700 leading-tight">
+                  {rotuloConfirmacao(animal.vacinado)}
                 </p>
               </div>
 
-              <div className="h-px bg-stone-100 w-full mb-5" />
-
-              <div className="grid grid-cols-2 gap-2 mb-5">
-                {[
-                  { label: "Idade", value: animal.idade },
-                  { label: "Vacinado", value: rotuloConfirmacao(animal.vacinado) },
-                  { label: "Castrado", value: rotuloConfirmacao(animal.castrado) },
-                  {
-                    label: "Vermifugado",
-                    value: rotuloConfirmacao(animal.vermifugado),
-                  },
-                ].map((item) => (
-                  <div
-                    key={item.label}
-                    className="bg-stone-50 border border-stone-100 rounded-xl px-3 py-2"
-                  >
-                    <p className="text-[9px] font-black text-slate-300 uppercase tracking-widest">
-                      {item.label}
-                    </p>
-                    <p className="text-xs font-black text-slate-700">
-                      {item.value}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
               <div className="space-y-2">
-                <h3 className="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">
+                <h3 className="text-xs md:text-[10px] font-black text-slate-300 uppercase tracking-[0.2em]">
                   Conheça o amigo
                 </h3>
-                <p className="text-slate-500 leading-relaxed font-medium text-sm italic">
+                <p className="text-slate-500 leading-relaxed font-medium text-base md:text-sm italic">
                   "{animal.nameAnimal} é um(a) {animal.especie} que está
                   aguardando por um lar cheio de amor."
                 </p>
@@ -267,14 +290,14 @@ export default function DetalhesAnimalPage() {
             {mostrarFormulario ? (
               <form
                 onSubmit={handleEnviarSolicitacao}
-                className="mt-4 bg-stone-50 p-3 rounded-2xl border border-stone-200 space-y-3"
+                className="mt-4 bg-stone-50 p-3 rounded-2xl border border-stone-200 space-y-3 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0"
               >
-                <h3 className="text-base font-black text-slate-800">
+                <h3 className="text-lg md:text-base font-black text-slate-800 lg:col-span-2">
                   Solicitação de Adoção
                 </h3>
 
                 <div className="space-y-1">
-                  <label className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                  <label className="text-xs md:text-[10px] font-black uppercase tracking-widest text-slate-500">
                     Endereço onde ficará o animal
                   </label>
                   <input
@@ -283,7 +306,7 @@ export default function DetalhesAnimalPage() {
                     value={cepAnimal}
                     onChange={(e) => handleCepAnimalChange(e.target.value)}
                     placeholder="CEP (00000-000)"
-                    className="w-full bg-white border border-stone-200 focus:border-teal-500 outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                    className="w-full bg-white border border-stone-200 focus:border-teal-500 outline-none px-4 py-4 md:py-2.5 text-base md:text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
                   />
                   {cidadeAnimal && (
                     <>
@@ -291,51 +314,63 @@ export default function DetalhesAnimalPage() {
                         type="text"
                         readOnly
                         value={`${logradouroAnimal} - ${bairroAnimal}, ${cidadeAnimal}/${ufAnimal}`}
-                        className="w-full bg-stone-50 border border-stone-200 outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold"
+                        className="w-full bg-stone-50 border border-stone-200 outline-none px-4 py-4 md:py-2.5 text-base md:text-sm rounded-xl text-slate-700 font-bold"
                       />
                       <input
                         type="text"
                         value={complementoAnimal}
                         onChange={(e) => setComplementoAnimal(e.target.value)}
                         placeholder="Número e complemento (opcional)"
-                        className="w-full bg-white border border-stone-200 focus:border-teal-500 outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                        className="w-full bg-white border border-stone-200 focus:border-teal-500 outline-none px-4 py-4 md:py-2.5 text-base md:text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
                       />
                     </>
                   )}
                 </div>
 
-                <div className="bg-white p-3 rounded-xl border border-stone-200 space-y-2">
-                  <h4 className="text-xs font-black text-orange-500 uppercase tracking-wider">
-                    Lei Federal nº 9.605/98 (Artigo 32)
-                  </h4>
-                  <p className="text-[11px] text-slate-500 leading-snug font-medium">
-                    Praticar ato de abuso, maus-tratos, ferir ou mutilar animais
-                    silvestres, domésticos ou domesticados, nativos ou exóticos
-                    é crime federal, sujeito a pena de detenção e multa. Para
-                    cães e gatos, a pena é de reclusão de 2 a 5 anos, multa e
-                    proibição da guarda.
-                  </p>
+                {termos.length > 0 && (
+                  <div className="bg-white p-3 rounded-xl border border-stone-200 space-y-2 lg:col-start-2 lg:row-start-2 lg:row-span-2 lg:self-center lg:mb-14">
+                    <ul className="space-y-1">
+                      {termos.map((termo) => (
+                        <li
+                          key={termo.id}
+                          className="text-sm md:text-xs font-black text-orange-500 uppercase tracking-wider"
+                        >
+                          {termo.titulo}
+                        </li>
+                      ))}
+                    </ul>
 
-                  <label className="flex items-start gap-2 cursor-pointer pt-1">
-                    <input
-                      type="checkbox"
-                      required
-                      checked={concordaTermos}
-                      onChange={(e) => setConcordaTermos(e.target.checked)}
-                      className="mt-1 w-4 h-4 rounded text-teal-600 focus:ring-teal-500 border-stone-300"
-                    />
-                    <span className="text-[11px] leading-snug text-slate-600 font-bold select-none">
-                      Estou ciente e concordo com a Lei Federal 9.605/98 e
-                      assumo o compromisso de guarda responsável do animal.
-                    </span>
-                  </label>
-                </div>
+                    <label className="flex items-start gap-2 cursor-pointer pt-1">
+                      <input
+                        type="checkbox"
+                        required
+                        checked={concordaTermos}
+                        onChange={(e) => setConcordaTermos(e.target.checked)}
+                        className="mt-0.5 md:mt-1 w-7 h-7 md:w-4 md:h-4 shrink-0 rounded text-teal-600 focus:ring-teal-500 border-stone-300"
+                      />
+                      <span className="text-sm md:text-[11px] leading-snug text-slate-600 font-bold select-none">
+                        Li e concordo com os termos acima e assumo o compromisso
+                        de guarda responsável do animal.{" "}
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setTermosAbertos(true);
+                          }}
+                          className="text-teal-600 hover:text-teal-700 underline"
+                        >
+                          Ler termos completos
+                        </button>
+                      </span>
+                    </label>
+                  </div>
+                )}
 
-                <div className="bg-white p-3 rounded-xl border border-stone-200 space-y-2">
-                  <h4 className="text-xs font-black text-slate-500 uppercase tracking-wider">
+                <div className="bg-white p-3 rounded-xl border border-stone-200 space-y-2 lg:col-start-1">
+                  <h4 className="text-sm md:text-xs font-black text-slate-500 uppercase tracking-wider">
                     Assinatura do Termo de Compromisso
                   </h4>
-                  <p className="text-[11px] text-slate-500 leading-snug font-medium">
+                  <p className="text-[13px] md:text-[11px] text-slate-500 leading-snug font-medium">
                     Assine digitalmente para confirmar que está ciente da lei e
                     do compromisso de guarda responsável.
                   </p>
@@ -343,7 +378,7 @@ export default function DetalhesAnimalPage() {
                   <button
                     type="button"
                     onClick={() => setModalAssinaturaAberto(true)}
-                    className={`w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all ${
+                    className={`w-full inline-flex items-center justify-center gap-2 min-h-14 md:min-h-0 py-4 md:py-2.5 rounded-xl font-black text-sm md:text-[10px] uppercase tracking-widest transition-all ${
                       assinatura
                         ? "bg-teal-50 text-teal-600 border-2 border-teal-100 hover:bg-teal-100"
                         : "bg-white text-slate-500 border-2 border-dashed border-stone-300 hover:border-teal-400 hover:text-teal-600"
@@ -363,11 +398,11 @@ export default function DetalhesAnimalPage() {
                   </button>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex gap-3 lg:col-start-2 lg:row-start-3 lg:self-end">
                   <button
                     type="button"
                     onClick={() => setMostrarFormulario(false)}
-                    className="flex-1 py-2.5 bg-white border border-stone-200 text-slate-500 hover:bg-stone-100 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all"
+                    className="flex-1 min-h-14 md:min-h-0 py-4 md:py-2.5 bg-white border border-stone-200 text-slate-500 hover:bg-stone-100 rounded-xl font-black text-sm md:text-[10px] uppercase tracking-widest transition-all"
                   >
                     Cancelar
                   </button>
@@ -379,7 +414,7 @@ export default function DetalhesAnimalPage() {
                         ? "Assine o termo para habilitar o envio"
                         : undefined
                     }
-                    className="flex-[2] py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-orange-100 active:scale-95 disabled:bg-slate-300"
+                    className="flex-[2] min-h-14 md:min-h-0 py-4 md:py-2.5 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-black text-sm md:text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-orange-100 active:scale-95 disabled:bg-slate-300"
                   >
                     {enviando ? "Enviando..." : "Confirmar Adoção"}
                   </button>
@@ -398,7 +433,7 @@ export default function DetalhesAnimalPage() {
                     }
                     setMostrarFormulario(true);
                   }}
-                  className={`flex-[2] py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest transition-all shadow-lg active:scale-95 ${
+                  className={`flex-[2] min-h-14 md:min-h-0 py-4 md:py-2.5 rounded-xl font-black text-sm md:text-[10px] uppercase tracking-widest transition-all shadow-lg active:scale-95 ${
                     isDisponivel
                       ? "bg-orange-500 hover:bg-orange-600 text-white shadow-orange-100"
                       : "bg-slate-100 text-slate-300 cursor-not-allowed shadow-none"
@@ -412,6 +447,10 @@ export default function DetalhesAnimalPage() {
         </div>
       </div>
       </div>
+
+      {termosAbertos && (
+        <TermoModal termos={termos} onFechar={() => setTermosAbertos(false)} />
+      )}
 
       {modalAssinaturaAberto && (
         <AssinaturaModal

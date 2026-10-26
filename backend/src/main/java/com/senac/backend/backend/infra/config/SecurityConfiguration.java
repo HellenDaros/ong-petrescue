@@ -52,6 +52,8 @@ public class SecurityConfiguration {
                                 .requestMatchers("/adocoes/ong", "/adocoes/*/status").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
                                 .requestMatchers(HttpMethod.GET, "/animais/*").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG", "ADOTANTE")
                                 .requestMatchers("/pets/**", "/animais/**").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
+                                .requestMatchers(HttpMethod.GET, "/termos/ativo").authenticated()
+                                .requestMatchers("/termos", "/termos/**").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
                                 .requestMatchers("/eventos/**").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
                                 .anyRequest().authenticated()
                         )

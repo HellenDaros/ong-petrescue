@@ -14,6 +14,7 @@ import {
   User,
   FileText,
   Calendar,
+  ScrollText,
   ChevronLeft,
   ChevronRight,
   X,
@@ -85,6 +86,12 @@ export default function Sidebar({
       name: "Eventos",
       href: "/eventos",
       icon: Calendar,
+      roles: ["ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO_ONG"],
+    },
+    {
+      name: "Termos e Leis",
+      href: "/termos",
+      icon: ScrollText,
       roles: ["ROLE_ADMIN_ONG", "ROLE_FUNCIONARIO_ONG"],
     },
     {
