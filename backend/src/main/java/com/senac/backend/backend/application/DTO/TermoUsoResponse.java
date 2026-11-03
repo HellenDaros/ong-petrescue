@@ -9,9 +9,10 @@ public record TermoUsoResponse(
         String titulo,
         String conteudo,
         boolean ativo,
+        boolean textoPadrao,
         LocalDateTime dataAtualizacao
 ) {
     public TermoUsoResponse(TermoUso termo) {
-        this(termo.getId(), termo.getTitulo(), termo.getConteudo(), termo.isAtivo(), termo.getDataAtualizacao());
+        this(termo.getId(), termo.getTitulo(), termo.getConteudo(), termo.isAtivo(), termo.isTextoPadrao(), termo.getDataAtualizacao());
     }
 }

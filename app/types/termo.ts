@@ -3,12 +3,14 @@ export interface Termo {
   titulo: string;
   conteudo: string;
   ativo: boolean;
+  textoPadrao: boolean;
   dataAtualizacao: string;
 }
 
 export interface TermoRequest {
   titulo: string;
   conteudo: string;
+  textoPadrao: boolean;
 }
 
 export interface TermoFormProps {

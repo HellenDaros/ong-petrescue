@@ -25,6 +25,9 @@ public class TermoUso {
 
     private boolean ativo = false;
 
+    @Column(columnDefinition = "boolean not null default false")
+    private boolean textoPadrao = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private Empresa empresa;

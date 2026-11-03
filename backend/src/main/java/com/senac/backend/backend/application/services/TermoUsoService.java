@@ -51,6 +51,16 @@ public class TermoUsoService {
         }
     }
 
+    private void substituirTextoPadrao(TermoUso termo) {
+        List<TermoUso> anteriores = termoUsoRepository.findByEmpresa_IdAndTextoPadraoTrueAndIdNot(
+                termo.getEmpresa().getId(), termo.getId() == null ? -1L : termo.getId());
+        for (TermoUso anterior : anteriores) {
+            anterior.setTextoPadrao(false);
+            anterior.setAtivo(false);
+        }
+        termoUsoRepository.saveAll(anteriores);
+    }
+
     @Transactional(readOnly = true)
     public List<TermoUsoResponse> listar() {
         return termoUsoRepository.findByEmpresa_IdOrderByIdDesc(usuarioDaOng().getEmpresa().getId()).stream()
@@ -66,7 +76,11 @@ public class TermoUsoService {
         termo.setTitulo(request.titulo().trim());
         termo.setConteudo(request.conteudo().trim());
         termo.setAtivo(true);
+        termo.setTextoPadrao(request.textoPadrao());
         termo.setEmpresa(usuarioDaOng().getEmpresa());
+        if (termo.isTextoPadrao()) {
+            substituirTextoPadrao(termo);
+        }
         return termoUsoRepository.save(termo).getId();
     }
 
@@ -76,7 +90,11 @@ public class TermoUsoService {
         TermoUso termo = buscarDaOng(id);
         termo.setTitulo(request.titulo().trim());
         termo.setConteudo(request.conteudo().trim());
+        termo.setTextoPadrao(request.textoPadrao());
         termo.setDataAtualizacao(LocalDateTime.now());
+        if (termo.isTextoPadrao() && termo.isAtivo()) {
+            substituirTextoPadrao(termo);
+        }
         termoUsoRepository.save(termo);
     }
 
@@ -84,6 +102,9 @@ public class TermoUsoService {
     public void alterarStatus(Long id, AlterarStatusTermoRequest request) {
         TermoUso termo = buscarDaOng(id);
         termo.setAtivo(request.ativo());
+        if (termo.isTextoPadrao() && termo.isAtivo()) {
+            substituirTextoPadrao(termo);
+        }
         termoUsoRepository.save(termo);
     }
 
@@ -100,7 +121,7 @@ public class TermoUsoService {
         if (animal.getEmpresa() == null) {
             return List.of();
         }
-        return termoUsoRepository.findByEmpresa_IdAndAtivoTrue(animal.getEmpresa().getId());
+        return termoUsoRepository.findByEmpresa_IdAndAtivoTrueOrderByTextoPadraoDescIdAsc(animal.getEmpresa().getId());
     }
 
    @Transactional(readOnly = true)

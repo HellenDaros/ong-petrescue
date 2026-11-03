@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Edit3, Plus, Power } from "lucide-react";
+import { Plus, RefreshCw, SquarePen } from "lucide-react";
 import { Termo } from "@/app/types/termo";
 import { alterarStatusTermo, listarTermos } from "@/app/services/termoService";
 
@@ -108,6 +108,11 @@ export default function TermosPage() {
                     <div className="flex flex-col">
                       <span className="text-sm font-black text-slate-700">
                         {termo.titulo}
+                        {termo.textoPadrao && (
+                          <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full bg-orange-50 text-orange-500 text-[9px] font-black uppercase tracking-tighter align-middle">
+                            Padrão
+                          </span>
+                        )}
                       </span>
                       <span className="text-xs text-slate-400 line-clamp-1">
                         {termo.conteudo}
@@ -138,7 +143,7 @@ export default function TermosPage() {
                         className="p-2 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-xl transition-all"
                         title="Editar"
                       >
-                        <Edit3 size={20} strokeWidth={2} />
+                        <SquarePen size={16} strokeWidth={2} />
                       </Link>
 
                       <button
@@ -146,7 +151,7 @@ export default function TermosPage() {
                         className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all"
                         title={termo.ativo ? "Desativar" : "Ativar"}
                       >
-                        <Power size={20} strokeWidth={2} />
+                        <RefreshCw size={16} strokeWidth={2} />
                       </button>
                     </div>
                   </td>

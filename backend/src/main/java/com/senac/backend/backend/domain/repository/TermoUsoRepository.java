@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface TermoUsoRepository extends JpaRepository<TermoUso, Long> {
     List<TermoUso> findByEmpresa_IdOrderByIdDesc(Long empresaId);
     Optional<TermoUso> findByIdAndEmpresa_Id(Long id, Long empresaId);
-    List<TermoUso> findByEmpresa_IdAndAtivoTrue(Long empresaId);
+    List<TermoUso> findByEmpresa_IdAndAtivoTrueOrderByTextoPadraoDescIdAsc(Long empresaId);
+    List<TermoUso> findByEmpresa_IdAndTextoPadraoTrueAndIdNot(Long empresaId, Long id);
 }
