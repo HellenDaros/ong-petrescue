@@ -10,6 +10,7 @@ import {
   PORTE_LABEL,
   SEXO_LABEL,
 } from "../constants/animal-constants";
+import VacinaSelect from "./vacina-select";
 import { maskCelular, onlyDigits } from "@/app/utils/masks";
 
 type UnidadeIdade = "meses" | "anos";
@@ -110,6 +111,11 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
   };
 
   const handleSalvar = async () => {
+    if (animal.vacinado === "SIM" && !animal.vacinadoDescricao.trim()) {
+      alert("Selecione ao menos uma vacina.");
+      return;
+    }
+
     let urlFoto = animal.urlFoto;
 
     if (fotoFile) {
@@ -439,15 +445,9 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Quais Vacinas? (Descrição)
               </label>
-              <input
-                type="text"
-                required
-                onChange={(e) =>
-                  handleChange("vacinadoDescricao", e.target.value)
-                }
+              <VacinaSelect
                 value={animal.vacinadoDescricao}
-                placeholder="Ex: V10, Raiva..."
-                className="w-full bg-teal-50/30 border border-teal-100 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-teal-200"
+                onChange={(valor) => handleChange("vacinadoDescricao", valor)}
               />
             </div>
           )}

@@ -274,6 +274,11 @@ export default function DetalhesAnimalPage() {
                 <p className="text-[13px] md:text-[11px] font-black text-slate-700 leading-tight">
                   {rotuloConfirmacao(animal.vacinado)}
                 </p>
+                {animal.vacinado === "SIM" && animal.vacinadoDescricao && (
+                  <p className="text-[11px] md:text-[10px] font-bold text-teal-700 leading-snug mt-0.5">
+                    {animal.vacinadoDescricao}
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
