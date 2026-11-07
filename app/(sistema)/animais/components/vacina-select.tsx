@@ -219,7 +219,7 @@ export default function VacinaSelect({ value, onChange }: VacinaSelectProps) {
                   <button
                     type="button"
                     onClick={() => iniciarEdicao(vacina)}
-                    className="text-xs font-black text-slate-400 hover:text-[#008080]"
+                    className="px-2 py-0.5 rounded-lg bg-amber-50 text-xs font-black text-amber-500 hover:bg-amber-100 transition-colors"
                   >
                     Editar
                   </button>

@@ -48,7 +48,10 @@ export interface SolicitacaoAdocaoResponse {
     id: number;
     nameAnimal: string;
     raca: string;
+    sexo: string;
     idade: string;
+    porte: string;
+    corPelagem: string;
     especie: string;
     urlFoto: string;
     castrado: string;
@@ -56,6 +59,7 @@ export interface SolicitacaoAdocaoResponse {
     vacinado: string;
     vacinadoDescricao: string | null;
   };
+  ongNome: string | null;
   cep: string | null;
   endereco: string | null;
   bairro: string | null;
@@ -65,7 +69,14 @@ export interface SolicitacaoAdocaoResponse {
   statusAdocao: "PENDENTE" | "APROVADO" | "REJEITADO";
   assinaturaBase64: string | null;
   termosTitulos: string[];
+  textoPadraoTitulo: string | null;
+  textoPadraoConteudo: string | null;
   dataSolicitacao: string;
+}
+
+export interface FichaAdocaoModalProps {
+  solicitacao: SolicitacaoAdocaoResponse;
+  onFechar: () => void;
 }
 
 export function formatarEnderecoAdocao(adocao: SolicitacaoAdocaoResponse): string {

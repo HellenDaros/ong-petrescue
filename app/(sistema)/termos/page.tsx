@@ -140,7 +140,7 @@ export default function TermosPage() {
                     <div className="flex items-center justify-center gap-2">
                       <Link
                         href={`/termos/${termo.id}/editar`}
-                        className="p-2 text-slate-400 hover:text-teal-600 hover:bg-teal-50 rounded-xl transition-all"
+                        className="p-2 bg-amber-50 text-amber-400 hover:bg-amber-100 hover:text-amber-500 rounded-xl transition-all"
                         title="Editar"
                       >
                         <SquarePen size={16} strokeWidth={2} />

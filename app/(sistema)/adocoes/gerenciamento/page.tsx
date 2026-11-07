@@ -5,7 +5,14 @@ import {
   buscarAdocoesOng,
   responderSolicitacaoAdocao,
 } from "@/app/services/adocaoService";
-import { Phone, ClipboardCheck, CalendarDays, Eye } from "lucide-react";
+import {
+  Phone,
+  ClipboardCheck,
+  CalendarDays,
+  Eye,
+  Printer,
+} from "lucide-react";
+import FichaAdocaoModal from "@/app/components/FichaAdocaoModal";
 import FiltroColuna from "@/app/components/FiltroColuna";
 import { valoresUnicos } from "@/app/utils/listas";
 import {
@@ -45,6 +52,8 @@ export default function GerenciamentoAdocoesPage() {
   const [solicitacaoDetalhe, setSolicitacaoDetalhe] =
     useState<SolicitacaoAdocaoResponse | null>(null);
   const [solicitacaoResponder, setSolicitacaoResponder] =
+    useState<SolicitacaoAdocaoResponse | null>(null);
+  const [solicitacaoFicha, setSolicitacaoFicha] =
     useState<SolicitacaoAdocaoResponse | null>(null);
 
   const carregarSolicitacoes = async () => {
@@ -159,10 +168,10 @@ export default function GerenciamentoAdocoesPage() {
       {
         <div className="bg-white rounded-[2.5rem] border border-stone-100 shadow-md overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse min-w-[1000px]">
+            <table className="w-full text-left border-collapse min-w-[900px]">
               <thead>
                 <tr className="bg-stone-50 border-b border-stone-100 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                  <th className="px-6 py-5 whitespace-nowrap">
+                  <th className="pl-6 pr-2 py-5 whitespace-nowrap">
                     <FiltroColuna
                       titulo="Cód."
                       tipo="numero"
@@ -175,7 +184,7 @@ export default function GerenciamentoAdocoesPage() {
                       textoDecrescente="Mais recentes"
                     />
                   </th>
-                  <th className="px-6 py-5 whitespace-nowrap">
+                  <th className="pl-2 pr-6 py-5 whitespace-nowrap">
                     <FiltroColuna
                       titulo="Pet"
                       tipo="texto"
@@ -284,10 +293,10 @@ export default function GerenciamentoAdocoesPage() {
                     key={sol.id}
                     className="hover:bg-stone-50/50 transition-colors group"
                   >
-                    <td className="px-6 py-4 text-sm font-bold text-slate-400">
+                    <td className="pl-6 pr-2 py-4 text-sm font-bold text-slate-400">
                       #{sol.id}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="pl-2 pr-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0 shadow-sm border border-stone-200">
                           <img
@@ -372,6 +381,14 @@ export default function GerenciamentoAdocoesPage() {
                             <ClipboardCheck size={16} strokeWidth={2.5} />
                           </button>
                         )}
+
+                        <button
+                          onClick={() => setSolicitacaoFicha(sol)}
+                          title="Imprimir ficha de adoção"
+                          className="p-2.5 bg-stone-100 hover:bg-stone-200 text-slate-500 rounded-xl transition-colors"
+                        >
+                          <Printer size={16} strokeWidth={2.5} />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -431,6 +448,13 @@ export default function GerenciamentoAdocoesPage() {
         <DetalhesSolicitacaoModal
           solicitacao={solicitacaoDetalhe}
           onFechar={() => setSolicitacaoDetalhe(null)}
+        />
+      )}
+
+      {solicitacaoFicha && (
+        <FichaAdocaoModal
+          solicitacao={solicitacaoFicha}
+          onFechar={() => setSolicitacaoFicha(null)}
         />
       )}
 

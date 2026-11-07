@@ -9,6 +9,7 @@ public record SolicitacaoAdocaoResponse(
         Long id,
         AdotanteResponse adotante,
         AnimalResponse animal,
+        String ongNome,
         String cep,
         String endereco,
         String bairro,
@@ -18,6 +19,8 @@ public record SolicitacaoAdocaoResponse(
         String statusAdocao,
         String assinaturaBase64,
         List<String> termosTitulos,
+        String textoPadraoTitulo,
+        String textoPadraoConteudo,
         LocalDateTime dataSolicitacao
 ) {
     public SolicitacaoAdocaoResponse(SolicitacaoAdocao solicitacao) {
@@ -25,6 +28,7 @@ public record SolicitacaoAdocaoResponse(
                 solicitacao.getId(),
                 new AdotanteResponse(solicitacao.getAdotante()),
                 new AnimalResponse(solicitacao.getAnimal()),
+                solicitacao.getAnimal().getEmpresa() != null ? solicitacao.getAnimal().getEmpresa().getNameFantasia() : null,
                 solicitacao.getEndereco() != null ? solicitacao.getEndereco().getCep() : null,
                 solicitacao.getEndereco() != null ? solicitacao.getEndereco().getLogradouro() : null,
                 solicitacao.getEndereco() != null ? solicitacao.getEndereco().getBairro() : null,
@@ -33,13 +37,22 @@ public record SolicitacaoAdocaoResponse(
                 solicitacao.getComplemento(),
                 solicitacao.getStatusAdocao().toString(),
                 solicitacao.getAssinaturaBase64(),
-                solicitacao.getTermos().stream().map(TermoUso::getTitulo).toList(),
+                titulosAceitos(solicitacao),
+                solicitacao.getTextoPadraoTitulo(),
+                solicitacao.getTextoPadraoConteudo(),
                 solicitacao.getDataSolicitacao()
         );
     }
 
+    private static List<String> titulosAceitos(SolicitacaoAdocao solicitacao) {
+        if (!solicitacao.getTermosTitulos().isEmpty()) {
+            return List.copyOf(solicitacao.getTermosTitulos());
+        }
+        return solicitacao.getTermos().stream().map(TermoUso::getTitulo).toList();
+    }
+
     public SolicitacaoAdocaoResponse semAssinatura() {
-        return new SolicitacaoAdocaoResponse(id, adotante, animal, cep, endereco, bairro, cidade, uf,
-                complemento, statusAdocao, null, termosTitulos, dataSolicitacao);
+        return new SolicitacaoAdocaoResponse(id, adotante, animal, ongNome, cep, endereco, bairro, cidade, uf,
+                complemento, statusAdocao, null, termosTitulos, textoPadraoTitulo, textoPadraoConteudo, dataSolicitacao);
     }
 }

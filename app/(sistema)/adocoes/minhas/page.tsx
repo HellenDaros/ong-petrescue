@@ -2,7 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import { buscarMinhasAdocoes } from "@/app/services/adocaoService";
-import { Calendar, MapPin, Heart } from "lucide-react";
+import { Calendar, MapPin, Heart, Printer } from "lucide-react";
+import FichaAdocaoModal from "@/app/components/FichaAdocaoModal";
 import Link from "next/link";
 import {
   SolicitacaoAdocaoResponse,
@@ -13,6 +14,8 @@ import { getStatusBadge } from "../utils/status-badge";
 export default function MinhasAdocoesPage() {
   const [adocoes, setAdocoes] = useState<SolicitacaoAdocaoResponse[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const [adocaoFicha, setAdocaoFicha] =
+    useState<SolicitacaoAdocaoResponse | null>(null);
 
   const carregarAdocoes = async () => {
     try {
@@ -120,13 +123,30 @@ export default function MinhasAdocoesPage() {
                   </div>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-stone-50 text-[10px] font-black text-[#008080] uppercase tracking-widest">
-                  ONG responsável pelo animal
+                <div className="mt-4 pt-3 border-t border-stone-50 flex items-center justify-between gap-3">
+                  <span className="text-[10px] font-black text-[#008080] uppercase tracking-widest">
+                    ONG responsável pelo animal
+                  </span>
+                  <button
+                    onClick={() => setAdocaoFicha(adocao)}
+                    title="Imprimir ficha de adoção"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-slate-500 rounded-xl text-[10px] font-black uppercase tracking-wider transition-colors"
+                  >
+                    <Printer size={14} />
+                    Ficha
+                  </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
+      )}
+
+      {adocaoFicha && (
+        <FichaAdocaoModal
+          solicitacao={adocaoFicha}
+          onFechar={() => setAdocaoFicha(null)}
+        />
       )}
     </div>
   );

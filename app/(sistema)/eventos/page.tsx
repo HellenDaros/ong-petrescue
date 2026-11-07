@@ -248,7 +248,7 @@ export default function EventosPage() {
 
                     <Link
                       href={`/eventos/${evento.id}/editar`}
-                      className="inline-flex items-center gap-1 text-slate-500 hover:text-teal-600 text-xs font-bold transition-all p-1"
+                      className="inline-flex items-center gap-1 text-amber-500 hover:text-amber-600 text-xs font-bold transition-all p-1"
                     >
                       {eventoSomenteLeitura(evento) ? (
                         <Eye size={14} />

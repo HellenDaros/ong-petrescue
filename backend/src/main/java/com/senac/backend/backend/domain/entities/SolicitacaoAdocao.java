@@ -49,5 +49,15 @@ public class SolicitacaoAdocao {
     )
     private List<TermoUso> termos = new ArrayList<>();
 
+   @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "solicitacao_termo_titulo", joinColumns = @JoinColumn(name = "solicitacao_id"))
+    @Column(name = "titulo")
+    private List<String> termosTitulos = new ArrayList<>();
+
+    private String textoPadraoTitulo;
+
+    @Column(columnDefinition = "TEXT")
+    private String textoPadraoConteudo;
+
     private LocalDateTime dataSolicitacao = LocalDateTime.now();
 }

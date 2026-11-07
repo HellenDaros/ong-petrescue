@@ -82,6 +82,14 @@ public class SolicitacaoAdocaoService {
         solicitacao.setStatusAdocao(EnumStatusAdocao.PENDENTE);
         solicitacao.setAssinaturaBase64(request.assinaturaBase64());
         solicitacao.setTermos(termos);
+        solicitacao.setTermosTitulos(termos.stream().map(TermoUso::getTitulo).toList());
+        termos.stream()
+                .filter(TermoUso::isTextoPadrao)
+                .findFirst()
+                .ifPresent(textoPadrao -> {
+                    solicitacao.setTextoPadraoTitulo(textoPadrao.getTitulo());
+                    solicitacao.setTextoPadraoConteudo(textoPadrao.getConteudo());
+                });
         solicitacao.setDataSolicitacao(LocalDateTime.now());
 
         return solicitacaoAdocaoRepository.save(solicitacao).getId();
