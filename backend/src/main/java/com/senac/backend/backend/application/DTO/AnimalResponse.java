@@ -34,7 +34,9 @@ public record AnimalResponse(
 
         String telefoneDoador,
 
-        String statusAnimal
+        String statusAnimal,
+
+        String ongNome
 
 ) {
 
@@ -55,7 +57,8 @@ public record AnimalResponse(
                 animal.getEspecie().toString(),
                 animal.getNameDoador(),
                 animal.getTelefoneDoador(),
-                animal.getStatusAnimal().toString()
+                animal.getStatusAnimal().toString(),
+                animal.getEmpresa() != null ? animal.getEmpresa().getNameFantasia() : null
         );
     }
 }

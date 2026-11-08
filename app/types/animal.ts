@@ -16,6 +16,7 @@ export class Animal {
     public nameDoador: string,
     public telefoneDoador: string,
     public statusAnimal: string,
+    public ongNome?: string | null,
   ) {}
 }
 

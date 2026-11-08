@@ -18,10 +18,16 @@ import AssinaturaModal from "@/app/components/AssinaturaModal";
 import { Termo } from "@/app/types/termo";
 import { buscarTermosAtivosDoAnimal } from "@/app/services/termoService";
 import TermoModal from "@/app/components/TermoModal";
-import { CONFIRMACAO_LABEL } from "@/app/(sistema)/animais/constants/animal-constants";
+import {
+  CONFIRMACAO_LABEL,
+  SEXO_LABEL,
+} from "@/app/(sistema)/animais/constants/animal-constants";
 
 const rotuloConfirmacao = (valor: string) =>
   CONFIRMACAO_LABEL[valor as keyof typeof CONFIRMACAO_LABEL] ?? valor;
+
+const rotuloSexo = (valor: string) =>
+  SEXO_LABEL[valor as keyof typeof SEXO_LABEL] ?? valor;
 
 export default function DetalhesAnimalPage() {
   const params = useParams();
@@ -246,6 +252,7 @@ export default function DetalhesAnimalPage() {
 
                 <dl className="shrink-0 space-y-1 text-right">
                   {[
+                    { label: "Sexo", value: rotuloSexo(animal.sexo) },
                     { label: "Idade", value: animal.idade },
                     { label: "Castrado", value: rotuloConfirmacao(animal.castrado) },
                     {

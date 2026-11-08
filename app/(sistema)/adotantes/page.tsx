@@ -255,6 +255,14 @@ export default function MeuPerfilAdotante() {
               </label>
               <p className="text-slate-700 font-semibold">{perfil.uf || "-"}</p>
             </div>
+            <div>
+              <label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+                Complemento
+              </label>
+              <p className="text-slate-700 font-semibold">
+                {perfil.complemento || "Não informado"}
+              </p>
+            </div>
           </div>
         </div>
       </div>
