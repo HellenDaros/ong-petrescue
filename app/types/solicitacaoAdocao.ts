@@ -71,7 +71,13 @@ export interface SolicitacaoAdocaoResponse {
   termosTitulos: string[];
   textoPadraoTitulo: string | null;
   textoPadraoConteudo: string | null;
+  motivoRecusa: string | null;
   dataSolicitacao: string;
+}
+
+export interface SolicitacaoConcorrente {
+  id: number;
+  adotanteNome: string;
 }
 
 export interface FichaAdocaoModalProps {

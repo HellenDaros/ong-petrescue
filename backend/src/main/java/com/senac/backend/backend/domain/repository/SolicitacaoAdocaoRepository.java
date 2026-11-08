@@ -1,6 +1,7 @@
 package com.senac.backend.backend.domain.repository;
 
 import com.senac.backend.backend.domain.entities.SolicitacaoAdocao;
+import com.senac.backend.backend.domain.enuns.EnumStatusAdocao;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,7 @@ import java.util.List;
 public interface SolicitacaoAdocaoRepository extends JpaRepository<SolicitacaoAdocao, Long>, JpaSpecificationExecutor<SolicitacaoAdocao> {
     List<SolicitacaoAdocao> findByAdotanteUsuarioId(Long usuarioId);
     List<SolicitacaoAdocao> findByAnimalEmpresaId(Long empresaId);
+    List<SolicitacaoAdocao> findByAnimalIdAndStatusAdocaoAndIdNot(Long animalId, EnumStatusAdocao statusAdocao, Long id);
     Page<SolicitacaoAdocao> findByAnimalEmpresaId(Long empresaId, Pageable pageable);
 
 }

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { buscarMinhasAdocoes } from "@/app/services/adocaoService";
-import { Calendar, MapPin, Heart, Printer } from "lucide-react";
+import { Calendar, MapPin, Heart, Info, Printer } from "lucide-react";
 import FichaAdocaoModal from "@/app/components/FichaAdocaoModal";
 import Link from "next/link";
 import {
@@ -113,6 +113,21 @@ export default function MinhasAdocoesPage() {
                         )}
                       </span>
                     </div>
+                    {adocao.statusAdocao === "REJEITADO" &&
+                      adocao.motivoRecusa && (
+                        <div className="flex items-start gap-2 bg-rose-50 text-rose-700 rounded-xl p-3">
+                          <Info
+                            size={14}
+                            className="mt-0.5 flex-shrink-0"
+                          />
+                          <span>
+                            <span className="block font-black uppercase tracking-wider text-[10px]">
+                              Motivo da recusa
+                            </span>
+                            {adocao.motivoRecusa}
+                          </span>
+                        </div>
+                      )}
                     <div className="flex items-start gap-2">
                       <MapPin
                         size={14}
@@ -125,7 +140,9 @@ export default function MinhasAdocoesPage() {
 
                 <div className="mt-4 pt-3 border-t border-stone-50 flex items-center justify-between gap-3">
                   <span className="text-[10px] font-black text-[#008080] uppercase tracking-widest">
-                    ONG responsável pelo animal
+                    {adocao.ongNome
+                      ? `ONG: ${adocao.ongNome}`
+                      : "ONG responsável pelo animal"}
                   </span>
                   <button
                     onClick={() => setAdocaoFicha(adocao)}

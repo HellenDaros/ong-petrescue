@@ -57,6 +57,9 @@ public class SolicitacaoAdocao {
     private String textoPadraoTitulo;
 
     @Column(columnDefinition = "TEXT")
+    private String motivoRecusa;
+
+    @Column(columnDefinition = "TEXT")
     private String textoPadraoConteudo;
 
     private LocalDateTime dataSolicitacao = LocalDateTime.now();

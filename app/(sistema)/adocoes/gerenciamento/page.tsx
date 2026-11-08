@@ -109,10 +109,11 @@ export default function GerenciamentoAdocoesPage() {
   const handleResponder = async (
     id: number,
     novoStatus: "APROVADO" | "REJEITADO",
+    motivo?: string,
   ) => {
     setProcessandoId(id);
     try {
-      const sucesso = await responderSolicitacaoAdocao(id, novoStatus);
+      const sucesso = await responderSolicitacaoAdocao(id, novoStatus, motivo);
       if (sucesso) {
         alert(
           `Solicitação de adoção ${novoStatus === "APROVADO" ? "aprovada" : "rejeitada"} com sucesso!`,
@@ -463,8 +464,8 @@ export default function GerenciamentoAdocoesPage() {
           solicitacao={solicitacaoResponder}
           processando={processandoId !== null}
           onFechar={() => setSolicitacaoResponder(null)}
-          onResponder={(status) =>
-            handleResponder(solicitacaoResponder.id, status)
+          onResponder={(status, motivo) =>
+            handleResponder(solicitacaoResponder.id, status, motivo)
           }
         />
       )}

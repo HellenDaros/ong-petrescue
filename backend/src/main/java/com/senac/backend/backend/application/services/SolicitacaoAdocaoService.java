@@ -2,6 +2,7 @@ package com.senac.backend.backend.application.services;
 
 import com.senac.backend.backend.application.DTO.SolicitacaoAdocaoRequest;
 import com.senac.backend.backend.application.DTO.SolicitacaoAdocaoResponse;
+import com.senac.backend.backend.application.DTO.SolicitacaoConcorrenteResponse;
 import com.senac.backend.backend.domain.entities.Adotante;
 import com.senac.backend.backend.domain.entities.Animal;
 import com.senac.backend.backend.domain.entities.Endereco;
@@ -174,8 +175,10 @@ public class SolicitacaoAdocaoService {
                 });
     }
 
+    private static final int TAMANHO_MAXIMO_MOTIVO = 500;
+
     @Transactional
-    public boolean responderSolicitacao(Long id, EnumStatusAdocao novoStatus) {
+    public boolean responderSolicitacao(Long id, EnumStatusAdocao novoStatus, String motivo) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (usuarioLogado.getEmpresa() == null) {
             throw new RuntimeException("Usuário não autorizado.");
@@ -188,6 +191,13 @@ public class SolicitacaoAdocaoService {
             throw new RuntimeException("Acesso negado: esta solicitação pertence a outra ONG.");
         }
 
+        if (novoStatus == EnumStatusAdocao.REJEITADO && motivo != null && !motivo.isBlank()) {
+            if (motivo.trim().length() > TAMANHO_MAXIMO_MOTIVO) {
+                throw new RuntimeException("A justificativa deve ter no máximo " + TAMANHO_MAXIMO_MOTIVO + " caracteres.");
+            }
+            solicitacao.setMotivoRecusa(motivo.trim());
+        }
+
         solicitacao.setStatusAdocao(novoStatus);
         solicitacaoAdocaoRepository.save(solicitacao);
 
@@ -195,8 +205,43 @@ public class SolicitacaoAdocaoService {
             Animal animal = solicitacao.getAnimal();
             animal.setStatusAnimal(EnumStatusAnimal.INATIVO);
             animalRepository.save(animal);
+            recusarConcorrentes(solicitacao);
         }
 
         return true;
+    }
+
+    private void recusarConcorrentes(SolicitacaoAdocao aprovada) {
+        Animal animal = aprovada.getAnimal();
+        List<SolicitacaoAdocao> concorrentes = solicitacaoAdocaoRepository
+                .findByAnimalIdAndStatusAdocaoAndIdNot(animal.getId(), EnumStatusAdocao.PENDENTE, aprovada.getId());
+
+        for (SolicitacaoAdocao concorrente : concorrentes) {
+            concorrente.setStatusAdocao(EnumStatusAdocao.REJEITADO);
+            concorrente.setMotivoRecusa("O animal " + animal.getNameAnimal() + " já foi adotado por outra pessoa. "
+                    + "Caso surja alguma mudança, a ONG entrará em contato com você.");
+        }
+        solicitacaoAdocaoRepository.saveAll(concorrentes);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SolicitacaoConcorrenteResponse> listarConcorrentes(Long id) {
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (usuarioLogado.getEmpresa() == null) {
+            throw new RuntimeException("Usuário não autorizado.");
+        }
+
+        SolicitacaoAdocao solicitacao = solicitacaoAdocaoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Solicitação de adoção não encontrada."));
+
+        if (!solicitacao.getAnimal().getEmpresa().getId().equals(usuarioLogado.getEmpresa().getId())) {
+            throw new RuntimeException("Acesso negado: esta solicitação pertence a outra ONG.");
+        }
+
+        return solicitacaoAdocaoRepository
+                .findByAnimalIdAndStatusAdocaoAndIdNot(solicitacao.getAnimal().getId(), EnumStatusAdocao.PENDENTE, id)
+                .stream()
+                .map(SolicitacaoConcorrenteResponse::new)
+                .toList();
     }
 }

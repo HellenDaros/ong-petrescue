@@ -21,6 +21,7 @@ public record SolicitacaoAdocaoResponse(
         List<String> termosTitulos,
         String textoPadraoTitulo,
         String textoPadraoConteudo,
+        String motivoRecusa,
         LocalDateTime dataSolicitacao
 ) {
     public SolicitacaoAdocaoResponse(SolicitacaoAdocao solicitacao) {
@@ -40,6 +41,7 @@ public record SolicitacaoAdocaoResponse(
                 titulosAceitos(solicitacao),
                 solicitacao.getTextoPadraoTitulo(),
                 solicitacao.getTextoPadraoConteudo(),
+                solicitacao.getMotivoRecusa(),
                 solicitacao.getDataSolicitacao()
         );
     }
@@ -53,6 +55,6 @@ public record SolicitacaoAdocaoResponse(
 
     public SolicitacaoAdocaoResponse semAssinatura() {
         return new SolicitacaoAdocaoResponse(id, adotante, animal, ongNome, cep, endereco, bairro, cidade, uf,
-                complemento, statusAdocao, null, termosTitulos, textoPadraoTitulo, textoPadraoConteudo, dataSolicitacao);
+                complemento, statusAdocao, null, termosTitulos, textoPadraoTitulo, textoPadraoConteudo, motivoRecusa, dataSolicitacao);
     }
 }

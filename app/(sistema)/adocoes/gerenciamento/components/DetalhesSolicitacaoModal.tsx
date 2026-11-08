@@ -126,6 +126,19 @@ export default function DetalhesSolicitacaoModal({
         </div>
 
         <div className="flex-1 overflow-y-auto p-8 space-y-4 [scrollbar-width:thin] [scrollbar-color:#d6d3d1_transparent]">
+          {solicitacao.statusAdocao === "REJEITADO" &&
+            solicitacao.motivoRecusa && (
+              <div className="space-y-4">
+                <h4 className="text-xs font-black text-rose-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                  <Info size={14} />
+                  Motivo da Recusa
+                </h4>
+                <p className="bg-rose-50 border border-rose-100 rounded-2xl p-5 text-sm font-bold text-rose-700 leading-relaxed">
+                  {solicitacao.motivoRecusa}
+                </p>
+              </div>
+            )}
+
           <div className="space-y-4">
             <h4 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">
               Dados do Adotante

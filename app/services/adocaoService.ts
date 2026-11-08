@@ -2,6 +2,7 @@ import {
   FiltrosAdocoes,
   SolicitacaoAdocaoRequest,
   SolicitacaoAdocaoResponse,
+  SolicitacaoConcorrente,
   SolicitacoesPaginadas,
 } from "../types/solicitacaoAdocao";
 import api from "./api";
@@ -45,14 +46,26 @@ export async function buscarAdocoesOng(
   return response.data;
 }
 
+export async function buscarConcorrentes(
+  id: number,
+): Promise<SolicitacaoConcorrente[]> {
+  const response = await api.get<SolicitacaoConcorrente[]>(
+    `/adocoes/${id}/concorrentes`,
+  );
+  return response.data;
+}
+
 export async function responderSolicitacaoAdocao(
   id: number,
   status: "APROVADO" | "REJEITADO",
+  motivo?: string,
 ): Promise<boolean> {
   try {
-    const response = await api.put(`/adocoes/${id}/status`, null, {
-      params: { status },
-    });
+    const response = await api.put(
+      `/adocoes/${id}/status`,
+      { motivo: motivo || null },
+      { params: { status } },
+    );
     return response.status === 200;
   } catch (error) {
     console.error(`Erro ao responder solicitação de adoção ${id}:`, error);

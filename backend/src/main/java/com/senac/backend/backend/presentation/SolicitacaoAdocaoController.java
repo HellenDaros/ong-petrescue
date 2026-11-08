@@ -1,7 +1,9 @@
 package com.senac.backend.backend.presentation;
 
+import com.senac.backend.backend.application.DTO.ResponderSolicitacaoRequest;
 import com.senac.backend.backend.application.DTO.SolicitacaoAdocaoRequest;
 import com.senac.backend.backend.application.DTO.SolicitacaoAdocaoResponse;
+import com.senac.backend.backend.application.DTO.SolicitacaoConcorrenteResponse;
 import com.senac.backend.backend.application.services.SolicitacaoAdocaoService;
 import com.senac.backend.backend.domain.enuns.EnumStatusAdocao;
 import io.swagger.v3.oas.annotations.Operation;
@@ -56,10 +58,17 @@ public class SolicitacaoAdocaoController {
                 pagina, tamanho, codigo, pet, especie, adotante, cidade, bairro, status, dataInicio, dataFim, ordenarPor, direcao, paginado));
     }
 
+    @GetMapping("/{id}/concorrentes")
+    @Operation(summary = "Listar solicitações concorrentes", description = "Retorna as outras solicitações pendentes para o mesmo animal, que serão recusadas automaticamente se esta for aprovada")
+    public ResponseEntity<List<SolicitacaoConcorrenteResponse>> listarConcorrentes(@PathVariable Long id) {
+        return ResponseEntity.ok(solicitacaoAdocaoService.listarConcorrentes(id));
+    }
+
     @PutMapping("/{id}/status")
     @Operation(summary = "Responder solicitação de adoção", description = "Aprova ou rejeita uma solicitação de adoção pendente")
-    public ResponseEntity<?> responder(@PathVariable Long id, @RequestParam EnumStatusAdocao status) {
-        boolean result = solicitacaoAdocaoService.responderSolicitacao(id, status);
+    public ResponseEntity<?> responder(@PathVariable Long id, @RequestParam EnumStatusAdocao status,
+                                       @RequestBody(required = false) ResponderSolicitacaoRequest request) {
+        boolean result = solicitacaoAdocaoService.responderSolicitacao(id, status, request != null ? request.motivo() : null);
         return result ? ResponseEntity.ok("Solicitação respondida com sucesso!") : ResponseEntity.notFound().build();
     }
 }
