@@ -50,6 +50,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.POST, "/adocoes").hasAnyRole("ADOTANTE")
                                 .requestMatchers("/adocoes/minhas").hasAnyRole("ADOTANTE")
                                 .requestMatchers("/adocoes/ong", "/adocoes/*/status", "/adocoes/*/concorrentes").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
+                                .requestMatchers("/dashboard").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
                                 .requestMatchers(HttpMethod.GET, "/animais/*").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG", "ADOTANTE")
                                 .requestMatchers("/pets/**", "/animais/**").hasAnyRole("ADMIN_ONG", "FUNCIONARIO_ONG")
                                 .requestMatchers(HttpMethod.GET, "/termos/ativo").authenticated()

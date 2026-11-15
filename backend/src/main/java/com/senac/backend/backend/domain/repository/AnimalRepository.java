@@ -17,6 +17,8 @@ public interface AnimalRepository extends JpaRepository<Animal, Long>, JpaSpecif
 
     List<Animal> findByEmpresa_IdAndStatusAnimal(Long empresaId, EnumStatusAnimal statusAnimal);
 
+    long countByEmpresa_IdAndStatusAnimal(Long empresaId, EnumStatusAnimal statusAnimal);
+
     Page<Animal> findByEmpresa_Id(Long empresaId, Pageable pageable);
 
     Optional<Animal> findByIdAndEmpresa_Id(Long id, Long empresaId);
