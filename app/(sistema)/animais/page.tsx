@@ -153,6 +153,7 @@ export default function Animais() {
                     onFiltrar={(v) => alterarFiltro("status", v)}
                     opcoes={[
                       { valor: "DISPONIVEL", rotulo: "Disponível" },
+                      { valor: "ADOTADO", rotulo: "Adotado" },
                       { valor: "INATIVO", rotulo: "Inativo" },
                     ]}
                   />
@@ -204,11 +205,13 @@ export default function Animais() {
                       className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${
                         animal.statusAnimal === "DISPONIVEL"
                           ? "bg-teal-50 text-teal-600"
-                          : "bg-red-50 text-red-600"
+                          : animal.statusAnimal === "ADOTADO"
+                            ? "bg-amber-50 text-amber-600"
+                            : "bg-red-50 text-red-600"
                       }`}
                     >
                       <span
-                        className={`w-1.5 h-1.5 rounded-full mr-2 ${animal.statusAnimal === "DISPONIVEL" ? "bg-teal-500" : "bg-red-500"}`}
+                        className={`w-1.5 h-1.5 rounded-full mr-2 ${animal.statusAnimal === "DISPONIVEL" ? "bg-teal-500" : animal.statusAnimal === "ADOTADO" ? "bg-amber-500" : "bg-red-500"}`}
                       />
                       {animal.statusAnimal}
                     </span>

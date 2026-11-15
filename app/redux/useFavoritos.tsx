@@ -23,11 +23,11 @@ export const useFavoritos = () => {
       const animaisServidor = await buscarListaAnimaisPublico();
       if (animaisServidor.length === 0) return;
 
-      const favsAtualizados = favoritos.map((favLocal) => {
+      const favsAtualizados = favoritos.flatMap((favLocal) => {
         const animalNoServidor = animaisServidor.find(
           (s) => s.id === favLocal.id,
         );
-        return animalNoServidor ? animalNoServidor : favLocal;
+        return animalNoServidor ? [animalNoServidor] : [];
       });
 
       dispatch(setFavoritos({ items: favsAtualizados }));

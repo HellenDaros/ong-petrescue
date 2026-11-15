@@ -203,7 +203,7 @@ public class SolicitacaoAdocaoService {
 
         if (novoStatus == EnumStatusAdocao.APROVADO) {
             Animal animal = solicitacao.getAnimal();
-            animal.setStatusAnimal(EnumStatusAnimal.INATIVO);
+            animal.setStatusAnimal(EnumStatusAnimal.ADOTADO);
             animalRepository.save(animal);
             recusarConcorrentes(solicitacao);
         }

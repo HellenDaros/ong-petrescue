@@ -4,15 +4,32 @@ import { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { buscarEventoPublicoPorId } from "@/app/services/eventoService";
-import { Evento, formatarDataBR, formatarLocalEvento } from "@/app/types/evento";
+import {
+  Evento,
+  formatarDataBR,
+  formatarLocalEvento,
+} from "@/app/types/evento";
 import { Animal } from "@/app/types/animal";
 import { useFavoritos } from "@/app/redux/useFavoritos";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
-import { Calendar, Clock, MapPin, Heart, AlertTriangle, PawPrint, Sparkles, Search } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Heart,
+  AlertTriangle,
+  PawPrint,
+  Sparkles,
+  Search,
+} from "lucide-react";
 import BotaoVoltar from "@/app/components/BotaoVoltar";
 
-export default function EventoPublicoPage({ params }: { params: Promise<{ id: string }> }) {
+export default function EventoPublicoPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const resolvedParams = use(params);
   const eventoId = Number(resolvedParams.id);
   const router = useRouter();
@@ -41,16 +58,27 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
     }
   };
 
-  const animaisFiltrados = (evento?.animais ?? []).filter(
+  const usuarioDaOng =
+    usuario?.role === "ROLE_ADMIN_ONG" ||
+    usuario?.role === "ROLE_FUNCIONARIO_ONG";
+  const animaisDoEvento = (evento?.animais ?? []).filter(
+    (animal) => usuarioDaOng || animal.statusAnimal === "DISPONIVEL",
+  );
+
+  const animaisFiltrados = animaisDoEvento.filter(
     (animal) =>
-      animal.nameAnimal.toLowerCase().includes(filtroNome.trim().toLowerCase()) &&
+      animal.nameAnimal
+        .toLowerCase()
+        .includes(filtroNome.trim().toLowerCase()) &&
       (filtroEspecie === "" || animal.especie === filtroEspecie),
   );
 
   const handleCardClick = (animalId: number | null) => {
     if (animalId === null) return;
     if (!usuario) {
-      alert("Você deve fazer login para continuar. Caso não tenha uma conta, crie uma.");
+      alert(
+        "Você deve fazer login para continuar. Caso não tenha uma conta, crie uma.",
+      );
       router.push(`/login?redirectTo=/galeria/${animalId}`);
     } else {
       router.push(`/galeria/${animalId}`);
@@ -77,7 +105,9 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
           <div className="w-16 h-16 bg-teal-100 text-teal-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
             <PawPrint size={32} />
           </div>
-          <p className="text-slate-500 font-bold text-sm">Carregando feira de adoção...</p>
+          <p className="text-slate-500 font-bold text-sm">
+            Carregando feira de adoção...
+          </p>
         </div>
       </div>
     );
@@ -89,7 +119,9 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
         <div className="w-20 h-20 bg-red-100 text-red-500 rounded-full flex items-center justify-center mb-4">
           <AlertTriangle size={36} />
         </div>
-        <h1 className="text-2xl font-black text-slate-800 mb-2">Evento não encontrado</h1>
+        <h1 className="text-2xl font-black text-slate-800 mb-2">
+          Evento não encontrado
+        </h1>
         <p className="text-slate-500 text-sm mb-6">
           O evento solicitado não existe ou foi removido.
         </p>
@@ -114,7 +146,7 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
 
           <div className="flex items-center gap-2">
             <span className="text-base font-black tracking-tighter text-slate-800">
-             I🧡PET
+              I🧡PET
             </span>
           </div>
         </div>
@@ -179,7 +211,9 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
                 Este evento já foi encerrado
               </h3>
               <p className="text-xs font-medium text-amber-800">
-                A feira presencial de adoção foi finalizada, porém a lista dos animais participantes continua disponível para consulta e solicitação de adoção online.
+                A feira presencial de adoção foi finalizada, porém a lista dos
+                animais participantes continua disponível para consulta e
+                solicitação de adoção online.
               </p>
             </div>
           </div>
@@ -193,11 +227,12 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
             Animais Presentes na Feira
           </h2>
           <p className="text-slate-500 text-xs md:text-sm font-medium">
-            Estes são os peludinhos selecionados pela ONG para este evento ({evento.animais?.length || 0} animais).
+            Estes são os peludinhos selecionados pela ONG para este evento (
+            {animaisDoEvento.length} animais).
           </p>
         </div>
 
-        {evento.animais && evento.animais.length > 0 && (
+        {animaisDoEvento.length > 0 && (
           <div className="flex flex-col sm:flex-row gap-2 max-w-md mx-auto mb-5">
             <div className="relative flex-1">
               <Search
@@ -273,13 +308,23 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
                           {animal.raca}
                         </p>
                       </div>
-                      <button className="shrink-0 whitespace-nowrap bg-stone-100 hover:bg-orange-100 text-orange-500 px-3 py-2 rounded-xl font-black text-[10px] uppercase tracking-wider transition-colors shadow-sm active:scale-95">
-                        Quero Adotar!
-                      </button>
+                      {animal.statusAnimal === "DISPONIVEL" && (
+                        <button className="shrink-0 whitespace-nowrap bg-stone-100 hover:bg-orange-100 text-orange-500 px-3 py-2 rounded-xl font-black text-[10px] uppercase tracking-wider transition-colors shadow-sm active:scale-95">
+                          Quero Adotar!
+                        </button>
+                      )}
                     </div>
 
                     <div className="flex justify-between items-center pt-3 border-t border-stone-50">
-                      <div className="flex items-center gap-1.5 text-teal-600 text-[10px] font-black uppercase">
+                      <div
+                        className={`flex items-center gap-1.5 text-[10px] font-black uppercase ${
+                          animal.statusAnimal === "DISPONIVEL"
+                            ? "text-teal-600"
+                            : animal.statusAnimal === "ADOTADO"
+                              ? "text-amber-600"
+                              : "text-red-500"
+                        }`}
+                      >
                         <Calendar size={12} strokeWidth={3} />
                         {animal.statusAnimal}
                       </div>
@@ -293,7 +338,7 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
               );
             })}
 
-          {evento.animais && evento.animais.length > 0 && animaisFiltrados.length === 0 && (
+          {animaisDoEvento.length > 0 && animaisFiltrados.length === 0 && (
             <div className="col-span-full py-8 text-center bg-white rounded-2xl border border-dashed border-stone-200 p-4">
               <p className="text-slate-500 font-bold uppercase text-[10px] tracking-widest">
                 Nenhum animal encontrado com esses filtros.
@@ -301,7 +346,7 @@ export default function EventoPublicoPage({ params }: { params: Promise<{ id: st
             </div>
           )}
 
-          {(!evento.animais || evento.animais.length === 0) && (
+          {animaisDoEvento.length === 0 && (
             <div className="col-span-full py-8 text-center bg-white rounded-2xl border border-dashed border-stone-200 p-4">
               <div className="w-10 h-10 bg-stone-100 rounded-full flex items-center justify-center mx-auto mb-2 text-stone-300">
                 <PawPrint size={20} />

@@ -156,7 +156,15 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
   };
 
   const selecionarTodos = () => {
-    setEvento((prev) => ({ ...prev, animais: animaisOng }));
+    setEvento((prev) => ({
+      ...prev,
+      animais: [
+        ...animaisOng,
+        ...prev.animais.filter(
+          (a) => !animaisOng.some((disponivel) => disponivel.id === a.id),
+        ),
+      ],
+    }));
   };
 
   const desmarcarTodos = () => {
@@ -212,7 +220,14 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
   };
 
   // Evento já realizado: mostra os animais que participaram, mesmo inativos.
-  const listaAnimais = somenteLeitura ? evento.animais : animaisOng;
+  const listaAnimais = somenteLeitura
+    ? evento.animais
+    : [
+        ...animaisOng,
+        ...evento.animais.filter(
+          (a) => !animaisOng.some((disponivel) => disponivel.id === a.id),
+        ),
+      ];
 
   const animaisFiltrados = listaAnimais.filter(
     (animal) =>
@@ -522,7 +537,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
               <span className="text-xs font-bold text-teal-700 bg-teal-100/80 px-3 py-1.5 rounded-full ml-4">
                 {somenteLeitura
                   ? `${evento.animais.length} animais no evento`
-                  : `${evento.animais.length} de ${animaisOng.length} selecionados`}
+                  : `${evento.animais.length} de ${listaAnimais.length} selecionados`}
               </span>
             </div>
 
@@ -583,6 +598,12 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                         <p className="text-slate-400 text-xs font-semibold truncate">
                           {animal.especie} • {animal.raca}
                         </p>
+                        {!somenteLeitura &&
+                          animal.statusAnimal !== "DISPONIVEL" && (
+                            <span className="inline-block mt-0.5 text-[9px] font-black uppercase text-amber-600">
+                              {animal.statusAnimal}
+                            </span>
+                          )}
                       </div>
                     </div>
                   );

@@ -5,5 +5,6 @@ public enum EnumStatusAnimal {
     DISPONIVEL,
     DELETADO,
     INATIVO,
+    ADOTADO,
 
 }
