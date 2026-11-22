@@ -151,7 +151,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-center p-6">
+    <div className="flex-1 flex items-center justify-center p-3 sm:p-6">
       <div className="w-full max-w-2xl bg-white rounded-3xl shadow-xl shadow-stone-200/50 border border-stone-100 overflow-hidden">
         <div className="bg-stone-50/50 px-6 py-5 border-b border-stone-100">
           <h2 className="text-2xl font-black text-[#008080] tracking-tight">
@@ -167,7 +167,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
             e.preventDefault();
             handleSalvar();
           }}
-          className="p-10 space-y-6"
+          className="p-5 sm:p-10 space-y-5 sm:space-y-6"
         >
           <div className="space-y-1">
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
@@ -183,7 +183,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Espécie
@@ -218,7 +218,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Sexo
@@ -255,13 +255,13 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                   }
                   value={idadeValor}
                   placeholder="Ex: 2"
-                  className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
+                  className="w-full min-w-0 bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
                 />
                 <div className="flex bg-stone-50 rounded-2xl p-1 shrink-0">
                   {(["meses", "anos"] as const).map((unidade) => (
                     <label
                       key={unidade}
-                      className={`px-4 py-3 rounded-xl text-xs font-black uppercase tracking-wide cursor-pointer transition-all text-center ${
+                      className={`px-3 py-2.5 rounded-xl text-xs font-black uppercase tracking-wide cursor-pointer transition-all text-center ${
                         idadeUnidade === unidade
                           ? "bg-[#008080] text-white shadow"
                           : "text-slate-400 hover:text-slate-600"
@@ -283,7 +283,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Porte
@@ -318,7 +318,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Nome do Doador{" "}
@@ -354,7 +354,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Foto do Pet{" "}
@@ -375,7 +375,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
                   type="file"
                   accept="image/png,image/jpeg,image/webp"
                   onChange={handleFotoChange}
-                  className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-100 file:text-teal-700 file:font-bold"
+                  className="w-full min-w-0 bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:bg-teal-100 file:text-teal-700 file:font-bold"
                 />
               </div>
             </div>
@@ -400,7 +400,7 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Vermifugado?

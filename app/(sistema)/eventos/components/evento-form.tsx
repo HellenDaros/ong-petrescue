@@ -10,8 +10,7 @@ import {
   EventoRequest,
   eventoSomenteLeitura,
 } from "@/app/types/evento";
-import CampoData from "@/app/components/CampoData";
-import { hojeISO } from "@/app/utils/datas";
+import CampoData from "@/app/components/CampoData";import { hojeISO } from "@/app/utils/datas";
 import { maskCEP } from "@/app/utils/masks";
 import { Animal } from "@/app/types/animal";
 import { buscarListaAnimais } from "@/app/services/animalService";
@@ -519,10 +518,10 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
               )}
             </div>
 
-            <div className="flex justify-between items-center bg-stone-50 px-4 py-3 rounded-2xl">
-              <div className="relative flex-1 max-w-sm">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 bg-stone-50 px-4 py-3 rounded-2xl">
+              <div className="relative w-full sm:flex-1 sm:max-w-sm">
                 <Search
-                  className="absolute left-3 top-3 text-slate-400"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
                   size={16}
                 />
                 <input
@@ -530,11 +529,11 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                   placeholder="Buscar por nome, raça ou espécie..."
                   value={buscaAnimal}
                   onChange={(e) => setBuscaAnimal(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full pl-9 pr-4 py-3 sm:py-2 text-sm sm:text-xs bg-white rounded-xl border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
                 />
               </div>
 
-              <span className="text-xs font-bold text-teal-700 bg-teal-100/80 px-3 py-1.5 rounded-full ml-4">
+              <span className="self-start sm:self-auto text-xs font-bold text-teal-700 bg-teal-100/80 px-3 py-1.5 rounded-full sm:ml-4">
                 {somenteLeitura
                   ? `${evento.animais.length} animais no evento`
                   : `${evento.animais.length} de ${listaAnimais.length} selecionados`}
