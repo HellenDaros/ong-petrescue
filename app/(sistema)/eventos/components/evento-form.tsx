@@ -306,7 +306,7 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
                 <CampoData
                   value={evento.data}
                   onChange={(valor) => handleChange("data", valor)}
-                  min={hojeISO()}
+                  min={somenteLeitura ? undefined : hojeISO()}
                   required
                   className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
                 />

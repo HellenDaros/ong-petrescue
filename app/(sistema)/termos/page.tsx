@@ -138,13 +138,23 @@ export default function TermosPage() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-center gap-2">
-                      <Link
-                        href={`/termos/${termo.id}/editar`}
-                        className="p-2 bg-amber-50 text-amber-400 hover:bg-amber-100 hover:text-amber-500 rounded-xl transition-all"
-                        title="Editar"
-                      >
-                        <SquarePen size={16} strokeWidth={2} />
-                      </Link>
+                      {termo.ativo ? (
+                        <Link
+                          href={`/termos/${termo.id}/editar`}
+                          className="p-2 bg-amber-50 text-amber-400 hover:bg-amber-100 hover:text-amber-500 rounded-xl transition-all"
+                          title="Editar"
+                        >
+                          <SquarePen size={16} strokeWidth={2} />
+                        </Link>
+                      ) : (
+                        <span
+                          aria-disabled="true"
+                          className="p-2 bg-stone-100 text-stone-300 rounded-xl cursor-not-allowed"
+                          title="Edição indisponível para termos inativos"
+                        >
+                          <SquarePen size={16} strokeWidth={2} />
+                        </span>
+                      )}
 
                       <button
                         onClick={() => handleAtivacao(termo)}

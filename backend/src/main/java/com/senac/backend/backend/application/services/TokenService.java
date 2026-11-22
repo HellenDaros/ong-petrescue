@@ -52,7 +52,7 @@ public class TokenService {
 
         try{
             Algorithm algoritimo = Algorithm.HMAC256(secret);
-            String token = JWT.create().withIssuer(emissor).withSubject(email).withExpiresAt(gerarDataExpiracao()).sign(algoritimo);
+            String token = JWT.create().withIssuer(emissor).withSubject(email).withJWTId(java.util.UUID.randomUUID().toString()).withExpiresAt(gerarDataExpiracao()).sign(algoritimo);
 
             var usuario = usuarioRepository.findAll()
                             .stream()
