@@ -3,17 +3,7 @@ import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { hojeISO } from "@/app/utils/datas";
 import { maskData } from "@/app/utils/masks";
-
-interface CampoDataProps {
-  value: string; // YYYY-MM-DD
-  onChange: (valor: string) => void;
-  min?: string;
-  max?: string;
-  required?: boolean;
-  className?: string;
-  alinhar?: "esquerda" | "direita";
-  expandirNoMobile?: boolean; // no celular, o calendário ocupa a largura do painel que contém o campo
-}
+import { CampoDataProps } from "@/app/types/componentes";
 
 const MARGEM = 8;
 

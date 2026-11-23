@@ -1,18 +1,15 @@
 "use client";
 import { Menu } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
-import { store } from "../redux/store";
-
-interface HeaderProps {
-  onOpenMobileMenu?: () => void;
-}
+import { RootState } from "../redux/store";
+import { HeaderProps } from "../types/componentes";
 
 export default function Header({ onOpenMobileMenu }: HeaderProps) {
   // const { usuario, logout } = useAuth();
 
   const dispatch = useDispatch();
-  const usuario = store.getState().auth.usuario;
+  const usuario = useSelector((state: RootState) => state.auth.usuario);
 
   return (
     <header className="bg-[#f1f5f4] border-b border-stone-200 px-4 md:px-6 py-3">

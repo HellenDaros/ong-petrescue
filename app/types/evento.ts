@@ -60,6 +60,12 @@ export interface EventoFormProps {
   eventoExistente?: Evento;
 }
 
+export interface FiltroEventosProps {
+  filtros: FiltrosEventos;
+  cidades: string[];
+  onAplicar: (filtros: FiltrosEventos) => void;
+}
+
 export function formatarDataBR(data: string): string {
   const [ano, mes, dia] = data.split("-");
   return ano && mes && dia ? `${dia}/${mes}/${ano}` : data;

@@ -12,6 +12,7 @@ import com.senac.backend.backend.domain.valueobjects.Celular;
 import com.senac.backend.backend.domain.valueobjects.CPF;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,12 +26,29 @@ public class AdotanteService {
     private AdotanteRepository adotanteRepository;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private EnderecoService enderecoService;
 
     @Transactional
     public Long SalvarAdotante(AdotanteRequest adotante) {
         try {
-            Usuario usuarioSalvo = usuarioRepository.save(new Usuario(adotante));
+            if (adotante.senha() == null || adotante.senha().isBlank()) {
+                throw new BusinessException("Informe a senha do usuário.");
+            }
+
+            if (usuarioRepository.existsByEmail(adotante.email())) {
+                throw new BusinessException("E-mail já cadastrado.");
+            }
+
+            if (adotante.cpf() != null && usuarioRepository.existsByCpf_Cpf(adotante.cpf())) {
+                throw new BusinessException("CPF já cadastrado.");
+            }
+
+            Usuario novoUsuario = new Usuario(adotante);
+            novoUsuario.setSenha(passwordEncoder.encode(novoUsuario.getSenha()));
+            Usuario usuarioSalvo = usuarioRepository.save(novoUsuario);
             Endereco endereco = enderecoService.buscarOuCriarEndereco(adotante.cep());
 
             return adotanteRepository.save(
@@ -87,12 +105,20 @@ public class AdotanteService {
             adotanteRepository.save(adotanteBanco);
 
             var usuarioBanco = adotanteBanco.getUsuario();
+            if (usuarioRepository.existsByEmailAndIdNot(adotante.email(), usuarioBanco.getId())) {
+                throw new BusinessException("E-mail já cadastrado.");
+            }
+
+            if (adotante.cpf() != null && usuarioRepository.existsByCpf_CpfAndIdNot(adotante.cpf(), usuarioBanco.getId())) {
+                throw new BusinessException("CPF já cadastrado.");
+            }
+
             usuarioBanco.setName(adotante.name());
             usuarioBanco.setEmail(adotante.email());
             usuarioBanco.setCpf(new CPF(adotante.cpf()));
 
             if (adotante.senha() != null && !adotante.senha().isBlank()) {
-                usuarioBanco.setSenha(adotante.senha());
+                usuarioBanco.setSenha(passwordEncoder.encode(adotante.senha()));
             }
 
             usuarioRepository.save(usuarioBanco);

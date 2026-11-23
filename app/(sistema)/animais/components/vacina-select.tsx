@@ -159,7 +159,7 @@ export default function VacinaSelect({ value, onChange }: VacinaSelectProps) {
           if (termo && !existeIgual) handleCadastrar();
         }}
         placeholder="Busque ou digite para cadastrar. Ex: V10, Raiva..."
-        className="w-full bg-teal-50/30 border border-teal-100 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-teal-200"
+        className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
       />
 
       {aberto && (

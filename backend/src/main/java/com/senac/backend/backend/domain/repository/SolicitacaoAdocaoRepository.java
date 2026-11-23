@@ -17,5 +17,6 @@ public interface SolicitacaoAdocaoRepository extends JpaRepository<SolicitacaoAd
     List<SolicitacaoAdocao> findByAnimalIdAndStatusAdocaoAndIdNot(Long animalId, EnumStatusAdocao statusAdocao, Long id);
     Page<SolicitacaoAdocao> findByAnimalEmpresaId(Long empresaId, Pageable pageable);
     long countByAnimalEmpresaIdAndStatusAdocao(Long empresaId, EnumStatusAdocao statusAdocao);
+    boolean existsByAdotanteIdAndAnimalIdAndStatusAdocao(Long adotanteId, Long animalId, EnumStatusAdocao statusAdocao);
 
 }

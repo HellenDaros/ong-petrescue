@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import FichaAdocaoModal from "@/app/components/FichaAdocaoModal";
 import FiltroColuna from "@/app/components/FiltroColuna";
+import FotoAnimal from "@/app/components/FotoAnimal";
 import { valoresUnicos } from "@/app/utils/listas";
 import {
   SolicitacaoAdocaoResponse,
@@ -300,8 +301,8 @@ export default function GerenciamentoAdocoesPage() {
                     <td className="pl-2 pr-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-stone-100 flex-shrink-0 shadow-sm border border-stone-200">
-                          <img
-                            src={sol.animal.urlFoto}
+                          <FotoAnimal
+                            urlFoto={sol.animal.urlFoto}
                             alt={sol.animal.nameAnimal}
                             className="w-full h-full object-cover"
                           />

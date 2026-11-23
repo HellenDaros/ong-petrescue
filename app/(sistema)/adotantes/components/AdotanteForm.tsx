@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
 import { salvarAdotante } from "@/app/services/adotanteService";
+import { buscarUsuarioLogado } from "@/app/services/usuarioService";
+import { setUsuario } from "@/app/redux/slices/authSlice";
 import { Adotante, AdotanteFormProps } from "@/app/types/adotante";
 import { consultarCep } from "@/app/utils/cep";
 import { maskCelular, maskCEP, maskCPF, onlyDigits } from "@/app/utils/masks";
@@ -13,6 +16,7 @@ export default function AdotanteForm({
   redirectTo,
 }: AdotanteFormProps) {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const [adotante, setAdotante] = useState<Adotante>(
     adotanteExistente ||
@@ -126,6 +130,8 @@ export default function AdotanteForm({
       );
 
       if (isEdicao) {
+        const usuario = await buscarUsuarioLogado();
+        dispatch(setUsuario({ usuario: { ...usuario } }));
         router.push("/home");
       } else {
         if (redirectTo) {

@@ -2,12 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
-
-interface AssinaturaModalProps {
-  assinaturaAtual?: string | null;
-  onFechar: () => void;
-  onSalvar: (assinaturaBase64: string) => void;
-}
+import { AssinaturaModalProps } from "@/app/types/solicitacaoAdocao";
 
 export default function AssinaturaModal({
   assinaturaAtual,

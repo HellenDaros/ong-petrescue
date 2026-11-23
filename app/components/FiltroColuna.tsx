@@ -2,38 +2,11 @@
 import CampoData from "@/app/components/CampoData";
 import { Filter } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-type TipoCampo = "texto" | "numero" | "select" | "data";
-
-interface OpcaoFiltro {
-  valor: string;
-  rotulo: string;
-}
-
-interface CampoAdicional {
-  rotulo: string;
-  tipo: TipoCampo;
-  valor: string;
-  onFiltrar: (valor: string) => void;
-  opcoes?: OpcaoFiltro[] | ((valorPrincipal: string) => OpcaoFiltro[]);
-  dependeDoPrincipal?: boolean;
-  textoSemPrincipal?: string;
-}
-
-interface FiltroColunaProps {
-  titulo: string;
-  tipo: TipoCampo;
-  valor: string;
-  onFiltrar: (valor: string) => void;
-  rotuloPesquisa?: string;
-  opcoes?: OpcaoFiltro[];
-  adicionais?: CampoAdicional[];
-  ordenavel?: boolean;
-  ordenacaoAtiva?: "asc" | "desc" | null;
-  onOrdenar?: (direcao: "asc" | "desc") => void;
-  textoCrescente?: string;
-  textoDecrescente?: string;
-}
+import {
+  FiltroColunaProps,
+  OpcaoFiltro,
+  TipoCampo,
+} from "@/app/types/componentes";
 
 const classeCampo =
   "w-full px-3 py-2 rounded-xl border border-stone-200 bg-white text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400";

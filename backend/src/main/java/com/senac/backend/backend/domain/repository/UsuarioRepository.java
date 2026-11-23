@@ -23,7 +23,15 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>, JpaSpec
 
     Optional<Usuario> findByEmpresaAndRole(Empresa empresa, String role);
 
-    boolean existsUsuarioByEmailContainingAndSenha(String email, String senha);
+    Optional<Usuario> findByEmail(String email);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByEmailAndIdNot(String email, Long id);
+
+    boolean existsByCpf_Cpf(String cpf);
+
+    boolean existsByCpf_CpfAndIdNot(String cpf, Long id);
 
 
 }

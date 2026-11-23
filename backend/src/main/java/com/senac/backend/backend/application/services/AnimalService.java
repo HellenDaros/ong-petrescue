@@ -5,6 +5,7 @@ import com.senac.backend.backend.application.DTO.AnimalRequest;
 import com.senac.backend.backend.application.DTO.AnimalResponse;
 import com.senac.backend.backend.domain.entities.Animal;
 import com.senac.backend.backend.domain.entities.Usuario;
+import com.senac.backend.backend.domain.enuns.EnumConfirmacao;
 import com.senac.backend.backend.domain.enuns.EnumEspecieAnimal;
 import com.senac.backend.backend.domain.enuns.EnumStatusAnimal;
 import com.senac.backend.backend.domain.exceptions.BusinessException;
@@ -120,14 +121,14 @@ public class AnimalService {
         Sort ordenacao = "asc".equalsIgnoreCase(direcao) ? Sort.by("id").ascending() : Sort.by("id").descending();
 
         return animalRepository.findAll(filtros, PageRequest.of(pagina, tamanho, ordenacao))
-                .map(AnimalResponse::new);
+                .map(animal -> new AnimalResponse(animal, false));
     }
 
     @Transactional(readOnly = true)
     public List<AnimalResponse> listarPublicos() {
         return animalRepository.findByStatusAnimal(EnumStatusAnimal.DISPONIVEL)
                 .stream()
-                .map(AnimalResponse::new)
+                .map(animal -> new AnimalResponse(animal, false))
                 .collect(Collectors.toList());
     }
 
@@ -146,12 +147,45 @@ public class AnimalService {
                         .orElseThrow(() -> new BusinessException("Animal não encontrado."));
             }
 
-            return new AnimalResponse(animal);
+            return new AnimalResponse(animal, !"ROLE_ADOTANTE".equals(usuarioLogado.getRole()));
 
 
     }
 
+    private void validarAnimal(AnimalRequest request) {
+        if (request.nameAnimal() == null || request.nameAnimal().isBlank()) {
+            throw new BusinessException("Informe o nome do animal.");
+        }
+        if (request.especie() == null) {
+            throw new BusinessException("Informe a espécie do animal.");
+        }
+        if (request.raca() == null || request.raca().isBlank()) {
+            throw new BusinessException("Informe a raça do animal.");
+        }
+        if (request.sexo() == null) {
+            throw new BusinessException("Informe o sexo do animal.");
+        }
+        if (request.idade() == null || !request.idade().matches("(?i)^\\d+ (mês|meses|ano|anos)$")) {
+            throw new BusinessException("Informe uma idade válida (ex.: 3 meses ou 2 anos).");
+        }
+        if (request.porte() == null) {
+            throw new BusinessException("Informe o porte do animal.");
+        }
+        if (request.corPelagem() == null || request.corPelagem().isBlank()) {
+            throw new BusinessException("Informe a cor da pelagem do animal.");
+        }
+        if (request.castrado() == null || request.vermifugado() == null || request.vacinado() == null) {
+            throw new BusinessException("Informe se o animal é castrado, vermifugado e vacinado.");
+        }
+        if (request.vacinado() == EnumConfirmacao.SIM
+                && (request.vacinadoDescricao() == null || request.vacinadoDescricao().isBlank())) {
+            throw new BusinessException("Selecione ao menos uma vacina.");
+        }
+    }
+
     public Long SalvarAnimal(AnimalRequest animalRequest) {
+        validarAnimal(animalRequest);
+
         try {
             Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -168,6 +202,8 @@ public class AnimalService {
     }
 
     public boolean AlterarAnimal(Long id, AnimalRequest animalRequest) {
+        validarAnimal(animalRequest);
+
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Animal animalBanco = animalRepository
@@ -175,6 +211,9 @@ public class AnimalService {
                 .orElse(null);
 
         if (animalBanco != null) {
+            if (animalBanco.getStatusAnimal() != EnumStatusAnimal.DISPONIVEL) {
+                throw new BusinessException("Animal inativo ou adotado não pode ser editado.");
+            }
 
             animalBanco.setNameAnimal(animalRequest.nameAnimal());
             animalBanco.setRaca(animalRequest.raca());
@@ -204,6 +243,9 @@ public class AnimalService {
     }
 
     public boolean AlterarStatus(Long id, AlterarStatusAnimalRequest statusRequest) {
+        if (statusRequest.statusAnimal() == null) {
+            throw new BusinessException("Informe o status do animal.");
+        }
 
         Usuario usuarioLogado =
                 (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

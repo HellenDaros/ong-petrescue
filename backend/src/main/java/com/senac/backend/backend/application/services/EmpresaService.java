@@ -13,6 +13,7 @@ import com.senac.backend.backend.domain.valueobjects.CPF;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,9 @@ public class EmpresaService {
     @Autowired
     private EnderecoService enderecoService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Transactional
     public Long SalvarEmpresa(EmpresaRequest empresa) {
         try {
@@ -35,6 +39,19 @@ public class EmpresaService {
 
             if (adminLogado.getEmpresa() != null) {
                 throw new BusinessException("Já possui uma ONG vinculada.");
+            }
+
+            if (empresa.usuarioAdmin().senha() == null || empresa.usuarioAdmin().senha().isBlank()) {
+                throw new BusinessException("Informe a senha do usuário.");
+            }
+
+            if (usuarioRepository.existsByEmail(empresa.usuarioAdmin().email())) {
+                throw new BusinessException("E-mail já cadastrado.");
+            }
+
+            if (empresa.usuarioAdmin().cpf() != null
+                    && usuarioRepository.existsByCpf_Cpf(empresa.usuarioAdmin().cpf())) {
+                throw new BusinessException("CPF já cadastrado.");
             }
 
             Endereco endereco = enderecoService.buscarOuCriarEndereco(empresa.cep());
@@ -50,6 +67,7 @@ public class EmpresaService {
                             empresaSalva,
                             "ROLE_ADMIN_ONG"
                     );
+            adminOng.setSenha(passwordEncoder.encode(adminOng.getSenha()));
 
             usuarioRepository.save(adminOng);
 
@@ -129,6 +147,15 @@ public class EmpresaService {
 
         if (administrador != null) {
 
+            if (usuarioRepository.existsByEmailAndIdNot(request.usuarioAdmin().email(), administrador.getId())) {
+                throw new BusinessException("E-mail já cadastrado.");
+            }
+
+            if (request.usuarioAdmin().cpf() != null
+                    && usuarioRepository.existsByCpf_CpfAndIdNot(request.usuarioAdmin().cpf(), administrador.getId())) {
+                throw new BusinessException("CPF já cadastrado.");
+            }
+
             administrador.setName(request.usuarioAdmin().name());
             administrador.setEmail(request.usuarioAdmin().email());
             administrador.setCpf(new CPF(request.usuarioAdmin().cpf()));
@@ -136,7 +163,7 @@ public class EmpresaService {
             if (request.usuarioAdmin().senha() != null
                     && !request.usuarioAdmin().senha().isBlank()) {
 
-                administrador.setSenha(request.usuarioAdmin().senha());
+                administrador.setSenha(passwordEncoder.encode(request.usuarioAdmin().senha()));
             }
             usuarioRepository.save(administrador);
         }

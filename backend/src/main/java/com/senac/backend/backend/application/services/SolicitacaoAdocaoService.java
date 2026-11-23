@@ -12,6 +12,7 @@ import com.senac.backend.backend.domain.entities.Usuario;
 import com.senac.backend.backend.domain.enuns.EnumEspecieAnimal;
 import com.senac.backend.backend.domain.enuns.EnumStatusAdocao;
 import com.senac.backend.backend.domain.enuns.EnumStatusAnimal;
+import com.senac.backend.backend.domain.exceptions.BusinessException;
 import com.senac.backend.backend.domain.repository.AdotanteRepository;
 import com.senac.backend.backend.domain.repository.AnimalRepository;
 import com.senac.backend.backend.domain.repository.SolicitacaoAdocaoRepository;
@@ -55,21 +56,26 @@ public class SolicitacaoAdocaoService {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Adotante adotante = adotanteRepository.findByUsuario_Id(usuarioLogado.getId())
-                .orElseThrow(() -> new RuntimeException("Perfil de adotante não encontrado para o usuário logado."));
+                .orElseThrow(() -> new BusinessException("Perfil de adotante não encontrado para o usuário logado."));
 
         Animal animal = animalRepository.findById(request.animalId())
-                .orElseThrow(() -> new RuntimeException("Animal não encontrado."));
+                .orElseThrow(() -> new BusinessException("Animal não encontrado."));
 
         if (animal.getStatusAnimal() != EnumStatusAnimal.DISPONIVEL) {
-            throw new RuntimeException("Animal não está disponível para adoção.");
+            throw new BusinessException("Animal não está disponível para adoção.");
+        }
+
+        if (solicitacaoAdocaoRepository.existsByAdotanteIdAndAnimalIdAndStatusAdocao(
+                adotante.getId(), animal.getId(), EnumStatusAdocao.PENDENTE)) {
+            throw new BusinessException("Você já possui uma solicitação pendente para este animal.");
         }
 
         if (request.assinaturaBase64() == null || request.assinaturaBase64().isBlank()) {
-            throw new RuntimeException("É necessário assinar o termo de adoção antes de enviar a solicitação.");
+            throw new BusinessException("É necessário assinar o termo de adoção antes de enviar a solicitação.");
         }
 
         if (request.cep() == null || request.cep().isBlank()) {
-            throw new RuntimeException("Informe o CEP do endereço onde o animal ficará.");
+            throw new BusinessException("Informe o CEP do endereço onde o animal ficará.");
         }
 
         List<TermoUso> termos = termoUsoService.validarTermosDaSolicitacao(animal, request.termoIds());
@@ -112,7 +118,7 @@ public class SolicitacaoAdocaoService {
                                                                  boolean paginado) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (usuarioLogado.getEmpresa() == null) {
-            throw new RuntimeException("Usuário não está associado a nenhuma ONG.");
+            throw new BusinessException("Usuário não está associado a nenhuma ONG.");
         }
         Long empresaId = usuarioLogado.getEmpresa().getId();
 
@@ -170,7 +176,6 @@ public class SolicitacaoAdocaoService {
         return solicitacaoAdocaoRepository.findAll(filtros, paginacao)
                 .map(solicitacao -> {
                     var response = new SolicitacaoAdocaoResponse(solicitacao);
-                    // sem paginação a lista serve de apoio (ex.: filtros), então não leva a assinatura
                     return paginado ? response : response.semAssinatura();
                 });
     }
@@ -181,19 +186,19 @@ public class SolicitacaoAdocaoService {
     public boolean responderSolicitacao(Long id, EnumStatusAdocao novoStatus, String motivo) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (usuarioLogado.getEmpresa() == null) {
-            throw new RuntimeException("Usuário não autorizado.");
+            throw new BusinessException("Usuário não autorizado.");
         }
 
         SolicitacaoAdocao solicitacao = solicitacaoAdocaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Solicitação de adoção não encontrada."));
+                .orElseThrow(() -> new BusinessException("Solicitação de adoção não encontrada."));
 
         if (!solicitacao.getAnimal().getEmpresa().getId().equals(usuarioLogado.getEmpresa().getId())) {
-            throw new RuntimeException("Acesso negado: esta solicitação pertence a outra ONG.");
+            throw new BusinessException("Acesso negado: esta solicitação pertence a outra ONG.");
         }
 
         if (novoStatus == EnumStatusAdocao.REJEITADO && motivo != null && !motivo.isBlank()) {
             if (motivo.trim().length() > TAMANHO_MAXIMO_MOTIVO) {
-                throw new RuntimeException("A justificativa deve ter no máximo " + TAMANHO_MAXIMO_MOTIVO + " caracteres.");
+                throw new BusinessException("A justificativa deve ter no máximo " + TAMANHO_MAXIMO_MOTIVO + " caracteres.");
             }
             solicitacao.setMotivoRecusa(motivo.trim());
         }
@@ -228,14 +233,14 @@ public class SolicitacaoAdocaoService {
     public List<SolicitacaoConcorrenteResponse> listarConcorrentes(Long id) {
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (usuarioLogado.getEmpresa() == null) {
-            throw new RuntimeException("Usuário não autorizado.");
+            throw new BusinessException("Usuário não autorizado.");
         }
 
         SolicitacaoAdocao solicitacao = solicitacaoAdocaoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Solicitação de adoção não encontrada."));
+                .orElseThrow(() -> new BusinessException("Solicitação de adoção não encontrada."));
 
         if (!solicitacao.getAnimal().getEmpresa().getId().equals(usuarioLogado.getEmpresa().getId())) {
-            throw new RuntimeException("Acesso negado: esta solicitação pertence a outra ONG.");
+            throw new BusinessException("Acesso negado: esta solicitação pertence a outra ONG.");
         }
 
         return solicitacaoAdocaoRepository

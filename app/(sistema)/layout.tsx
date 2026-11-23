@@ -4,8 +4,10 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import { useRouter } from "next/navigation";
 import Sidebar from "../components/Sidebar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState, store } from "../redux/store";
+import { setUsuario } from "../redux/slices/authSlice";
+import { buscarUsuarioLogado } from "../services/usuarioService";
 
 export default function SistemaLayout({
   children,
@@ -13,6 +15,7 @@ export default function SistemaLayout({
   children: React.ReactNode;
 }) {
   const usuario = useSelector((state: RootState) => state.auth.usuario);
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
@@ -27,8 +30,6 @@ export default function SistemaLayout({
     }
   }, []);
 
-  // Área logada usa tamanho-base menor (13px em vez de 16px). Como o Tailwind usa rem,
-  // fontes, paddings e larguras escalam juntos. Restaura ao sair do sistema.
   useEffect(() => {
     const html = document.documentElement;
     const anterior = html.style.fontSize;
@@ -37,6 +38,16 @@ export default function SistemaLayout({
       html.style.fontSize = anterior;
     };
   }, []);
+
+  useEffect(() => {
+    if (!store.getState().auth.token) return;
+
+    buscarUsuarioLogado()
+      .then((atual) => dispatch(setUsuario({ usuario: { ...atual } })))
+      .catch((error) =>
+        console.error("Erro ao atualizar usuário logado:", error),
+      );
+  }, [dispatch]);
 
   useEffect(() => {
     if (mounted && usuario == null) {
@@ -68,8 +79,6 @@ export default function SistemaLayout({
         <Header onOpenMobileMenu={() => setMobileOpen(true)} />
 
         <main className="flex-1 flex flex-col py-5 px-6 md:px-10">
-          {/* zoom reduz o conteúdo de todas as telas do sistema de uma vez.
-              Conteúdo alinhado ao topo para o botão "Voltar" ficar sempre na mesma posição. */}
           <div
             className="sistema-conteudo w-full max-w-7xl mx-auto flex-1 flex flex-col"
             style={{ zoom: 0.9 }}

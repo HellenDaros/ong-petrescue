@@ -1,12 +1,7 @@
 "use client";
-import { FiltrosGaleria } from "@/app/types/animal";
+import { FiltroGaleriaProps, FiltrosGaleria } from "@/app/types/animal";
 import { Filter } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-interface FiltroGaleriaProps {
-  filtros: FiltrosGaleria;
-  onAplicar: (filtros: FiltrosGaleria) => void;
-}
 
 const campo =
   "w-full min-w-0 px-3 py-2.5 rounded-xl border border-stone-200 bg-white text-sm font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400";

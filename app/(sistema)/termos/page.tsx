@@ -39,7 +39,7 @@ export default function TermosPage() {
     const confirmacao = confirm(
       ativar
         ? `Ativar o termo "${termo.titulo}"? Ele passará a ser exibido para quem solicitar a adoção de um animal da sua ONG.`
-        : `Desativar o termo "${termo.titulo}"? Ele deixará de ser exibido na solicitação de adoção. Se nenhum termo ficar ativo, será exibido o texto padrão da Lei Federal 9.605/98.`,
+        : `Desativar o termo "${termo.titulo}"? Ele deixará de ser exibido na solicitação de adoção. Se nenhum termo ficar ativo, a solicitação seguirá sem termos para o adotante aceitar.`,
     );
     if (!confirmacao) return;
 
@@ -176,7 +176,7 @@ export default function TermosPage() {
                   >
                     {carregando
                       ? "Carregando termos..."
-                      : "Nenhum termo cadastrado. Enquanto não houver termo ativo, a solicitação de adoção exibe o texto padrão da Lei Federal 9.605/98."}
+                      : "Nenhum termo cadastrado. Enquanto não houver termo ativo, a solicitação de adoção não exibe nenhum termo para o adotante aceitar."}
                   </td>
                 </tr>
               )}

@@ -11,6 +11,7 @@ import {
 } from "@/app/types/evento";
 import { Animal } from "@/app/types/animal";
 import { useFavoritos } from "@/app/redux/useFavoritos";
+import FotoAnimal from "@/app/components/FotoAnimal";
 import { useSelector } from "react-redux";
 import { RootState } from "@/app/redux/store";
 import {
@@ -286,8 +287,8 @@ export default function EventoPublicoPage({
                   </button>
 
                   <div className="relative h-44 w-full overflow-hidden">
-                    <img
-                      src={animal.urlFoto}
+                    <FotoAnimal
+                      urlFoto={animal.urlFoto}
                       alt={animal.nameAnimal}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
@@ -296,15 +297,26 @@ export default function EventoPublicoPage({
                         {animal.especie}
                       </span>
                     </div>
+                    <div className="absolute bottom-3 left-3">
+                      <span className="bg-white/90 backdrop-blur-sm text-slate-600 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
+                        {animal.idade}
+                      </span>
+                    </div>
                   </div>
 
                   <div className="p-4">
                     <div className="flex justify-between items-start gap-2 mb-3">
-                      <div>
-                        <h3 className="text-base font-black text-slate-800 leading-tight">
+                      <div className="min-w-0 flex-1">
+                        <h3
+                          title={animal.nameAnimal}
+                          className="text-base font-black text-slate-800 leading-tight truncate"
+                        >
                           {animal.nameAnimal}
                         </h3>
-                        <p className="text-slate-400 font-bold text-[11px] uppercase tracking-wider">
+                        <p
+                          title={animal.raca}
+                          className="text-slate-400 font-bold text-[11px] uppercase tracking-wider truncate"
+                        >
                           {animal.raca}
                         </p>
                       </div>

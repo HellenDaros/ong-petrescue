@@ -88,6 +88,9 @@ public class TermoUsoService {
     public void alterar(Long id, TermoUsoRequest request) {
         validarRequest(request);
         TermoUso termo = buscarDaOng(id);
+        if (!termo.isAtivo()) {
+            throw new BusinessException("Termo inativo não pode ser editado. Ative o termo para editá-lo.");
+        }
         termo.setTitulo(request.titulo().trim());
         termo.setConteudo(request.conteudo().trim());
         termo.setTextoPadrao(request.textoPadrao());

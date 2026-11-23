@@ -14,6 +14,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.criteria.Predicate;
 import java.util.ArrayList;
@@ -28,23 +29,21 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Value("${spring.secretkey}")
     private String secret;
 
     public boolean ValidaUsuarioSenha(LoginRequest loginRequest){
         try {
-            boolean existe = usuarioRepository.existsUsuarioByEmailContainingAndSenha(loginRequest.email(), loginRequest.senha());
-            if (!existe) {
+            var usuario = usuarioRepository.findByEmail(loginRequest.email()).orElse(null);
+
+            if (usuario == null || !senhaConfere(usuario, loginRequest.senha())) {
                 throw new BusinessException("Usuário ou senha inválidos.");
             }
 
-            var usuario = usuarioRepository.findAll()
-                    .stream()
-                    .filter(u -> u.getEmail().equals(loginRequest.email()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (usuario != null && usuario.getStatus() != EnumStatusUsuario.ATIVO) {
+            if (usuario.getStatus() != EnumStatusUsuario.ATIVO) {
                 throw new BusinessException("Acesso não permitido. Seu usuário está inativo.");
             }
 
@@ -55,6 +54,14 @@ public class UsuarioService {
             throw new RuntimeException(e);
         }
 
+    }
+
+    private boolean senhaConfere(Usuario usuario, String senhaDigitada) {
+        if (senhaDigitada == null || usuario.getSenha() == null) {
+            return false;
+        }
+
+        return passwordEncoder.matches(senhaDigitada, usuario.getSenha());
     }
 
     public Page<UsuarioResponse> ListarTodos(int pagina, int tamanho, Long codigo, String nome, String email,
@@ -128,12 +135,20 @@ public class UsuarioService {
                 .orElse(null);
 
         if (usuarioBanco != null){
+            if (usuarioRepository.existsByEmailAndIdNot(usuario.email(), id)) {
+                throw new BusinessException("E-mail já cadastrado.");
+            }
+
+            if (usuario.cpf() != null && usuarioRepository.existsByCpf_CpfAndIdNot(usuario.cpf(), id)) {
+                throw new BusinessException("CPF já cadastrado.");
+            }
+
             usuarioBanco.setEmail(usuario.email());
             usuarioBanco.setName(usuario.name());
             usuarioBanco.setCpf(new CPF(usuario.cpf()));
 
             if (usuario.senha() != null && !usuario.senha().isBlank()) {
-                usuarioBanco.setSenha(usuario.senha());
+                usuarioBanco.setSenha(passwordEncoder.encode(usuario.senha()));
             }
 
             usuarioRepository.save(usuarioBanco);
@@ -147,11 +162,24 @@ public class UsuarioService {
 
             Empresa empresaDaOng = adminLogado.getEmpresa();
 
+            if (usuario.senha() == null || usuario.senha().isBlank()) {
+                throw new BusinessException("Informe a senha do usuário.");
+            }
+
+            if (usuarioRepository.existsByEmail(usuario.email())) {
+                throw new BusinessException("E-mail já cadastrado.");
+            }
+
+            if (usuario.cpf() != null && usuarioRepository.existsByCpf_Cpf(usuario.cpf())) {
+                throw new BusinessException("CPF já cadastrado.");
+            }
+
             Usuario novoFuncionario = new Usuario(
                     usuario,
                     empresaDaOng,
                     "ROLE_FUNCIONARIO_ONG"
             );
+            novoFuncionario.setSenha(passwordEncoder.encode(novoFuncionario.getSenha()));
             return usuarioRepository.save(novoFuncionario).getId();
         } catch (Exception e) {
             if (e instanceof BusinessException businessException) {
@@ -166,12 +194,30 @@ public class UsuarioService {
         try {
 
             if(usuario.secretKey().equals( secret)) {
-                return usuarioRepository.save(new Usuario(usuario)).getId();
+                if (usuario.senha() == null || usuario.senha().isBlank()) {
+                    throw new BusinessException("Informe a senha do usuário.");
+                }
+
+                if (usuarioRepository.existsByEmail(usuario.email())) {
+                    throw new BusinessException("E-mail já cadastrado.");
+                }
+
+                if (usuario.cpf() != null && !usuario.cpf().isBlank()
+                        && usuarioRepository.existsByCpf_Cpf(usuario.cpf())) {
+                    throw new BusinessException("CPF já cadastrado.");
+                }
+
+                Usuario novoAdmin = new Usuario(usuario);
+                novoAdmin.setSenha(passwordEncoder.encode(novoAdmin.getSenha()));
+                return usuarioRepository.save(novoAdmin).getId();
             }else
             {
                 return 0L;
             }
         }catch (Exception e){
+            if (e instanceof BusinessException businessException) {
+                throw businessException;
+            }
             throw new RuntimeException(e);
         }
 
@@ -186,6 +232,10 @@ public class UsuarioService {
                 .orElse(null);
 
         if (usuarioBanco != null){
+            if ("ROLE_ADMIN".equals(usuarioBanco.getRole())) {
+                throw new BusinessException("O usuário administrador não pode ser inativado.");
+            }
+
             usuarioBanco.setStatus(statusRequest.status());
             usuarioRepository.save(usuarioBanco);
             return true;

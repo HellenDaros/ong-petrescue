@@ -1,12 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { Termo } from "@/app/types/termo";
-
-interface TermoModalProps {
-  termos: Termo[];
-  onFechar: () => void;
-}
+import { TermoModalProps } from "@/app/types/termo";
 
 export default function TermoModal({ termos, onFechar }: TermoModalProps) {
   return (

@@ -286,14 +286,13 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
 
               <div className="md:col-span-2">
                 <label className="block text-xs font-black uppercase text-slate-700 mb-2">
-                  Descrição do Evento *
+                  Descrição do Evento (opcional)
                 </label>
                 <textarea
                   rows={3}
                   value={evento.descricao}
                   onChange={(e) => handleChange("descricao", e.target.value)}
                   placeholder="Descreva a proposta do evento, avisos para visitantes e detalhes..."
-                  required
                   className="w-full px-3 py-2.5 rounded-xl bg-stone-50 border border-stone-200 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm font-medium"
                 />
               </div>

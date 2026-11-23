@@ -85,6 +85,24 @@ export interface FichaAdocaoModalProps {
   onFechar: () => void;
 }
 
+export interface AssinaturaModalProps {
+  assinaturaAtual?: string | null;
+  onFechar: () => void;
+  onSalvar: (assinaturaBase64: string) => void;
+}
+
+export interface ResponderSolicitacaoModalProps {
+  solicitacao: SolicitacaoAdocaoResponse;
+  processando: boolean;
+  onFechar: () => void;
+  onResponder: (status: "APROVADO" | "REJEITADO", motivo?: string) => void;
+}
+
+export interface DetalhesSolicitacaoModalProps {
+  solicitacao: SolicitacaoAdocaoResponse;
+  onFechar: () => void;
+}
+
 export function formatarEnderecoAdocao(adocao: SolicitacaoAdocaoResponse): string {
   const endereco = [
     adocao.endereco,

@@ -128,6 +128,7 @@ public class EventoService {
         }
 
         validarDataEvento(request.data());
+        validarDadosEvento(request);
 
         Endereco endereco = enderecoService.buscarOuCriarEndereco(request.cep());
 
@@ -166,6 +167,7 @@ public class EventoService {
 
         validarEventoEditavel(eventoBanco);
         validarDataEvento(request.data());
+        validarDadosEvento(request);
 
         Endereco endereco = enderecoService.buscarOuCriarEndereco(request.cep());
 
@@ -207,6 +209,21 @@ public class EventoService {
         eventoBanco.setStatus(request.status());
         eventoRepository.save(eventoBanco);
         return true;
+    }
+
+    private void validarDadosEvento(EventoRequest request) {
+        if (request.nome() == null || request.nome().isBlank()) {
+            throw new BusinessException("Informe o nome do evento.");
+        }
+        if (request.horarioInicio() == null) {
+            throw new BusinessException("Informe o horário de início do evento.");
+        }
+        if (request.horarioTermino() == null) {
+            throw new BusinessException("Informe o horário de término do evento.");
+        }
+        if (!request.horarioTermino().isAfter(request.horarioInicio())) {
+            throw new BusinessException("O horário de término deve ser posterior ao horário de início.");
+        }
     }
 
     private void validarDataEvento(LocalDate data) {

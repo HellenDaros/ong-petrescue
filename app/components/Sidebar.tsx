@@ -21,13 +21,7 @@ import {
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-
-interface SidebarProps {
-  collapsed: boolean;
-  onToggleCollapse: () => void;
-  mobileOpen: boolean;
-  onCloseMobile: () => void;
-}
+import { SidebarProps } from "../types/componentes";
 
 export default function Sidebar({
   collapsed,

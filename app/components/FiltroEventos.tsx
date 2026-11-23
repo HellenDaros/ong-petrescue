@@ -1,14 +1,8 @@
 "use client";
 import CampoData from "@/app/components/CampoData";
-import { FiltrosEventos } from "@/app/types/evento";
+import { FiltroEventosProps, FiltrosEventos } from "@/app/types/evento";
 import { Filter } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-interface FiltroEventosProps {
-  filtros: FiltrosEventos;
-  cidades: string[];
-  onAplicar: (filtros: FiltrosEventos) => void;
-}
 
 const campo =
   "w-full min-w-0 px-3 py-3.5 sm:py-2 rounded-xl border border-stone-200 bg-white text-lg sm:text-xs font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-teal-200 focus:border-teal-400";

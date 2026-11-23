@@ -2,18 +2,18 @@
 import { ChangeEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Animal, AnimalFormProps } from "@/app/types/animal";
+import { Animal, AnimalFormProps, UnidadeIdade } from "@/app/types/animal";
 import { salvarAnimal, uploadFotoAnimal } from "@/app/services/animalService";
 import {
   CONFIRMACAO_LABEL,
   ESPECIE_LABEL,
+  NOME_SEM_NOME,
   PORTE_LABEL,
+  RACA_SRD,
   SEXO_LABEL,
 } from "../constants/animal-constants";
 import VacinaSelect from "./vacina-select";
 import { maskCelular, onlyDigits } from "@/app/utils/masks";
-
-type UnidadeIdade = "meses" | "anos";
 
 function parseIdade(idade: string): { valor: string; unidade: UnidadeIdade } {
   const match = idade.match(/\d+/);
@@ -63,6 +63,13 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
       ),
   );
 
+  const [semNome, setSemNome] = useState<boolean>(
+    () => animalExistente?.nameAnimal === NOME_SEM_NOME,
+  );
+  const [semRaca, setSemRaca] = useState<boolean>(
+    () => animalExistente?.raca?.toUpperCase() === RACA_SRD,
+  );
+
   const [fotoFile, setFotoFile] = useState<File | null>(null);
   const [fotoPreview, setFotoPreview] = useState<string>(
     animalExistente?.urlFoto || "",
@@ -100,6 +107,16 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
         campo === "statusAnimal" ? valor : prev.statusAnimal,
       );
     });
+  };
+
+  const handleSemNome = (marcado: boolean) => {
+    setSemNome(marcado);
+    handleChange("nameAnimal", marcado ? NOME_SEM_NOME : "");
+  };
+
+  const handleSemRaca = (marcado: boolean) => {
+    setSemRaca(marcado);
+    handleChange("raca", marcado ? RACA_SRD : "");
   };
 
   const handleIdadeChange = (valor: string, unidade: UnidadeIdade) => {
@@ -173,14 +190,27 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
             <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
               Nome do Pet
             </label>
-            <input
-              type="text"
-              required
-              onChange={(e) => handleChange("nameAnimal", e.target.value)}
-              value={animal.nameAnimal}
-              placeholder="Ex: Bolinha"
-              className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-            />
+            <div className="flex items-center gap-3">
+              <input
+                type="text"
+                required
+                disabled={semNome}
+                onChange={(e) => handleChange("nameAnimal", e.target.value)}
+                value={animal.nameAnimal}
+                placeholder="Ex: Bolinha"
+                title={semNome ? "Animal sem nome definido" : undefined}
+                className="flex-1 min-w-0 bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300 disabled:bg-stone-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+              />
+              <label className="flex items-center gap-2 sm:gap-1.5 shrink-0 text-xs sm:text-[10px] font-black uppercase tracking-widest text-slate-400 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={semNome}
+                  onChange={(e) => handleSemNome(e.target.checked)}
+                  className="w-5 h-5 sm:w-3.5 sm:h-3.5 accent-[#008080] cursor-pointer"
+                />
+                Sem nome
+              </label>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -207,14 +237,27 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
               <label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
                 Raça
               </label>
-              <input
-                type="text"
-                required
-                onChange={(e) => handleChange("raca", e.target.value)}
-                value={animal.raca}
-                placeholder="Vira-lata, Poodle..."
-                className="w-full bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300"
-              />
+              <div className="flex items-center gap-3">
+                <input
+                  type="text"
+                  required
+                  disabled={semRaca}
+                  onChange={(e) => handleChange("raca", e.target.value)}
+                  value={animal.raca}
+                  placeholder="Vira-lata, Poodle..."
+                  title={semRaca ? "Sem raça definida" : undefined}
+                  className="flex-1 min-w-0 bg-stone-50 border border-stone-200 focus:border-teal-500 focus:bg-white outline-none px-4 py-2.5 text-sm rounded-xl text-slate-700 font-bold transition-all placeholder:text-stone-300 disabled:bg-stone-100 disabled:text-slate-400 disabled:cursor-not-allowed"
+                />
+                <label className="flex items-center gap-2 sm:gap-1.5 shrink-0 text-xs sm:text-[10px] font-black uppercase tracking-widest text-slate-400 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={semRaca}
+                    onChange={(e) => handleSemRaca(e.target.checked)}
+                    className="w-5 h-5 sm:w-3.5 sm:h-3.5 accent-[#008080] cursor-pointer"
+                  />
+                  SRD
+                </label>
+              </div>
             </div>
           </div>
 

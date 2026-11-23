@@ -52,3 +52,16 @@ export interface AnimalContextType {
 export interface AnimalFormProps {
   animalExistente?: Animal;
 }
+
+export interface FotoAnimalProps {
+  urlFoto?: string | null;
+  alt: string;
+  className?: string;
+}
+
+export interface FiltroGaleriaProps {
+  filtros: FiltrosGaleria;
+  onAplicar: (filtros: FiltrosGaleria) => void;
+}
+
+export type UnidadeIdade = "meses" | "anos";

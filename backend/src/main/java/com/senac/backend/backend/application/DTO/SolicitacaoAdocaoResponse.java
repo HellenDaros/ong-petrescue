@@ -28,7 +28,7 @@ public record SolicitacaoAdocaoResponse(
         this(
                 solicitacao.getId(),
                 new AdotanteResponse(solicitacao.getAdotante()),
-                new AnimalResponse(solicitacao.getAnimal()),
+                new AnimalResponse(solicitacao.getAnimal(), false),
                 solicitacao.getAnimal().getEmpresa() != null ? solicitacao.getAnimal().getEmpresa().getNameFantasia() : null,
                 solicitacao.getEndereco() != null ? solicitacao.getEndereco().getCep() : null,
                 solicitacao.getEndereco() != null ? solicitacao.getEndereco().getLogradouro() : null,

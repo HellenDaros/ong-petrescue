@@ -15,6 +15,10 @@ export const PORTE_LABEL = {
   GIGANTE: "Gigante",
 };
 
+export const NOME_SEM_NOME = "Sem nome";
+
+export const RACA_SRD = "SRD";
+
 export const CONFIRMACAO_LABEL = {
   SIM: "Sim",
   NAO: "Não",

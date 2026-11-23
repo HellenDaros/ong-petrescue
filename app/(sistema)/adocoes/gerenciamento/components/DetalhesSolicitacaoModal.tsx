@@ -13,19 +13,15 @@ import {
   X,
 } from "lucide-react";
 import {
-  SolicitacaoAdocaoResponse,
+  DetalhesSolicitacaoModalProps,
   formatarEnderecoAdocao,
 } from "@/app/types/solicitacaoAdocao";
+import FotoAnimal from "@/app/components/FotoAnimal";
 import { CONFIRMACAO_LABEL } from "@/app/(sistema)/animais/constants/animal-constants";
 import { getStatusBadge } from "../../utils/status-badge";
 
 const rotuloConfirmacao = (valor: string) =>
   CONFIRMACAO_LABEL[valor as keyof typeof CONFIRMACAO_LABEL] ?? valor;
-
-interface DetalhesSolicitacaoModalProps {
-  solicitacao: SolicitacaoAdocaoResponse;
-  onFechar: () => void;
-}
 
 function Campo({
   label,
@@ -75,8 +71,8 @@ export default function DetalhesSolicitacaoModal({
         <div className="flex items-start justify-between px-8 pt-8 pb-6 border-b border-stone-100 bg-white shrink-0">
           <div className="flex items-center gap-4">
             <div className="relative w-14 h-14 rounded-2xl overflow-hidden bg-stone-100 flex-shrink-0 shadow-sm border border-stone-200">
-              <img
-                src={animal.urlFoto}
+              <FotoAnimal
+                urlFoto={animal.urlFoto}
                 alt={animal.nameAnimal}
                 className="w-full h-full object-cover"
               />

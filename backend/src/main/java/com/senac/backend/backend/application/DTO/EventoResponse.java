@@ -51,7 +51,7 @@ public record EventoResponse(
                 evento.getStatus() != null ? evento.getStatus().name() : null,
                 evento.getEmpresa() != null ? evento.getEmpresa().getId() : null,
                 evento.getEmpresa() != null ? evento.getEmpresa().getNameFantasia() : null,
-                comAnimais && evento.getAnimais() != null ? evento.getAnimais().stream().map(AnimalResponse::new).collect(Collectors.toList()) : List.of()
+                comAnimais && evento.getAnimais() != null ? evento.getAnimais().stream().map(animal -> new AnimalResponse(animal, false)).collect(Collectors.toList()) : List.of()
         );
     }
 }

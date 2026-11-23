@@ -20,3 +20,8 @@ export interface TermoFormProps {
 export interface AlterarStatusTermoRequest {
   ativo: boolean;
 }
+
+export interface TermoModalProps {
+  termos: Termo[];
+  onFechar: () => void;
+}

@@ -41,6 +41,10 @@ public record AnimalResponse(
 ) {
 
     public AnimalResponse(Animal animal) {
+        this(animal, true);
+    }
+
+    public AnimalResponse(Animal animal, boolean comDoador) {
         this(
                 animal.getId(),
                 animal.getNameAnimal(),
@@ -55,8 +59,8 @@ public record AnimalResponse(
                 animal.getVacinado().toString(),
                 animal.getVacinadoDescricao(),
                 animal.getEspecie().toString(),
-                animal.getNameDoador(),
-                animal.getTelefoneDoador(),
+                comDoador ? animal.getNameDoador() : null,
+                comDoador ? animal.getTelefoneDoador() : null,
                 animal.getStatusAnimal().toString(),
                 animal.getEmpresa() != null ? animal.getEmpresa().getNameFantasia() : null
         );

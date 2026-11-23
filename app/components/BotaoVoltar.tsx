@@ -1,10 +1,6 @@
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
-
-interface BotaoVoltarProps {
-  href: string;
-  children: React.ReactNode;
-}
+import { BotaoVoltarProps } from "@/app/types/componentes";
 
 export default function BotaoVoltar({ href, children }: BotaoVoltarProps) {
   return (

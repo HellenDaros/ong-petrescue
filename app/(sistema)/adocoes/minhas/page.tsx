@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { buscarMinhasAdocoes } from "@/app/services/adocaoService";
 import { Calendar, MapPin, Heart, Info, Printer } from "lucide-react";
 import FichaAdocaoModal from "@/app/components/FichaAdocaoModal";
+import FotoAnimal from "@/app/components/FotoAnimal";
 import Link from "next/link";
 import {
   SolicitacaoAdocaoResponse,
@@ -80,8 +81,8 @@ export default function MinhasAdocoesPage() {
               className="bg-white rounded-[2.5rem] overflow-hidden border border-stone-100 shadow-md hover:shadow-lg transition-all p-6 flex flex-col sm:flex-row gap-6 relative"
             >
               <div className="w-full sm:w-32 h-32 rounded-3xl overflow-hidden bg-stone-100 flex-shrink-0">
-                <img
-                  src={adocao.animal.urlFoto}
+                <FotoAnimal
+                  urlFoto={adocao.animal.urlFoto}
                   alt={adocao.animal.nameAnimal}
                   className="w-full h-full object-cover"
                 />

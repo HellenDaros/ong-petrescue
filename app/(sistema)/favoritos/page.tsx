@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Heart, MapPin, Calendar, ArrowRight, Trash2 } from "lucide-react";
 import { useFavoritos } from "@/app/redux/useFavoritos";
+import FotoAnimal from "@/app/components/FotoAnimal";
 
 export default function FavoritosPage() {
   const { favoritos, removeFavorito } = useFavoritos();
@@ -18,12 +19,6 @@ export default function FavoritosPage() {
             Os pets que ganharam seu coração.
           </p>
         </div>
-
-        {/* <Link href="/galeria">
-          <button className="flex items-center gap-2 bg-stone-100 hover:bg-stone-200 text-slate-600 px-6 py-3 rounded-2xl font-black transition-all active:scale-95">
-            Explorar mais pets
-          </button>
-        </Link> */}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -42,8 +37,8 @@ export default function FavoritosPage() {
 
             <Link href={`/galeria/${animal.id}`}>
               <div className="relative h-56 w-full overflow-hidden">
-                <img
-                  src={animal.urlFoto}
+                <FotoAnimal
+                  urlFoto={animal.urlFoto}
                   alt={animal.nameAnimal}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
@@ -52,19 +47,30 @@ export default function FavoritosPage() {
                     {animal.especie}
                   </span>
                 </div>
+                <div className="absolute bottom-4 left-4">
+                  <span className="bg-white/90 backdrop-blur-sm text-slate-600 text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
+                    {animal.idade}
+                  </span>
+                </div>
               </div>
 
               <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl font-black text-slate-800 leading-tight">
+                <div className="flex justify-between items-start gap-2 mb-4">
+                  <div className="min-w-0 flex-1">
+                    <h3
+                      title={animal.nameAnimal}
+                      className="text-xl font-black text-slate-800 leading-tight truncate"
+                    >
                       {animal.nameAnimal}
                     </h3>
-                    <p className="text-slate-400 font-bold text-[11px] uppercase tracking-wider">
+                    <p
+                      title={animal.raca}
+                      className="text-slate-400 font-bold text-[11px] uppercase tracking-wider truncate"
+                    >
                       {animal.raca}
                     </p>
                   </div>
-                  <div className="bg-stone-50 w-9 h-9 rounded-2xl flex items-center justify-center group-hover:bg-[#008080]/10 transition-colors">
+                  <div className="shrink-0 bg-stone-50 w-9 h-9 rounded-2xl flex items-center justify-center group-hover:bg-[#008080]/10 transition-colors">
                     <ArrowRight
                       size={18}
                       className="text-stone-300 group-hover:text-[#008080] transition-colors"

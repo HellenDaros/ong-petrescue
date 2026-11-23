@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { CheckCircle2, Heart, PenTool, Share2 } from "lucide-react";
+import { CheckCircle2, Heart, PenTool } from "lucide-react";
 import BotaoVoltar from "@/app/components/BotaoVoltar";
+import FotoAnimal from "@/app/components/FotoAnimal";
 import { Animal } from "@/app/types/animal";
 import { buscarAnimalPorId } from "@/app/services/animalService";
 import { useFavoritos } from "@/app/redux/useFavoritos";
@@ -183,7 +184,7 @@ export default function DetalhesAnimalPage() {
 
   return (
     <main className="font-[family-name:var(--font-poppins)] flex flex-col flex-1">
-      <BotaoVoltar href="/galeria">Voltar para a Galeria</BotaoVoltar>
+      <BotaoVoltar href="/">Voltar para a Galeria</BotaoVoltar>
 
       <div className="flex-1 flex items-center justify-center">
       <div
@@ -193,8 +194,8 @@ export default function DetalhesAnimalPage() {
           <div
             className={`w-full h-[260px] md:h-auto md:min-h-[320px] relative ${mostrarFormulario ? "md:w-[38%] lg:w-[30%]" : "md:w-[45%]"}`}
           >
-            <img
-              src={animal.urlFoto}
+            <FotoAnimal
+              urlFoto={animal.urlFoto}
               alt={animal.nameAnimal}
               className="w-full h-full object-cover"
             />
@@ -220,9 +221,6 @@ export default function DetalhesAnimalPage() {
                   fill={favoritado ? "currentColor" : "none"}
                   strokeWidth={2.5}
                 />
-              </button>
-              <button className="p-2 bg-white/90 backdrop-blur-sm rounded-xl shadow-md text-slate-400 hover:text-[#008080] transition-all">
-                <Share2 size={16} strokeWidth={2.5} />
               </button>
             </div>
           </div>
@@ -254,11 +252,6 @@ export default function DetalhesAnimalPage() {
                   {[
                     { label: "Sexo", value: rotuloSexo(animal.sexo) },
                     { label: "Idade", value: animal.idade },
-                    { label: "Castrado", value: rotuloConfirmacao(animal.castrado) },
-                    {
-                      label: "Vermifugado",
-                      value: rotuloConfirmacao(animal.vermifugado),
-                    },
                   ].map((item) => (
                     <div key={item.label} className="text-sm md:text-xs leading-tight">
                       <dt className="inline text-[11px] md:text-[9px] font-black text-slate-300 uppercase tracking-widest">
@@ -274,18 +267,39 @@ export default function DetalhesAnimalPage() {
 
               <div className="h-px bg-stone-100 w-full mb-3" />
 
-              <div className="bg-stone-50 border border-stone-100 rounded-lg px-2.5 py-1 mb-4">
-                <p className="text-[10px] md:text-[8px] font-black text-slate-300 uppercase tracking-widest leading-tight">
-                  Vacinado
-                </p>
-                <p className="text-[13px] md:text-[11px] font-black text-slate-700 leading-tight">
-                  {rotuloConfirmacao(animal.vacinado)}
-                </p>
-                {animal.vacinado === "SIM" && animal.vacinadoDescricao && (
-                  <p className="text-[11px] md:text-[10px] font-bold text-teal-700 leading-snug mt-0.5">
-                    {animal.vacinadoDescricao}
+              <div className="space-y-2 mb-4">
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { label: "Castrado", value: animal.castrado },
+                    { label: "Vermifugado", value: animal.vermifugado },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="bg-stone-50 border border-stone-100 rounded-lg px-2.5 py-1"
+                    >
+                      <p className="text-[10px] md:text-[8px] font-black text-slate-300 uppercase tracking-widest leading-tight">
+                        {item.label}
+                      </p>
+                      <p className="text-[13px] md:text-[11px] font-black text-slate-700 leading-tight">
+                        {rotuloConfirmacao(item.value)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="bg-stone-50 border border-stone-100 rounded-lg px-2.5 py-1">
+                  <p className="text-[10px] md:text-[8px] font-black text-slate-300 uppercase tracking-widest leading-tight">
+                    Vacinado
                   </p>
-                )}
+                  <p className="text-[13px] md:text-[11px] font-black text-slate-700 leading-tight">
+                    {rotuloConfirmacao(animal.vacinado)}
+                  </p>
+                  {animal.vacinado === "SIM" && animal.vacinadoDescricao && (
+                    <p className="text-[11px] md:text-[10px] font-bold text-teal-700 leading-snug mt-0.5">
+                      {animal.vacinadoDescricao}
+                    </p>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-2">

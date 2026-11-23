@@ -3,19 +3,12 @@
 import { useEffect, useState } from "react";
 import { AlertTriangle, Check, X } from "lucide-react";
 import {
-  SolicitacaoAdocaoResponse,
+  ResponderSolicitacaoModalProps,
   SolicitacaoConcorrente,
 } from "@/app/types/solicitacaoAdocao";
 import { buscarConcorrentes } from "@/app/services/adocaoService";
 
 const TAMANHO_MAXIMO_MOTIVO = 500;
-
-interface ResponderSolicitacaoModalProps {
-  solicitacao: SolicitacaoAdocaoResponse;
-  processando: boolean;
-  onFechar: () => void;
-  onResponder: (status: "APROVADO" | "REJEITADO", motivo?: string) => void;
-}
 
 export default function ResponderSolicitacaoModal({
   solicitacao,
