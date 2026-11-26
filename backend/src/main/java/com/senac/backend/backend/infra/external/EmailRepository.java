@@ -30,9 +30,9 @@ public class EmailRepository {
             MimeMessage mensagem = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mensagem, true, StandardCharsets.UTF_8.name());
 
-            helper.setFrom(remetente, "I PET");
+            helper.setFrom(remetente, "I🧡PET");
             helper.setTo(destinatario);
-            helper.setSubject("Recuperação de senha - I PET");
+            helper.setSubject("Recuperação de senha - I🧡PET");
             helper.setText(textoSimples(nome, link, minutosValidade), html(nome, link, minutosValidade));
 
             mailSender.send(mensagem);
@@ -43,7 +43,7 @@ public class EmailRepository {
 
     private String textoSimples(String nome, String link, long minutos) {
         return "Olá, " + nome + "!\n\n"
-                + "Recebemos um pedido para redefinir a sua senha no I PET.\n"
+                + "Recebemos um pedido para redefinir a sua senha no I🧡PET.\n"
                 + "Acesse o link abaixo para criar uma nova senha (válido por " + minutos + " minutos):\n\n"
                 + link + "\n\n"
                 + "Se você não pediu a troca de senha, ignore este e-mail. Sua senha continua a mesma.";

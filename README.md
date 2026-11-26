@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="docs/banner.svg" alt="I PET - Amor não se compra, se adota." width="100%">
+<img src="docs/banner.svg" alt="I🧡PET - Amor não se compra, se adota." width="100%">
 
-# 🧡 I PET
+# I🧡PET
 
 ### Cada animal merece um lar cheio de amor.
 
@@ -12,9 +12,9 @@ Plataforma que conecta **ONGs de proteção animal** a pessoas que querem **adot
 
 ---
 
-## 🐾 O que é o I PET?
+## 🐾 O que é o I🧡PET?
 
-O I PET ajuda as ONGs a divulgarem os animais que esperam por uma família, organizarem feiras de adoção e acompanharem cada pedido de adoção em um só lugar. Para quem quer adotar, é um jeito simples de conhecer os bichinhos, escolher o seu favorito e fazer o pedido pela internet.
+O I🧡PET ajuda as ONGs a divulgarem os animais que esperam por uma família, organizarem feiras de adoção e acompanharem cada pedido de adoção em um só lugar. Para quem quer adotar, é um jeito simples de conhecer os bichinhos, escolher o seu favorito e fazer o pedido pela internet.
 
 ---
 
