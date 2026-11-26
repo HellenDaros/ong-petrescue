@@ -1,5 +1,6 @@
 package com.senac.backend.backend.infra.external;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +12,14 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.HtmlUtils;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.List;
+import java.util.Map;
 
 @Component
 public class EmailRepository {
@@ -24,20 +32,67 @@ public class EmailRepository {
     @Value("${spring.mail.username}")
     private String remetente;
 
+    @Value("${app.email.brevo-api-key}")
+    private String brevoApiKey;
+
+    private static final String NOME_REMETENTE = "I🧡PET";
+    private static final String BREVO_URL = "https://api.brevo.com/v3/smtp/email";
+
+    private final HttpClient httpClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Async
     public void enviarRecuperacaoSenha(String destinatario, String nome, String link, long minutosValidade) {
+        String assunto = "Recuperação de senha - I🧡PET";
+        String texto = textoSimples(nome, link, minutosValidade);
+        String html = html(nome, link, minutosValidade);
+
         try {
-            MimeMessage mensagem = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mensagem, true, StandardCharsets.UTF_8.name());
-
-            helper.setFrom(remetente, "I🧡PET");
-            helper.setTo(destinatario);
-            helper.setSubject("Recuperação de senha - I🧡PET");
-            helper.setText(textoSimples(nome, link, minutosValidade), html(nome, link, minutosValidade));
-
-            mailSender.send(mensagem);
+            // Com a chave do Brevo (produção), envia pela API HTTPS; sem ela (local), usa o SMTP do Gmail.
+            if (brevoApiKey != null && !brevoApiKey.isBlank()) {
+                enviarPeloBrevo(destinatario, nome, assunto, texto, html);
+            } else {
+                enviarPorSmtp(destinatario, assunto, texto, html);
+            }
         } catch (Exception e) {
             log.error("Falha ao enviar e-mail de recuperação de senha para {}", destinatario, e);
+        }
+    }
+
+    private void enviarPorSmtp(String destinatario, String assunto, String texto, String html) throws Exception {
+        MimeMessage mensagem = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mensagem, true, StandardCharsets.UTF_8.name());
+
+        helper.setFrom(remetente, NOME_REMETENTE);
+        helper.setTo(destinatario);
+        helper.setSubject(assunto);
+        helper.setText(texto, html);
+
+        mailSender.send(mensagem);
+    }
+
+    private void enviarPeloBrevo(String destinatario, String nome, String assunto, String texto, String html) throws Exception {
+        Map<String, Object> corpo = Map.of(
+                "sender", Map.of("name", NOME_REMETENTE, "email", remetente),
+                "to", List.of(Map.of("email", destinatario, "name", nome == null ? destinatario : nome)),
+                "subject", assunto,
+                "textContent", texto,
+                "htmlContent", html
+        );
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BREVO_URL))
+                .timeout(Duration.ofSeconds(15))
+                .header("api-key", brevoApiKey)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(corpo), StandardCharsets.UTF_8))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() >= 300) {
+            throw new IllegalStateException("Brevo respondeu " + response.statusCode() + ": " + response.body());
         }
     }
 
