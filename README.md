@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# 🧡 I PET
 
-First, run the development server:
+### Cada animal merece um lar cheio de amor.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Plataforma que conecta **ONGs de proteção animal** a pessoas que querem **adotar**.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+</div>
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🐾 O que é o I PET?
 
-## Learn More
+O I PET ajuda as ONGs a divulgarem os animais que esperam por uma família, organizarem feiras de adoção e acompanharem cada pedido de adoção em um só lugar. Para quem quer adotar, é um jeito simples de conhecer os bichinhos, escolher o seu favorito e fazer o pedido pela internet.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✨ O que dá para fazer
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🙋 Quem quer adotar
 
-## Deploy on Vercel
+- 🐶 Ver a **galeria** de animais disponíveis e filtrar por nome ou espécie
+- ❤️ **Favoritar** os animais de que mais gostou
+- 📝 **Pedir a adoção**: ler os termos da ONG, informar onde o animal vai morar e assinar na tela
+- 📋 **Acompanhar** os pedidos e imprimir a **ficha de adoção**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🏠 Quem cuida da ONG
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- 📊 Ver um **painel** com o resumo: animais disponíveis, adotados, inativos e pedidos pendentes
+- 🐱 **Cadastrar e cuidar dos animais**, com foto, vacinas e situação
+- 🎪 **Criar eventos** e feiras de adoção, escolher os animais que vão participar e gerar o **QR Code** de divulgação
+- 📜 Definir os **termos e leis** que o adotante precisa aceitar
+- ✅ **Aprovar ou recusar** pedidos de adoção, explicando o motivo quando recusar
+- 👥 Cadastrar a **equipe** da ONG
+
+### 👀 Qualquer pessoa, sem precisar de conta
+
+- Ver a galeria de animais
+- Abrir a página de um evento pelo QR Code
+
+---
+
+## 💡 Como funciona no dia a dia
+
+- 🔒 Cada ONG vê e mexe **somente nos próprios dados**.
+- 🛑 Animal **inativo ou adotado** não pode ser editado, e um termo **inativo** também não. Primeiro é preciso reativar.
+- 📅 Evento que **já aconteceu** só pode ser visualizado. O sistema encerra os eventos sozinho quando o horário passa.
+- 🙅 Cada pessoa só pode ter **um pedido pendente** por animal.
+- 🪪 **E-mail e CPF** não podem se repetir no cadastro.
+- 🤫 Os dados de quem doou o animal **nunca aparecem** para o público.
+
+### 👤 Quem tem acesso a quê
+
+| Perfil                             | Quem é                                  |
+| ---------------------------------- | --------------------------------------- |
+| 🌐 **Administrador da plataforma** | Cadastra as ONGs que vão usar o sistema |
+| 🏠 **Administrador da ONG**        | Cuida de tudo dentro da sua ONG         |
+| 🧑‍💼 **Funcionário da ONG**          | Ajuda no dia a dia da ONG               |
+| 🙋 **Adotante**                    | Pessoa que quer adotar um animal        |
+
+---
+
+<div align="center">
+
+Feito com 🧡 para dar uma segunda chance a quem só precisa de um lar.
+
+</div>
