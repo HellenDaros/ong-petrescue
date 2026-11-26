@@ -110,6 +110,14 @@ function LoginFormContent() {
                 size={14}
               />
             </div>
+            <div className="flex justify-end px-1">
+              <Link
+                href="/esqueci-senha"
+                className="text-[10px] font-bold text-orange-500 hover:text-teal-600 transition-colors"
+              >
+                Esqueci minha senha
+              </Link>
+            </div>
           </div>
 
           <button

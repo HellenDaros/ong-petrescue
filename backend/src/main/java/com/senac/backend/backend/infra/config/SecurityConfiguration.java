@@ -38,6 +38,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                                 .requestMatchers(
                                         "/auth/login",
+                                        "/auth/esqueci-senha",
+                                        "/auth/redefinir-senha",
                                         "/error",
                                         "/usuarios/adm",
                                         "/animais/publicos",

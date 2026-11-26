@@ -28,7 +28,10 @@ public class JWTFilter extends OncePerRequestFilter {
         String method = request.getMethod();
 
         //liberação de metodos para não travar o token jwt
-        if (path.equals("/auth/login") || path.startsWith("/swagger-ui")
+        if (path.equals("/auth/login")
+                || path.equals("/auth/esqueci-senha")
+                || path.equals("/auth/redefinir-senha")
+                || path.startsWith("/swagger-ui")
                 || path.startsWith("/animais/publicos")
                 || path.startsWith("/eventos/publicos")
                 || path.startsWith("/uploads/")

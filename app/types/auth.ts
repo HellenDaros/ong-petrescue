@@ -10,6 +10,15 @@ export interface LoginRequest {
   senha: string;
 }
 
+export interface EsqueciSenhaRequest {
+  email: string;
+}
+
+export interface RedefinirSenhaRequest {
+  token: string;
+  novaSenha: string;
+}
+
 export interface AuthSlice {
   usuario: Usuario | Adotante | null;
   token: string;
