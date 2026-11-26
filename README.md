@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/banner.svg" alt="I PET - Amor não se compra, se adota." width="100%">
+
 # 🧡 I PET
 
 ### Cada animal merece um lar cheio de amor.
