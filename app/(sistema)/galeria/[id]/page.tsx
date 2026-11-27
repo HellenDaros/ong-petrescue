@@ -150,7 +150,7 @@ export default function DetalhesAnimalPage() {
     enviandoRef.current = true;
     setEnviando(true);
     try {
-      const sucesso = await criarSolicitacaoAdocao({
+      await criarSolicitacaoAdocao({
         animalId: animal.id,
         cep: cepAnimal,
         complemento: complementoAnimal.trim(),
@@ -158,15 +158,14 @@ export default function DetalhesAnimalPage() {
         termoIds: termos.map((termo) => termo.id),
       });
 
-      if (sucesso) {
-        alert("Solicitação de adoção enviada com sucesso!");
-        router.push("/adocoes/minhas");
-      } else {
-        alert("Erro ao enviar a solicitação. Tente novamente.");
-      }
+      alert("Solicitação de adoção enviada com sucesso!");
+      router.push("/adocoes/minhas");
     } catch (error) {
-      console.error("Erro ao solicitar adoção:", error);
-      alert("Erro ao solicitar adoção.");
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Erro ao enviar a solicitação. Tente novamente.",
+      );
     } finally {
       enviandoRef.current = false;
       setEnviando(false);

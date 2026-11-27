@@ -5,17 +5,23 @@ import {
   SolicitacaoConcorrente,
   SolicitacoesPaginadas,
 } from "../types/solicitacaoAdocao";
+import axios from "axios";
 import api from "./api";
+
+const extrairErro = (error: unknown, padrao: string): Error => {
+  if (axios.isAxiosError(error) && typeof error.response?.data === "string" && error.response.data) {
+    return new Error(error.response.data);
+  }
+  return new Error(padrao);
+};
 
 export async function criarSolicitacaoAdocao(
   request: SolicitacaoAdocaoRequest,
-): Promise<boolean> {
+): Promise<void> {
   try {
-    const response = await api.post("/adocoes", request);
-    return response.status === 200 || response.status === 201;
+    await api.post("/adocoes", request);
   } catch (error) {
-    console.error("Erro ao criar solicitação de adoção:", error);
-    return false;
+    throw extrairErro(error, "Erro ao enviar a solicitação. Tente novamente.");
   }
 }
 
