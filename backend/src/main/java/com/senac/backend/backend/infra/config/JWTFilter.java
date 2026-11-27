@@ -60,7 +60,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 if (usuarioLogado == null || usuarioLogado.getStatus() != EnumStatusUsuario.ATIVO) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType("text/plain;charset=UTF-8");
-                    response.getWriter().write("Usuario inativo ou invalido");
+                    response.getWriter().write("Usuário inativo ou inválido");
                     return;
                 }
 
@@ -75,12 +75,14 @@ public class JWTFilter extends OncePerRequestFilter {
 
             } catch (Exception ex) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("text/plain;charset=UTF-8");
                 response.getWriter().write("Token expirado ou inválido");
                 return;
             }
 
         } else {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("text/plain;charset=UTF-8");
             response.getWriter().write("Token não informado ou inválido");
             return;
         }
