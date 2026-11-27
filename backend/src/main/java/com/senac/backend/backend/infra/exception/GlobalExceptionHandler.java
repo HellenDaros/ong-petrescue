@@ -2,10 +2,12 @@ package com.senac.backend.backend.infra.exception;
 
 import com.senac.backend.backend.domain.exceptions.BusinessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -31,6 +33,14 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest()
                 .body("Dados inválidos. Verifique o tamanho e o conteúdo dos campos enviados.");
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<String> handleMaxUploadSizeExceededException(
+            MaxUploadSizeExceededException ex) {
+
+        return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
+                .body("A imagem deve ter no máximo 5 MB.");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
