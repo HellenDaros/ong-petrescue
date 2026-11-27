@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { CheckCircle2, Heart, PenTool } from "lucide-react";
@@ -50,6 +50,7 @@ export default function DetalhesAnimalPage() {
   const [termos, setTermos] = useState<Termo[]>([]);
   const [termosAbertos, setTermosAbertos] = useState(false);
   const [enviando, setEnviando] = useState(false);
+  const enviandoRef = useRef(false);
   const [assinatura, setAssinatura] = useState<string | null>(null);
   const [modalAssinaturaAberto, setModalAssinaturaAberto] = useState(false);
 
@@ -131,6 +132,7 @@ export default function DetalhesAnimalPage() {
 
   const handleEnviarSolicitacao = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (enviandoRef.current) return;
     if (!cidadeAnimal) {
       alert("Por favor, informe o CEP do endereço onde o animal ficará.");
       return;
@@ -145,6 +147,7 @@ export default function DetalhesAnimalPage() {
     }
     if (animal?.id === undefined || animal?.id === null) return;
 
+    enviandoRef.current = true;
     setEnviando(true);
     try {
       const sucesso = await criarSolicitacaoAdocao({
@@ -165,6 +168,7 @@ export default function DetalhesAnimalPage() {
       console.error("Erro ao solicitar adoção:", error);
       alert("Erro ao solicitar adoção.");
     } finally {
+      enviandoRef.current = false;
       setEnviando(false);
     }
   };
