@@ -20,8 +20,9 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "ONG Animal",
-  description: "Projeto de ONG Animal",
+  title: "I🧡PET",
+  description:
+    "Plataforma que conecta ONGs de proteção animal a pessoas que querem adotar.",
 };
 
 export default function RootLayout({
