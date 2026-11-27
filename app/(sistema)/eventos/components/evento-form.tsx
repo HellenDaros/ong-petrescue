@@ -15,6 +15,7 @@ import { maskCEP } from "@/app/utils/masks";
 import { Animal } from "@/app/types/animal";
 import { buscarListaAnimais } from "@/app/services/animalService";
 import { salvarEvento, uploadCapaEvento } from "@/app/services/eventoService";
+import { validarImagem } from "@/app/utils/imagem";
 import { consultarCep } from "@/app/utils/cep";
 
 const EVENTO_VAZIO: Evento = {
@@ -66,6 +67,13 @@ export default function EventoForm({ eventoExistente }: EventoFormProps) {
   const handleCapaChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const erro = validarImagem(file);
+    if (erro) {
+      alert(erro);
+      e.target.value = "";
+      return;
+    }
 
     setCapaFile(file);
     setCapaPreview(URL.createObjectURL(file));

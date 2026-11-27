@@ -5,8 +5,7 @@ import {
   Cat,
   User,
   ArrowRight,
-  Instagram,
-  Facebook,
+  Mail,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -26,6 +25,12 @@ export default function LandingPage() {
   useEffect(() => {
     setIsReady(true);
   }, []);
+
+  useEffect(() => {
+    if (!isReady || !window.location.hash) return;
+
+    document.getElementById(window.location.hash.slice(1))?.scrollIntoView();
+  }, [isReady]);
 
   if (!isReady) {
     return (
@@ -129,20 +134,22 @@ export default function LandingPage() {
             através da adoção responsável.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link
-              href="/cadastro-adotante"
-              className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 md:py-3 px-6 md:px-8 rounded-xl text-sm shadow-xl transition-all hover:scale-105 active:scale-95 text-center"
-            >
-              Ser um adotante
-            </Link>
-            <Link
-              href="/login"
-              className="w-full sm:w-auto bg-white hover:bg-teal-50 text-teal-700 font-bold py-2.5 md:py-3 px-6 md:px-8 rounded-xl text-sm shadow-xl transition-all border-b-4 border-stone-200 active:border-b-0 text-center"
-            >
-              Já tenho uma conta
-            </Link>
-          </div>
+          {!usuario && (
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link
+                href="/cadastro-adotante"
+                className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 md:py-3 px-6 md:px-8 rounded-xl text-sm shadow-xl transition-all hover:scale-105 active:scale-95 text-center"
+              >
+                Ser um adotante
+              </Link>
+              <Link
+                href="/login"
+                className="w-full sm:w-auto bg-white hover:bg-teal-50 text-teal-700 font-bold py-2.5 md:py-3 px-6 md:px-8 rounded-xl text-sm shadow-xl transition-all border-b-4 border-stone-200 active:border-b-0 text-center"
+              >
+                Já tenho uma conta
+              </Link>
+            </div>
+          )}
         </div>
       </header>
 
@@ -197,20 +204,15 @@ export default function LandingPage() {
               Plataforma dedicada a conectar ONGs e adotantes para salvar vidas.
             </p>
           </div>
-          <div className="flex gap-3">
-            <Link
-              href="#"
-              className="p-2 bg-white shadow-sm rounded-full text-slate-400 hover:text-teal-600 transition duration-300"
-            >
-              <Instagram size={16} />
-            </Link>
-            <Link
-              href="#"
-              className="p-2 bg-white shadow-sm rounded-full text-slate-400 hover:text-teal-600 transition duration-300"
-            >
-              <Facebook size={16} />
-            </Link>
-          </div>
+          <a
+            href="mailto:ilovepetoficial26@gmail.com"
+            className="flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-teal-600 transition duration-300"
+          >
+            <span className="p-2 bg-white shadow-sm rounded-full text-slate-400">
+              <Mail size={16} />
+            </span>
+            ilovepetoficial26@gmail.com
+          </a>
           <div className="text-center md:text-right text-slate-400 text-xs leading-relaxed">
             © {new Date().getFullYear()} I🧡PET. <br /> Todos os direitos
             reservados.

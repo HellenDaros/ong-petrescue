@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Animal, AnimalFormProps, UnidadeIdade } from "@/app/types/animal";
 import { salvarAnimal, uploadFotoAnimal } from "@/app/services/animalService";
+import { validarImagem } from "@/app/utils/imagem";
 import {
   CONFIRMACAO_LABEL,
   ESPECIE_LABEL,
@@ -79,6 +80,13 @@ export default function AnimalForm({ animalExistente }: AnimalFormProps) {
   const handleFotoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const erro = validarImagem(file);
+    if (erro) {
+      alert(erro);
+      e.target.value = "";
+      return;
+    }
 
     setFotoFile(file);
     setFotoPreview(URL.createObjectURL(file));
