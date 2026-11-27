@@ -42,7 +42,7 @@ export default function Sidebar({
     },
     {
       name: "Página Inicial",
-      href: "/",
+      href: "/#galeria",
       icon: BookImage,
     },
     { name: "Ong", href: "/empresa", icon: Settings, roles: ["ROLE_ADMIN"] },
